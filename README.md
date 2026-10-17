@@ -2,11 +2,11 @@
 
 **Model Context Protocol (MCP)** is an open standard that lets AI assistants discover and call external tools through a common interface. This repository is a non-authorizing MCP server for Global AI Governance reference tooling.
 
-**Status:** v0.1.0 preview. Source is public in this repository (formerly `gag-mcp`; the old URL redirects). **No hosted endpoint is operated**, and it is not listed in any platform directory.
+**Status:** v0.1.0 preview. Source is public in this repository (formerly `gag-mcp`; the old URL redirects). **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
 
 **Names that did not change:** the Python distribution and console command are still `gag-mcp`, the import package is still `gag_mcp`, the MCP server name reported to clients is still `gag-mcp`, and environment variables keep the `GAG_MCP_` / `GAG_` prefixes. Existing configurations keep working.
 
-AI Governance MCP lets any MCP-capable assistant (Claude, ChatGPT, Grok, and others) call the real Global AI Governance reference tooling:
+AI Governance MCP exposes the real Global AI Governance reference tooling to MCP clients:
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
@@ -18,9 +18,14 @@ AI Governance MCP lets any MCP-capable assistant (Claude, ChatGPT, Grok, and oth
 - `operating_disposition` → `reference_policy_disposition`
 - `issued_assessment_result` → `assessment_result_recorded_in_artifact`
 
-The test suite fails if any output contains an authorization-like key, a non-`NONE` authority effect, `conditionally_authorized`, or a `PERMITTED` value outside the relabeled field. All three tools are annotated `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`, and each has a `title`. Both the OpenAI and Anthropic directories require these annotations.
+The test suite fails if any output contains an authorization-like key, a non-`NONE` authority effect, `conditionally_authorized`, or a `PERMITTED` value outside the relabeled field. All three tools are annotated `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`, and each has a `title`.
 
 Not affiliated with or endorsed by xAI, OpenAI, or Anthropic. Compatible with MCP-based agents.
+
+**What has been tested, and what has not:**
+- **Protocol compatibility: tested** with the official MCP Python SDK client (`mcp==2.3.0`, stdio and Streamable HTTP, `scripts/smoke_test.py`) and the MCP Inspector CLI (2.11.0, stdio, and HTTP with a bearer token).
+- **Simulated provider schema checks: none performed.**
+- **Provider-tested connectivity: none yet.** The provider sections below are configuration guidance from each provider's public documentation, not tested connections.
 
 ## Install and run (local)
 
@@ -32,7 +37,7 @@ pip install -e ".[dev]"
 ./scripts/fetch_upstreams.sh          # read-only clones of the two public repos, pinned
 gag-mcp                               # stdio
 gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 16 tests
+pytest                                # 51 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -44,15 +49,15 @@ Environment variables (HTTP mode):
 
 | Var | Purpose |
 |---|---|
-| `GAG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Set this on any public host.** |
+| `GAG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Required for any non-loopback bind:** with `HOST`/`--host` other than `127.0.0.1`, `localhost`, or `::1`, the server refuses to start until this is set. |
 | `GAG_MCP_CORS_ORIGINS` | Comma-separated origins for browser-based clients (e.g., MCP Inspector). Off by default |
-| `GAG_MCP_BEARER_TOKEN` | Optional static bearer token for private pilots. This is **not OAuth**; see "Auth" below |
+| `GAG_MCP_BEARER_TOKEN` | Static bearer token, at least 32 characters (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). **Required whenever other machines can reach the server:** a non-loopback bind, or a `GAG_MCP_ALLOWED_HOSTS` entry that is not loopback (reverse proxy or tunnel). Without it the server refuses to start. Optional for loopback-only use. This is **not OAuth**; see "Auth" below |
 | `GAG_TOOLKIT_PATH`, `GAG_AGENTIC_PATH` | Use other checkouts instead of `vendor/` |
 | `HOST`, `PORT` | Bind address (defaults `127.0.0.1:8000`) |
 
 ## Client configuration (copy-paste)
 
-Replace `/ABS/PATH/ai-governance-mcp` and `https://YOUR-HOST` with your own values. Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need a public HTTPS URL (see "Hosting").
+Replace `/ABS/PATH/ai-governance-mcp`, `https://YOUR-HOST`, and `TOKEN` with your own values. Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
 
 ### Claude Desktop (local, stdio)
 `claude_desktop_config.json` (Settings → Developer → Edit Config):
@@ -72,7 +77,7 @@ Replace `/ABS/PATH/ai-governance-mcp` and `https://YOUR-HOST` with your own valu
 One-click desktop extension: `manifest.json` (MCPB `manifest_version` 0.4) passes `mcpb validate`. Packing a `.mcpb` still needs platform-specific dependency bundling (`cryptography` has native wheels). Consider switching to the `uv` server type. **Not yet tested in Claude Desktop.**
 
 ### Claude.ai / Claude Desktop / mobile (remote custom connector)
-Settings → Connectors → Add custom connector → URL `https://YOUR-HOST/mcp`. No auth is needed for this public, no-user-data server. Which plans can add custom connectors: **unverified**; check the Claude Help Center.
+Add custom connector → URL `https://YOUR-HOST/mcp`, sign-in "None", then under **Request headers** add `authorization` with the value `Bearer TOKEN`. Anthropic documents request headers as a beta available to a limited set of organizations. If your organization does not see that section, Claude.ai cannot connect to this server: it does not implement OAuth and does not accept anonymous network requests. Which plans can add custom connectors: **unverified**; check the Claude Help Center.
 
 ### Anthropic Messages API (MCP connector)
 ```bash
@@ -82,11 +87,11 @@ curl https://api.anthropic.com/v1/messages \
   -d '{
     "model": "CLAUDE_MODEL_ID", "max_tokens": 1500,
     "messages": [{"role": "user", "content": "Use gag to check the sample AI inventory and summarize the critical findings."}],
-    "mcp_servers": [{"type": "url", "name": "gag", "url": "https://YOUR-HOST/mcp"}],
+    "mcp_servers": [{"type": "url", "name": "gag", "url": "https://YOUR-HOST/mcp", "authorization_token": "TOKEN"}],
     "tools": [{"type": "mcp_toolset", "mcp_server_name": "gag"}]
   }'
 ```
-(`mcp-client-2025-11-20` is the previous header. Add `"authorization_token"` to the server entry if you enable a bearer token.)
+(`mcp-client-2025-11-20` is the previous header. `authorization_token` is required, because the server rejects requests without the token.)
 
 ### OpenAI Responses API (remote MCP tool)
 ```bash
@@ -97,15 +102,16 @@ curl https://api.openai.com/v1/responses \
     "input": "Use gag to verify the signed-revoked example passport and explain the result.",
     "tools": [{
       "type": "mcp", "server_label": "gag", "server_url": "https://YOUR-HOST/mcp",
+      "headers": {"Authorization": "Bearer TOKEN"},
       "allowed_tools": ["check_inventory", "build_decision_pack", "validate_passport"],
       "require_approval": "never"
     }]
   }'
 ```
-(Add `"authorization": "TOKEN"` if a bearer token is enabled. For a server that is never exposed publicly, OpenAI documents a Secure MCP Tunnel (`tunnel_id`). That path is untested here.)
+(OpenAI also documents an `authorization` field for OAuth access tokens; the `headers` form above sends the static token verbatim. For a server that is never exposed publicly, OpenAI documents a Secure MCP Tunnel (`tunnel_id`). That path is untested here.)
 
 ### ChatGPT (developer mode / custom app)
-Enable developer mode (workspace admin on Business/Enterprise/Edu; Pro users get read/fetch MCP only, per OpenAI Help). Then create an app or connector with MCP server URL `https://YOUR-HOST/mcp` and authentication "None". All three tools are read-only. Exact menu labels change often, so they are **unverified**. Public listing goes through the OpenAI plugin submission portal.
+**Not currently supported.** OpenAI documents the authentication options for a custom MCP server in ChatGPT as OAuth, no authentication, or mixed; there is no field for a static bearer token. This server requires a token for any remote use and does not implement OAuth, so ChatGPT on the web cannot connect to it. Use the OpenAI Responses API above instead.
 
 ### xAI Grok API (remote MCP tool)
 ```bash
@@ -117,37 +123,39 @@ curl https://api.x.ai/v1/responses \
     "tools": [{
       "type": "mcp", "server_label": "gag", "server_url": "https://YOUR-HOST/mcp",
       "server_description": "Non-authorizing AI governance checks (authority_effect NONE)",
+      "headers": {"Authorization": "Bearer TOKEN"},
       "allowed_tools": ["check_inventory", "build_decision_pack", "validate_passport"]
     }]
   }'
 ```
-xAI supports only Streamable HTTP or SSE; `require_approval` is not supported. In the xAI Python SDK, use `mcp(server_url=..., server_label="gag", allowed_tool_names=[...])`.
+xAI supports only Streamable HTTP or SSE; `require_approval` is not supported. In the xAI Python SDK, use `mcp(server_url=..., server_label="gag", allowed_tool_names=[...], extra_headers={"Authorization": "Bearer TOKEN"})`.
 
 ### Grok (grok.com consumer connectors)
-grok.com/connectors → New Connector → Custom → enter `https://YOUR-HOST/mcp`. The server must be reachable on the public internet.
+grok.com/connectors → New Connector → Custom → enter `https://YOUR-HOST/mcp`. The server must be reachable on the public internet. Whether this connector can send a static `Authorization: Bearer` header is **unverified**. If it cannot, grok.com cannot connect to this server; use the xAI API above instead.
 
 ## Auth
 - **Local stdio:** no auth. The MCP spec says stdio servers take credentials from the environment.
-- **Public demo endpoint:** no auth is acceptable. The tools are read-only, process only caller-supplied data, and store nothing. Anthropic's directory allows no-auth for servers without user-specific data.
-- **Private pilots:** `GAG_MCP_BEARER_TOKEN` works with the API connectors (`authorization` / `authorization_token` fields).
-- **OAuth 2.1:** only needed if a hosted version ever holds per-user data. The MCP spec then requires Protected Resource Metadata (RFC 9728) plus an authorization server. Not implemented.
+- **Loopback HTTP** (`127.0.0.1`, `localhost`, `::1`, with no public `GAG_MCP_ALLOWED_HOSTS` entry): the token is optional, as before.
+- **Any network exposure** (non-loopback bind, reverse proxy, or tunnel): `GAG_MCP_BEARER_TOKEN` is **required**, and the server refuses to start without it. There is no anonymous mode. An authenticating gateway in front of the server does not replace the token, because the server cannot verify a gateway's claim.
+- **Bearer token:** sent as `Authorization: Bearer TOKEN` (`authorization_token` in the Anthropic API, `headers` in the OpenAI and xAI APIs). It is one static shared secret for every caller: no rotation (restart with a new value), no per-user identity, no scopes, and no expiry. It is compared in constant time, every rejection gets the same `401` body, and the presented value is never echoed. Serve it only over HTTPS.
+- **OAuth 2.1:** not implemented. Clients that offer only OAuth or no authentication cannot connect. Adding OAuth would require Protected Resource Metadata (RFC 9728) plus an authorization server.
 
-## Hosting (needed for every remote platform; nothing has been deployed)
+## Self-hosting (needed for every remote platform; Global AI Governance operates no endpoint)
+
+Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the hostname clients use>`, and `GAG_MCP_BEARER_TOKEN=<random secret of 32+ characters>`. The server refuses to start on a non-loopback bind, or with a non-loopback allow-list entry, unless both are set.
 
 | Option | Cost (per provider docs, Oct 2026) | Fit |
 |---|---|---|
-| Cloudflare Quick Tunnel (`cloudflared tunnel --url http://localhost:8000`) | Free, no account | **Demos only.** Random temporary URL; xAI's own cookbook uses this pattern |
+| Cloudflare Quick Tunnel (`cloudflared tunnel --url http://localhost:8000`) | Free, no account | **Testing only.** Random temporary URL. Set `GAG_MCP_ALLOWED_HOSTS` to the tunnel hostname and set `GAG_MCP_BEARER_TOKEN` |
 | Render free web service (`deploy/Dockerfile`) | $0; 512 MB; spins down after 15 min idle (about 1 min cold start) | Cheapest always-addressable URL; cold starts may time out some clients (unverified) |
-| Google Cloud Run (`deploy/Dockerfile`) | Free tier of 2M requests/month; billing account required | **Recommended** for directory submission. Scales to zero, HTTPS, custom domain |
-
-Directory submissions also need a stable HTTPS domain the owner controls (ideally on a GAG domain), a published privacy policy and terms (drafts in `docs/`), a support contact, and, for OpenAI, domain verification at `/.well-known/openai-apps-challenge`.
+| Google Cloud Run (`deploy/Dockerfile`) | Free tier of 2M requests/month; billing account required | Scales to zero, HTTPS, custom domain |
 
 **Privacy note:** a hosted endpoint changes the toolkit's "LOCAL · NO UPLOAD" promise for that mode. Label it clearly, and keep stdio as the private default.
 
 ## Files
 - `src/gag_mcp/core.py`: transport-independent logic plus the authority envelope
-- `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, optional bearer)
-- `tests/`: 16 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement)
+- `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
+- `tests/`: 51 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
@@ -155,6 +163,7 @@ Directory submissions also need a stable HTTPS domain the owner controls (ideall
 - `docs/PRIVACY-DRAFT.md`, `docs/TERMS-DRAFT.md`: drafts for owner review
 
 ## Known limits
+- Input checks are strict: unsupported arguments are rejected (`additionalProperties: false`). Error messages give a category, the field name, and allowed values, never the value you sent; a rejected CSV reports the toolkit's error code, column, and remediation without the cell or header text. One exception comes from the MCP SDK itself: a call to a tool name that does not exist is answered with `Unknown tool: <name>`.
 - Tool calls are synchronous and use process-global stdout redirection, so they are fine for low traffic. Add a worker pool before heavy use.
 - `validate_passport` with caller-supplied JSON can't run full evidence-bundle binding checks, because no bundle is accepted over MCP yet. The output says this.
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.
