@@ -13,7 +13,7 @@ import json
 import os
 from typing import Annotated, Any, Literal
 
-from pydantic import Field
+from pydantic import ConfigDict, Field, model_validator
 
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
@@ -98,6 +98,28 @@ def validate_passport(example: Annotated[Literal["signed-unrevoked", "signed-rev
     return _guard(core.validate_passport, example, passport_json, trusted_key_json, revocation_list_json, at_time)
 
 
+def _strict_arguments(base):
+    """Argument model that rejects unsupported arguments and keeps caller values out of validation errors."""
+    allowed = frozenset(field.alias or name for name, field in base.model_fields.items())
+
+    class StrictArguments(base):
+        model_config = ConfigDict(extra="forbid", hide_input_in_errors=True, title=base.__name__)
+
+        @model_validator(mode="before")
+        @classmethod
+        def _only_known_arguments(cls, data):
+            if isinstance(data, dict) and not set(data) <= allowed:
+                raise ValueError(f"unsupported argument; allowed arguments: {', '.join(sorted(allowed))}")
+            return data
+
+    return StrictArguments
+
+
+for _tool in mcp._tool_manager.list_tools():  # mcp==2.3.0 is pinned exactly
+    _tool.fn_metadata.arg_model = _strict_arguments(_tool.fn_metadata.arg_model)
+    _tool.parameters = {**_tool.parameters, "additionalProperties": False}
+
+
 @mcp.custom_route("/health", methods=["GET"])
 async def health(request):  # pragma: no cover - exercised by smoke test
     from starlette.responses import JSONResponse
@@ -105,8 +127,28 @@ async def health(request):  # pragma: no cover - exercised by smoke test
 
 
 # ----------------------------------------------------------------------------- HTTP app
+LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1")
+MIN_NETWORK_TOKEN_LENGTH = 32
+
+
+def _is_loopback_name(entry: str) -> bool:
+    """True for allow-list entries such as 'localhost', '127.0.0.1:8000', '[::1]:*'."""
+    name = entry.strip().lower()
+    if name.startswith("["):
+        name = name[1:name.find("]")] if "]" in name else name[1:]
+    elif name.count(":") == 1:
+        name = name.split(":", 1)[0]
+    return name in LOOPBACK_HOSTS
+
+
 class _BearerAuth:
-    """Optional static bearer token (GAG_MCP_BEARER_TOKEN). Not OAuth; see README for directory listings."""
+    """Static bearer token (GAG_MCP_BEARER_TOKEN), compared in constant time.
+
+    Required on non-loopback binds; optional on loopback.
+
+    One shared secret for every caller: no rotation, no per-user identity, not OAuth. Every rejection
+    returns the same 401 body, and the presented value is never logged or echoed.
+    """
 
     def __init__(self, app, token: str):
         self.app, self.token = app, token.encode()
@@ -130,15 +172,24 @@ def build_http_app(host: str = "127.0.0.1"):
     if allowed_hosts:
         security = TransportSecuritySettings(enable_dns_rebinding_protection=True,
                                              allowed_hosts=allowed_hosts, allowed_origins=origins)
-    elif host not in ("127.0.0.1", "localhost", "::1"):
-        # Public bind without an allow-list: the operator must set GAG_MCP_ALLOWED_HOSTS.
-        security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
+    elif host not in LOOPBACK_HOSTS:
+        # Fail closed: a non-loopback bind needs an explicit Host allow-list (DNS-rebinding protection).
+        raise ValueError(f"refusing to serve HTTP on non-loopback host {host!r} without GAG_MCP_ALLOWED_HOSTS. "
+                         "Set GAG_MCP_ALLOWED_HOSTS to the hostname(s) clients use, or bind to 127.0.0.1.")
+    token = os.environ.get("GAG_MCP_BEARER_TOKEN", "")
+    # Secure by default: no anonymous network exposure. A non-loopback bind, or an allow-list naming a
+    # non-loopback host (reverse proxy or tunnel to a loopback bind), needs a bearer token.
+    network_exposed = host not in LOOPBACK_HOSTS or any(not _is_loopback_name(h) for h in allowed_hosts)
+    if network_exposed and len(token.strip()) < MIN_NETWORK_TOKEN_LENGTH:
+        # The token value is never included in the message.
+        raise ValueError("refusing to serve HTTP to non-loopback clients without a bearer token. "
+                         f"Set GAG_MCP_BEARER_TOKEN to a random secret of at least {MIN_NETWORK_TOKEN_LENGTH} "
+                         "characters, or serve only on 127.0.0.1 without a public GAG_MCP_ALLOWED_HOSTS entry.")
     app = mcp.streamable_http_app(stateless_http=True, json_response=True, transport_security=security, host=host)
     if origins:
         from starlette.middleware.cors import CORSMiddleware
         app = CORSMiddleware(app, allow_origins=origins, allow_methods=["GET", "POST", "OPTIONS"],
                              allow_headers=["*"], expose_headers=["Mcp-Session-Id", "MCP-Protocol-Version"])
-    token = os.environ.get("GAG_MCP_BEARER_TOKEN")
     if token:
         app = _BearerAuth(app, token)
     return app
@@ -154,8 +205,12 @@ def main() -> None:
     if not args.http:
         mcp.run("stdio")
         return
+    try:
+        app = build_http_app(args.host)
+    except ValueError as exc:
+        parser.error(str(exc))
     import uvicorn
-    uvicorn.run(build_http_app(args.host), host=args.host, port=args.port, log_level="warning")
+    uvicorn.run(app, host=args.host, port=args.port, log_level="warning")
 
 
 if __name__ == "__main__":
