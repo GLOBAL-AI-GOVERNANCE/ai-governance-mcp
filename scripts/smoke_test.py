@@ -104,7 +104,7 @@ async def main() -> int:
     ap.add_argument("--transcript")
     a = ap.parse_args()
     log("# gag-mcp verification transcript")
-    log(f"\nGenerated {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')} on the Grok Bot box. "
+    log(f"\nGenerated {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')} on a local machine. "
         "Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.")
     await exercise("stdio (subprocess)", StdioServerParameters(command=sys.executable, args=["-m", "gag_mcp.server"],
                                                                env=dict(os.environ)))

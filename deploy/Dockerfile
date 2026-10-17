@@ -1,4 +1,4 @@
-# gag-mcp remote (Streamable HTTP) image. NOT built or deployed yet; for Render / Cloud Run / any container host.
+# AI Governance MCP (command: gag-mcp) remote Streamable HTTP image. Not built or deployed by the maintainers; for Render / Cloud Run / any container host.
 FROM python:3.12-slim
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 WORKDIR /app

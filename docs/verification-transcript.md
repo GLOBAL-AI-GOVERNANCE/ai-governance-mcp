@@ -1,6 +1,6 @@
 # gag-mcp verification transcript
 
-Generated 2026-10-16 21:49 PDT on the Grok Bot box. Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.
+Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.
 
 ## Transport: stdio (subprocess)
 
