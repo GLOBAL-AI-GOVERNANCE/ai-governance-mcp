@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fetch the two public GLOBAL-AI-GOVERNANCE repos gag-mcp wraps, pinned to known commits.
+# Fetch the two public GLOBAL-AI-GOVERNANCE repos AI Governance MCP (gag-mcp) wraps, pinned to known commits.
 # Read-only clones. Override pins with TOOLKIT_REF / AGENTIC_REF.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

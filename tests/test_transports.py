@@ -1,14 +1,9 @@
 """Real MCP client calls over in-process, stdio, and Streamable HTTP transports."""
 import asyncio
 import os
-import socket
 import sys
-import threading
-import time
 
 import httpx
-import pytest
-import uvicorn
 from mcp import Client, StdioServerParameters
 
 from gag_mcp.server import build_http_app, mcp
@@ -49,29 +44,6 @@ def test_stdio_subprocess():
         async with Client(params) as c:
             await _exercise(c)
     asyncio.run(run())
-
-
-def _free_port():
-    s = socket.socket(); s.bind(("127.0.0.1", 0)); p = s.getsockname()[1]; s.close(); return p
-
-
-@pytest.fixture
-def http_server(monkeypatch):
-    def start(env=None):
-        for k, v in (env or {}).items():
-            monkeypatch.setenv(k, v)
-        port = _free_port()
-        server = uvicorn.Server(uvicorn.Config(build_http_app(), host="127.0.0.1", port=port, log_level="error"))
-        th = threading.Thread(target=server.run, daemon=True); th.start()
-        for _ in range(100):
-            if server.started: break
-            time.sleep(0.05)
-        started.append(server)
-        return f"http://127.0.0.1:{port}"
-    started = []
-    yield start
-    for s in started:
-        s.should_exit = True
 
 
 def test_streamable_http(http_server):

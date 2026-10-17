@@ -49,6 +49,24 @@ class GagInputError(ValueError):
     """Caller input was rejected (fail closed)."""
 
 
+# Toolkit validation errors keep these diagnostic fields only; supplied values never leave the server.
+_SAFE_TOOLKIT_ERROR_FIELDS = ("code", "source_column", "expected", "remediation")
+
+
+def _toolkit_rejection(exc: Exception) -> str:
+    try:
+        detail = json.loads(str(exc)).get("error")
+    except (ValueError, AttributeError):
+        detail = None
+    if not isinstance(detail, dict):
+        return ("Inventory rejected by toolkit validation (invalid_inventory). Check the CSV against the toolkit "
+                "template columns and allowed values, and evaluation_time against YYYY-MM-DDTHH:MM:SSZ.")
+    safe = {k: detail[k] for k in _SAFE_TOOLKIT_ERROR_FIELDS if k in detail}
+    if safe.get("code") == "UNKNOWN_COLUMN":
+        safe.pop("source_column", None)  # the unknown header is caller-supplied text
+    return f"Inventory rejected by toolkit validation: {json.dumps({'error': safe}, sort_keys=True)}"
+
+
 # --------------------------------------------------------------------------- paths
 def _vendor_root() -> Path:
     return Path(__file__).resolve().parents[2] / "vendor"
@@ -132,10 +150,11 @@ def _run(inventory_csv: str | None, use_sample: bool, evaluation_time: str | Non
             run_pipeline(src, Path(out.name), fail_on="none", evaluation_time=evaluation_time)
     except SystemExit as exc:  # fail_on=none should not exit, but stay fail-closed
         out.cleanup()
-        raise GagInputError(f"Toolkit pipeline stopped (exit {exc.code}).") from exc
+        code = exc.code if isinstance(exc.code, int) else 1
+        raise GagInputError(f"Toolkit pipeline stopped (exit {code}).") from exc
     except (OSError, ValueError) as exc:
         out.cleanup()
-        raise GagInputError(f"Inventory rejected by toolkit validation: {exc}") from exc
+        raise GagInputError(_toolkit_rejection(exc)) from exc
     finally:
         if tmp_in is not None:
             tmp_in.cleanup()
@@ -186,8 +205,8 @@ def build_decision_pack(inventory_csv: str | None = None, use_sample: bool = Fal
             with contextlib.redirect_stdout(sys.stderr):
                 verify_output_directory(outdir)
             integrity = "VERIFIED"
-        except Exception as exc:  # fail closed and report
-            integrity = f"FAILED: {exc}"
+        except Exception as exc:  # fail closed and report the category only
+            integrity = f"FAILED ({type(exc).__name__})"
         docs: dict[str, str] = {}
         if include_documents:
             for item in manifest.get("generated_files", []):
@@ -272,13 +291,13 @@ def validate_passport(example: str | None = None, passport: dict | str | None = 
         proc = subprocess.run([sys.executable, "tools/validate_artifact.py", "--kind", "passport", *args],
                               cwd=root, capture_output=True, text=True, timeout=60)
     except json.JSONDecodeError as exc:
-        raise GagInputError(f"Invalid JSON input: {exc}") from exc
+        raise GagInputError(f"Invalid JSON input (line {exc.lineno}, column {exc.colno}).") from exc
     finally:
         tmp.cleanup()
     try:
         raw = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
-        raise GagInputError(f"Validator produced no JSON (exit {proc.returncode}): {proc.stderr[-500:]}") from exc
+        raise GagInputError(f"Validator produced no result (exit {proc.returncode}).") from exc
     raw.pop("artifact", None)  # drop local temp paths
     body = {
         "mode": mode,
