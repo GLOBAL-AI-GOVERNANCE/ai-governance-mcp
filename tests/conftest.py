@@ -1,5 +1,12 @@
 import json
+import socket
+import threading
+import time
+
 import pytest
+import uvicorn
+
+from gag_mcp.server import build_http_app
 
 EVAL_TIME = "2026-10-16T00:00:00Z"
 
@@ -41,3 +48,26 @@ def assert_non_authorizing(out: dict):
 @pytest.fixture
 def gap_csv():
     return GAP_CSV
+
+
+def _free_port():
+    s = socket.socket(); s.bind(("127.0.0.1", 0)); p = s.getsockname()[1]; s.close(); return p
+
+
+@pytest.fixture
+def http_server(monkeypatch):
+    def start(env=None, bind="127.0.0.1"):
+        for k, v in (env or {}).items():
+            monkeypatch.setenv(k, v)
+        port = _free_port()
+        server = uvicorn.Server(uvicorn.Config(build_http_app(bind), host=bind, port=port, log_level="error"))
+        th = threading.Thread(target=server.run, daemon=True); th.start()
+        for _ in range(100):
+            if server.started: break
+            time.sleep(0.05)
+        started.append(server)
+        return f"http://127.0.0.1:{port}"
+    started = []
+    yield start
+    for s in started:
+        s.should_exit = True

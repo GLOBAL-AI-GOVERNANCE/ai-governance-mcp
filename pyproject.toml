@@ -5,19 +5,23 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "gag-mcp"
 version = "0.1.0"
-description = "Non-authorizing MCP server for Global AI Governance reference tooling (authority_effect NONE)."
+description = "AI Governance Model Context Protocol Server (AI Governance MCP): non-authorizing tools for Global AI Governance reference tooling (authority_effect NONE)."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "Apache-2.0"}
 dependencies = [
   "mcp==2.3.0",
   "jsonschema==4.26.0",
-  "cryptography==50.0.1",
+  "cryptography==50.0.2",
   "uvicorn>=0.30",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.urls]
+Repository = "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp"
+Issues = "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/issues"
 
 [project.scripts]
 gag-mcp = "gag_mcp.server:main"
