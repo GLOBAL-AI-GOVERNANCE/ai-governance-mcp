@@ -32,7 +32,7 @@ pip install -e ".[dev]"
 ./scripts/fetch_upstreams.sh          # read-only clones of the two public repos, pinned
 gag-mcp                               # stdio
 gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 16 tests
+pytest                                # 31 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -44,9 +44,9 @@ Environment variables (HTTP mode):
 
 | Var | Purpose |
 |---|---|
-| `GAG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Set this on any public host.** |
+| `GAG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Required for any non-loopback bind:** with `HOST`/`--host` other than `127.0.0.1`, `localhost`, or `::1`, the server refuses to start until this is set. |
 | `GAG_MCP_CORS_ORIGINS` | Comma-separated origins for browser-based clients (e.g., MCP Inspector). Off by default |
-| `GAG_MCP_BEARER_TOKEN` | Optional static bearer token for private pilots. This is **not OAuth**; see "Auth" below |
+| `GAG_MCP_BEARER_TOKEN` | Optional static bearer token for private pilots. This is **not OAuth**; see "Auth" below. Optional on every bind, because the documented public demo endpoint uses no auth |
 | `GAG_TOOLKIT_PATH`, `GAG_AGENTIC_PATH` | Use other checkouts instead of `vendor/` |
 | `HOST`, `PORT` | Bind address (defaults `127.0.0.1:8000`) |
 
@@ -129,7 +129,7 @@ grok.com/connectors → New Connector → Custom → enter `https://YOUR-HOST/mc
 ## Auth
 - **Local stdio:** no auth. The MCP spec says stdio servers take credentials from the environment.
 - **Public demo endpoint:** no auth is acceptable. The tools are read-only, process only caller-supplied data, and store nothing. Anthropic's directory allows no-auth for servers without user-specific data.
-- **Private pilots:** `GAG_MCP_BEARER_TOKEN` works with the API connectors (`authorization` / `authorization_token` fields).
+- **Private pilots:** `GAG_MCP_BEARER_TOKEN` works with the API connectors (`authorization` / `authorization_token` fields). It is one static shared secret for every caller: no rotation (restart with a new value), no per-user identity, no scopes, and no expiry. It is compared in constant time, every rejection gets the same `401` body, and the presented value is never echoed. Serve it only over HTTPS.
 - **OAuth 2.1:** only needed if a hosted version ever holds per-user data. The MCP spec then requires Protected Resource Metadata (RFC 9728) plus an authorization server. Not implemented.
 
 ## Hosting (needed for every remote platform; nothing has been deployed)
@@ -147,7 +147,7 @@ Directory submissions also need a stable HTTPS domain the owner controls (ideall
 ## Files
 - `src/gag_mcp/core.py`: transport-independent logic plus the authority envelope
 - `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, optional bearer)
-- `tests/`: 16 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement)
+- `tests/`: 31 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, and unknown-argument rejection)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
@@ -155,6 +155,7 @@ Directory submissions also need a stable HTTPS domain the owner controls (ideall
 - `docs/PRIVACY-DRAFT.md`, `docs/TERMS-DRAFT.md`: drafts for owner review
 
 ## Known limits
+- Input checks are strict: unsupported arguments are rejected (`additionalProperties: false`). Error messages give a category, the field name, and allowed values, never the value you sent; a rejected CSV reports the toolkit's error code, column, and remediation without the cell or header text. One exception comes from the MCP SDK itself: a call to a tool name that does not exist is answered with `Unknown tool: <name>`.
 - Tool calls are synchronous and use process-global stdout redirection, so they are fine for low traffic. Add a worker pool before heavy use.
 - `validate_passport` with caller-supplied JSON can't run full evidence-bundle binding checks, because no bundle is accepted over MCP yet. The output says this.
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.

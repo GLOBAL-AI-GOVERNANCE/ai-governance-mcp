@@ -7,7 +7,8 @@ COPY src ./src
 COPY scripts ./scripts
 RUN ./scripts/fetch_upstreams.sh && pip install --no-cache-dir .
 ENV HOST=0.0.0.0 PORT=8080
-# Set GAG_MCP_ALLOWED_HOSTS=<your-hostname> in the host's environment (DNS-rebinding allow-list).
+# Required: set GAG_MCP_ALLOWED_HOSTS=<your-hostname> in the host's environment (DNS-rebinding allow-list).
+# The server refuses to start on HOST=0.0.0.0 without it.
 # Optional: GAG_MCP_BEARER_TOKEN for private pilots; GAG_MCP_CORS_ORIGINS for browser clients.
 EXPOSE 8080
 USER nobody
