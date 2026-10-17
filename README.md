@@ -20,7 +20,7 @@ AI Governance MCP exposes the real Global AI Governance reference tooling to MCP
 
 The test suite fails if any output contains an authorization-like key, a non-`NONE` authority effect, `conditionally_authorized`, or a `PERMITTED` value outside the relabeled field. All three tools are annotated `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, `openWorldHint: false`, and each has a `title`.
 
-Not affiliated with or endorsed by xAI, OpenAI, or Anthropic. Compatible with MCP-based agents.
+Compatible with MCP-based agents. Not affiliated with or endorsed by xAI, OpenAI, Anthropic, or any other model provider.
 
 **What has been tested, and what has not:**
 - **Protocol compatibility: tested** with the official MCP Python SDK client (`mcp==2.3.0`, stdio and Streamable HTTP, `scripts/smoke_test.py`) and the MCP Inspector CLI (2.11.0, stdio, and HTTP with a bearer token).
@@ -74,7 +74,7 @@ Replace `/ABS/PATH/ai-governance-mcp`, `https://YOUR-HOST`, and `TOKEN` with you
   }
 }
 ```
-One-click desktop extension: `manifest.json` (MCPB `manifest_version` 0.4) passes `mcpb validate`. Packing a `.mcpb` still needs platform-specific dependency bundling (`cryptography` has native wheels). Consider switching to the `uv` server type. **Not yet tested in Claude Desktop.**
+One-click desktop extension: `manifest.json` (MCPB `manifest_version` 0.4) passes `mcpb validate`. Packing a `.mcpb` still needs platform-specific dependency bundling (`cryptography` has native wheels). **Not yet tested in Claude Desktop.**
 
 ### Claude.ai / Claude Desktop / mobile (remote custom connector)
 Add custom connector → URL `https://YOUR-HOST/mcp`, sign-in "None", then under **Request headers** add `authorization` with the value `Bearer TOKEN`. Anthropic documents request headers as a beta available to a limited set of organizations. If your organization does not see that section, Claude.ai cannot connect to this server: it does not implement OAuth and does not accept anonymous network requests. Which plans can add custom connectors: **unverified**; check the Claude Help Center.
@@ -108,6 +108,8 @@ curl https://api.openai.com/v1/responses \
     }]
   }'
 ```
+`"require_approval": "never"` is a documented OpenAI value that skips OpenAI's per-call approval prompt, which otherwise asks before data is sent to the server. It is used here only because all three tools are read-only and non-authorizing; it grants no authority, and every result still carries `authority_effect: "NONE"` and waits for a human decision. Set it to `"always"` to review each call.
+
 (OpenAI also documents an `authorization` field for OAuth access tokens; the `headers` form above sends the static token verbatim. For a server that is never exposed publicly, OpenAI documents a Secure MCP Tunnel (`tunnel_id`). That path is untested here.)
 
 ### ChatGPT (developer mode / custom app)
@@ -160,7 +162,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 - `scripts/fetch_upstreams.sh`: pinned upstream clones
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
 - `deploy/Dockerfile`: container for a remote host (not built)
-- `docs/PRIVACY-DRAFT.md`, `docs/TERMS-DRAFT.md`: drafts for owner review
+- `docs/PRIVACY-DRAFT.md`, `docs/TERMS-DRAFT.md`: unpublished draft privacy and terms text for a possible hosted deployment. Not in effect; no hosted endpoint is operated
 
 ## Known limits
 - Input checks are strict: unsupported arguments are rejected (`additionalProperties: false`). Error messages give a category, the field name, and allowed values, never the value you sent; a rejected CSV reports the toolkit's error code, column, and remediation without the cell or header text. One exception comes from the MCP SDK itself: a call to a tool name that does not exist is answered with `Unknown tool: <name>`.
@@ -169,7 +171,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.
 
 ## Support and contact
-Questions, integrations, and pilot requests: [GitHub Discussions](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/discussions). Security issues: see the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md).
+Questions, integrations, and pilot requests: [Pilots and integrations: start here (Discussion #29)](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE/discussions/29). Do not post confidential or regulated information in public Discussions. Security issues: report them privately as described in the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md), not in a public issue or Discussion.
 
 ## License
-Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0). AI Governance MCP is compatible with MCP-based agents. It is not affiliated with or endorsed by any model provider.
+Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0).
