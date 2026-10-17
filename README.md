@@ -1,8 +1,12 @@
-# gag-mcp: Global AI Governance MCP server (non-authorizing)
+# AI Governance Model Context Protocol Server (AI Governance MCP)
 
-**Status:** v0.1.0. Built and tested locally on the Grok Bot box, Oct 16, 2026. **Not published, not deployed, not pushed to GitHub.**
+**Model Context Protocol (MCP)** is an open standard that lets AI assistants discover and call external tools through a common interface. This repository is a non-authorizing MCP server for Global AI Governance reference tooling.
 
-gag-mcp lets any MCP-capable assistant (Claude, ChatGPT, Grok, and others) call the real Global AI Governance reference tooling:
+**Status:** v0.1.0 preview. Source is public in this repository (formerly `gag-mcp`; the old URL redirects). **No hosted endpoint is operated**, and it is not listed in any platform directory.
+
+**Names that did not change:** the Python distribution and console command are still `gag-mcp`, the import package is still `gag_mcp`, the MCP server name reported to clients is still `gag-mcp`, and environment variables keep the `GAG_MCP_` / `GAG_` prefixes. Existing configurations keep working.
+
+AI Governance MCP lets any MCP-capable assistant (Claude, ChatGPT, Grok, and others) call the real Global AI Governance reference tooling:
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
@@ -21,7 +25,8 @@ Not affiliated with or endorsed by xAI, OpenAI, or Anthropic. Compatible with MC
 ## Install and run (local)
 
 ```bash
-cd gag-mcp
+git clone https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git
+cd ai-governance-mcp
 python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 ./scripts/fetch_upstreams.sh          # read-only clones of the two public repos, pinned
@@ -30,6 +35,8 @@ gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000
 pytest                                # 16 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
+
+Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`. The tools also need the two pinned upstream checkouts; set `GAG_TOOLKIT_PATH` and `GAG_AGENTIC_PATH` to them (see `scripts/fetch_upstreams.sh` for the pinned commits). Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
 
@@ -45,7 +52,7 @@ Environment variables (HTTP mode):
 
 ## Client configuration (copy-paste)
 
-Replace `/ABS/PATH/gag-mcp` and `https://YOUR-HOST` with your own values. Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need a public HTTPS URL (see "Hosting").
+Replace `/ABS/PATH/ai-governance-mcp` and `https://YOUR-HOST` with your own values. Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need a public HTTPS URL (see "Hosting").
 
 ### Claude Desktop (local, stdio)
 `claude_desktop_config.json` (Settings → Developer → Edit Config):
@@ -53,10 +60,10 @@ Replace `/ABS/PATH/gag-mcp` and `https://YOUR-HOST` with your own values. Remote
 {
   "mcpServers": {
     "gag": {
-      "command": "/ABS/PATH/gag-mcp/.venv/bin/gag-mcp",
+      "command": "/ABS/PATH/ai-governance-mcp/.venv/bin/gag-mcp",
       "env": {
-        "GAG_TOOLKIT_PATH": "/ABS/PATH/gag-mcp/vendor/global-ai-governance-toolkit",
-        "GAG_AGENTIC_PATH": "/ABS/PATH/gag-mcp/vendor/agentic-ai-governance"
+        "GAG_TOOLKIT_PATH": "/ABS/PATH/ai-governance-mcp/vendor/global-ai-governance-toolkit",
+        "GAG_AGENTIC_PATH": "/ABS/PATH/ai-governance-mcp/vendor/agentic-ai-governance"
       }
     }
   }
@@ -153,7 +160,7 @@ Directory submissions also need a stable HTTPS domain the owner controls (ideall
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.
 
 ## Support and contact
-Questions, integrations, and pilot requests: [GitHub Discussions](https://github.com/GLOBAL-AI-GOVERNANCE/gag-mcp/discussions). Security issues: see the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md).
+Questions, integrations, and pilot requests: [GitHub Discussions](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/discussions). Security issues: see the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md).
 
 ## License
-Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0). gag-mcp is compatible with MCP-based agents. It is not affiliated with or endorsed by any model provider.
+Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0). AI Governance MCP is compatible with MCP-based agents. It is not affiliated with or endorsed by any model provider.
