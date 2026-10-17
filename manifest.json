@@ -1,0 +1,30 @@
+{
+  "manifest_version": "0.4",
+  "name": "gag-mcp",
+  "display_name": "Global AI Governance (non-authorizing)",
+  "version": "0.1.0",
+  "description": "Local AI governance checks, Decision Packs, and Agent Trust Passport verification. authority_effect NONE.",
+  "long_description": "Wraps the Global AI Governance toolkit and agentic-ai-governance reference validator. Runs locally over stdio. Nothing it returns approves deployment, certifies compliance, grants authorization, or accepts risk.",
+  "author": { "name": "Global AI Governance", "url": "https://github.com/GLOBAL-AI-GOVERNANCE" },
+  "homepage": "https://global-ai-governance.github.io/global-ai-governance-toolkit/",
+  "license": "Apache-2.0",
+  "server": {
+    "type": "python",
+    "entry_point": "src/gag_mcp/server.py",
+    "mcp_config": {
+      "command": "python3",
+      "args": ["-m", "gag_mcp.server"],
+      "env": {
+        "PYTHONPATH": "${__dirname}/src:${__dirname}/lib",
+        "GAG_TOOLKIT_PATH": "${__dirname}/vendor/global-ai-governance-toolkit",
+        "GAG_AGENTIC_PATH": "${__dirname}/vendor/agentic-ai-governance"
+      }
+    }
+  },
+  "tools": [
+    { "name": "check_inventory", "description": "Find governance gaps in an AI system inventory CSV (non-authorizing)." },
+    { "name": "build_decision_pack", "description": "Prepare a digest-listed Decision Pack for an accountable human." },
+    { "name": "validate_passport", "description": "Verify an Agent Trust Passport; verification is not authorization." }
+  ],
+  "compatibility": { "platforms": ["darwin", "linux", "win32"], "runtimes": { "python": ">=3.11" } }
+}
