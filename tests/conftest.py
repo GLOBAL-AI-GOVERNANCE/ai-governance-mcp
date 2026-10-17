@@ -56,11 +56,11 @@ def _free_port():
 
 @pytest.fixture
 def http_server(monkeypatch):
-    def start(env=None):
+    def start(env=None, bind="127.0.0.1"):
         for k, v in (env or {}).items():
             monkeypatch.setenv(k, v)
         port = _free_port()
-        server = uvicorn.Server(uvicorn.Config(build_http_app(), host="127.0.0.1", port=port, log_level="error"))
+        server = uvicorn.Server(uvicorn.Config(build_http_app(bind), host=bind, port=port, log_level="error"))
         th = threading.Thread(target=server.run, daemon=True); th.start()
         for _ in range(100):
             if server.started: break

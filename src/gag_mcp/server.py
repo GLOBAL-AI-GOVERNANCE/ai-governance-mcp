@@ -128,10 +128,23 @@ async def health(request):  # pragma: no cover - exercised by smoke test
 
 # ----------------------------------------------------------------------------- HTTP app
 LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1")
+MIN_NETWORK_TOKEN_LENGTH = 32
+
+
+def _is_loopback_name(entry: str) -> bool:
+    """True for allow-list entries such as 'localhost', '127.0.0.1:8000', '[::1]:*'."""
+    name = entry.strip().lower()
+    if name.startswith("["):
+        name = name[1:name.find("]")] if "]" in name else name[1:]
+    elif name.count(":") == 1:
+        name = name.split(":", 1)[0]
+    return name in LOOPBACK_HOSTS
 
 
 class _BearerAuth:
-    """Optional static bearer token (GAG_MCP_BEARER_TOKEN), compared in constant time.
+    """Static bearer token (GAG_MCP_BEARER_TOKEN), compared in constant time.
+
+    Required on non-loopback binds; optional on loopback.
 
     One shared secret for every caller: no rotation, no per-user identity, not OAuth. Every rejection
     returns the same 401 body, and the presented value is never logged or echoed.
@@ -163,12 +176,20 @@ def build_http_app(host: str = "127.0.0.1"):
         # Fail closed: a non-loopback bind needs an explicit Host allow-list (DNS-rebinding protection).
         raise ValueError(f"refusing to serve HTTP on non-loopback host {host!r} without GAG_MCP_ALLOWED_HOSTS. "
                          "Set GAG_MCP_ALLOWED_HOSTS to the hostname(s) clients use, or bind to 127.0.0.1.")
+    token = os.environ.get("GAG_MCP_BEARER_TOKEN", "")
+    # Secure by default: no anonymous network exposure. A non-loopback bind, or an allow-list naming a
+    # non-loopback host (reverse proxy or tunnel to a loopback bind), needs a bearer token.
+    network_exposed = host not in LOOPBACK_HOSTS or any(not _is_loopback_name(h) for h in allowed_hosts)
+    if network_exposed and len(token.strip()) < MIN_NETWORK_TOKEN_LENGTH:
+        # The token value is never included in the message.
+        raise ValueError("refusing to serve HTTP to non-loopback clients without a bearer token. "
+                         f"Set GAG_MCP_BEARER_TOKEN to a random secret of at least {MIN_NETWORK_TOKEN_LENGTH} "
+                         "characters, or serve only on 127.0.0.1 without a public GAG_MCP_ALLOWED_HOSTS entry.")
     app = mcp.streamable_http_app(stateless_http=True, json_response=True, transport_security=security, host=host)
     if origins:
         from starlette.middleware.cors import CORSMiddleware
         app = CORSMiddleware(app, allow_origins=origins, allow_methods=["GET", "POST", "OPTIONS"],
                              allow_headers=["*"], expose_headers=["Mcp-Session-Id", "MCP-Protocol-Version"])
-    token = os.environ.get("GAG_MCP_BEARER_TOKEN")
     if token:
         app = _BearerAuth(app, token)
     return app
