@@ -36,7 +36,7 @@ pytest                                # 16 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
-Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`. The tools also need the two pinned upstream checkouts; set `GAG_TOOLKIT_PATH` and `GAG_AGENTIC_PATH` to them (see `scripts/fetch_upstreams.sh` for the pinned commits).
+Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`. The tools also need the two pinned upstream checkouts; set `GAG_TOOLKIT_PATH` and `GAG_AGENTIC_PATH` to them (see `scripts/fetch_upstreams.sh` for the pinned commits). Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
 
