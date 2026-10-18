@@ -12,7 +12,7 @@ AI Governance MCP exposes the real Global AI Governance reference tooling to MCP
 |---|---|---|
 | `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cf906ef`) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
-| `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `2124aea`) |
+| `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `2124aea`) |
 
 **Authority boundary, enforced in code and tests.** Every result carries `authority_effect: "NONE"`, the `review_boundary` text, and `human_decision_state: "PENDING_HUMAN_DECISION"`. Upstream fields that an assistant could paraphrase as an authorization are relabeled, with their values left verbatim:
 - `operating_disposition` → `reference_policy_disposition`
@@ -25,7 +25,7 @@ Compatible with MCP-based agents. Not affiliated with or endorsed by xAI, OpenAI
 **What has been tested, and what has not:**
 - **Protocol compatibility: tested** with the official MCP Python SDK client (`mcp==2.3.0`, stdio and Streamable HTTP, `scripts/smoke_test.py`) and the MCP Inspector CLI (2.11.0, stdio, and HTTP with a bearer token).
 - **Simulated provider schema checks: none performed.**
-- **Provider-tested connectivity: none yet.** The provider sections below are configuration guidance from each provider's public documentation, not tested connections.
+- **Provider-client connectivity: one operator test.** Codex CLI 0.151.0 was operator-tested over local stdio against PR #8 head `c71457b9660608f0135d8e6169d60f6bfdbe0013` (discovery, tool listing, `check_inventory`, and `validate_passport` with caller-supplied JSON strings); PR #8 merged as `9abb2061a7a60e065ba999157787ae6091cb8581`. This is a single operator test, not independently reproduced evidence, and does not establish broader OpenAI compatibility, ChatGPT remote connectivity, Claude integration, or Grok connectivity. The provider sections below are configuration guidance from each provider's public documentation, not tested connections.
 
 ## Install and run (local)
 
@@ -37,7 +37,7 @@ pip install -e ".[dev]"
 ./scripts/fetch_upstreams.sh          # read-only clones of the two public repos, pinned
 gag-mcp                               # stdio
 gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 51 tests
+pytest                                # 53 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -157,7 +157,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 ## Files
 - `src/gag_mcp/core.py`: transport-independent logic plus the authority envelope
 - `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
-- `tests/`: 51 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards)
+- `tests/`: 53 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
@@ -167,7 +167,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 ## Known limits
 - Input checks are strict: unsupported arguments are rejected (`additionalProperties: false`). Error messages give a category, the field name, and allowed values, never the value you sent; a rejected CSV reports the toolkit's error code, column, and remediation without the cell or header text. One exception comes from the MCP SDK itself: a call to a tool name that does not exist is answered with `Unknown tool: <name>`.
 - Tool calls are synchronous and use process-global stdout redirection, so they are fine for low traffic. Add a worker pool before heavy use.
-- `validate_passport` with caller-supplied JSON can't run full evidence-bundle binding checks, because no bundle is accepted over MCP yet. The output says this.
+- `validate_passport` with caller-supplied JSON: pass `passport_json`, `trusted_key_json`, and optionally `revocation_list_json` as JSON text strings, and they reach the reference validator. No evidence bundle is accepted over MCP yet, so evidence-bundle binding cannot run, and the validator stops before its validity-window and revocation checks (each reported as `NOT_RUN`). For a passport that passes the structure and signature checks, expect `verification_primary_status: BOUND_INPUTS_UNAVAILABLE`, `artifact_validation_status: INCOMPLETE`, `fully_validated: false`, and `reference_policy_disposition: NOT_PERMITTED`. Supplying `revocation_list_json` or `at_time` does not currently produce a revocation or validity verdict in this mode, and the `REVOKED` result shown by `example: "signed-revoked"` (which runs with a bundled evidence set) does not carry over to caller-supplied passports. The output's `mode` field states this.
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.
 
 ## Support and contact
