@@ -1,8 +1,6 @@
 # gag-mcp Privacy Policy (DRAFT, not legal advice, not published)
 
-_Owner must review, edit, and publish at a stable HTTPS URL before any directory submission (OpenAI and Anthropic both require a privacy policy link for remote servers)._
-
-**Who we are.** gag-mcp is operated by Global AI Governance ("we"). Contact: **[CONTACT EMAIL OR URL, owner to fill]**.
+**Who we are.** gag-mcp is operated by Global AI Governance ("we").
 
 **What the remote server receives.** Only the arguments a user's AI assistant sends to a tool call: an AI system inventory (CSV text), and/or Agent Trust Passport, trusted key, and revocation list JSON. Inventories can contain names of system owners and business units. Do not send confidential, regulated, or personal data you are not permitted to share.
 
