@@ -229,3 +229,26 @@ def test_foreign_host_rejected_on_default_loopback(http_server, monkeypatch):
     r = httpx.post(base + "/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
                    headers={"accept": "application/json, text/event-stream", "host": "random-words.trycloudflare.com"})
     assert r.status_code == 421
+
+
+def test_caller_supplied_passport_json_strings_reach_the_validator():
+    # Regression: the SDK pre-parsed JSON-object strings in optional text fields into dicts, which were then
+    # rejected as "Input should be a valid string", so caller-supplied passports could never be verified.
+    examples = core.agentic_root() / "examples"
+    args = {"passport_json": (examples / "passports/signed-unrevoked.json").read_text(),
+            "trusted_key_json": (examples / "trusted-keys/test-ed25519-key.json").read_text(),
+            "revocation_list_json": (examples / "revocation/valid-revocation-list.json").read_text(),
+            "at_time": "2026-07-01T00:00:00Z"}
+    result = _call("validate_passport", args)
+    assert not result.is_error, _text(result)
+    out = result.structured_content
+    assert_non_authorizing(out)
+    assert out["result"]["mode"].startswith("caller-supplied passport")
+    assert out["result"]["verification"]["fully_validated"] is False
+    assert out["result"]["verification"]["reference_policy_disposition"] == "NOT_PERMITTED"
+
+
+def test_caller_supplied_passport_object_is_still_rejected():
+    result = _call("validate_passport", {"passport_json": {"schema": "x"}, "trusted_key_json": "{}"})
+    assert result.is_error
+    assert "valid string" in _text(result)

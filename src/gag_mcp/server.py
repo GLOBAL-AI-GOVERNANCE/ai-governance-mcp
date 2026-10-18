@@ -17,6 +17,7 @@ from pydantic import ConfigDict, Field, model_validator
 
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
+from mcp.server.mcpserver.utilities.func_metadata import FuncMetadata
 from mcp.server.transport_security import TransportSecuritySettings
 from mcp.types import ToolAnnotations
 
@@ -115,7 +116,20 @@ def _strict_arguments(base):
     return StrictArguments
 
 
+class _VerbatimArgumentsMetadata(FuncMetadata):
+    """Pass arguments to validation exactly as the client sent them.
+
+    mcp==2.3.0 runs json.loads on any string argument not annotated exactly `str`. Every argument here is
+    text, a bool, or a Literal, so that step only turned a JSON-object string for an optional text field
+    (passport_json, trusted_key_json, revocation_list_json) into a dict, which validation then rejected.
+    """
+
+    def pre_parse_json(self, data: dict[str, Any]) -> dict[str, Any]:
+        return dict(data)
+
+
 for _tool in mcp._tool_manager.list_tools():  # mcp==2.3.0 is pinned exactly
+    _tool.fn_metadata.__class__ = _VerbatimArgumentsMetadata
     _tool.fn_metadata.arg_model = _strict_arguments(_tool.fn_metadata.arg_model)
     _tool.parameters = {**_tool.parameters, "additionalProperties": False}
 
