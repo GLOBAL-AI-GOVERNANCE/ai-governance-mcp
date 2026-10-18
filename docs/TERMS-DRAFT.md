@@ -7,6 +7,5 @@
 5. **Availability.** Best effort; the hosted endpoint may change or stop. Open-source code remains available under its license.
 6. **Liability.** To the maximum extent permitted by law, no liability for decisions made using outputs.
 7. **No affiliation.** Compatible with MCP-based assistants; not affiliated with or endorsed by any AI lab.
-8. **Contact.** **[CONTACT, owner to fill]**
 
 _Last updated: [DATE]_

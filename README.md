@@ -171,7 +171,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.
 
 ## Security
-Report security issues privately as described in the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md).
+This repository does not operate an external security-report intake. Do not place secrets, credentials, personal data, sensitive operational information, or vulnerability material in public GitHub surfaces.
 
 ## License
 Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0).
