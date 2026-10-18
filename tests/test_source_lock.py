@@ -1,0 +1,24 @@
+import pathlib
+import unittest
+
+SCRIPT = (pathlib.Path(__file__).parents[1] / "scripts" / "fetch_upstreams.sh").read_text()
+EXPECTED_TOOLKIT = "cf906ef62c114a16b017a073c30f74933b8399e5"
+EXPECTED_AGENTIC = "2124aeaadf236303c584ac150a5ea61ca787d3f0"
+
+class SourceLockTests(unittest.TestCase):
+    def test_default_refs_are_exact_full_shas(self):
+        self.assertIn(f'DEFAULT_TOOLKIT_REF="{EXPECTED_TOOLKIT}"', SCRIPT)
+        self.assertIn(f'DEFAULT_AGENTIC_REF="{EXPECTED_AGENTIC}"', SCRIPT)
+        for value in (EXPECTED_TOOLKIT, EXPECTED_AGENTIC):
+            self.assertEqual(len(value), 40)
+            self.assertTrue(all(c in "0123456789abcdef" for c in value))
+
+    def test_default_resolution_fails_closed_on_mismatch(self):
+        self.assertIn('if [[ -n "$expected" && "$resolved" != "$expected" ]]', SCRIPT)
+        self.assertIn("SOURCE LOCK MISMATCH", SCRIPT)
+
+    def test_explicit_overrides_are_disclosed_as_bypassing_default_lock(self):
+        self.assertIn("default exact source lock is bypassed for this fetch", SCRIPT)
+
+if __name__ == "__main__":
+    unittest.main()

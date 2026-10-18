@@ -10,9 +10,9 @@ AI Governance MCP exposes the real Global AI Governance reference tooling to MCP
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
-| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cf906ef`) |
+| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cf906ef62c114a16b017a073c30f74933b8399e5`) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
-| `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `2124aea`) |
+| `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `2124aeaadf236303c584ac150a5ea61ca787d3f0`) |
 
 **Authority boundary, enforced in code and tests.** Every result carries `authority_effect: "NONE"`, the `review_boundary` text, and `human_decision_state: "PENDING_HUMAN_DECISION"`. Upstream fields that an assistant could paraphrase as an authorization are relabeled, with their values left verbatim:
 - `operating_disposition` → `reference_policy_disposition`
@@ -162,7 +162,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 - `scripts/fetch_upstreams.sh`: pinned upstream clones
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
 - `deploy/Dockerfile`: container for a remote host (not built)
-- `docs/PRIVACY-DRAFT.md`, `docs/TERMS-DRAFT.md`: unpublished draft privacy and terms text for a possible hosted deployment. Not in effect; no hosted endpoint is operated
+- No managed endpoint is operated; no hosted-service privacy policy or terms are published.
 
 ## Known limits
 - Input checks are strict: unsupported arguments are rejected (`additionalProperties: false`). Error messages give a category, the field name, and allowed values, never the value you sent; a rejected CSV reports the toolkit's error code, column, and remediation without the cell or header text. One exception comes from the MCP SDK itself: a call to a tool name that does not exist is answered with `Unknown tool: <name>`.
