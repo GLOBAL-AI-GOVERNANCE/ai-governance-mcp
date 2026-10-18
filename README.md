@@ -170,8 +170,8 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 - `validate_passport` with caller-supplied JSON: pass `passport_json`, `trusted_key_json`, and optionally `revocation_list_json` as JSON text strings, and they reach the reference validator. No evidence bundle is accepted over MCP yet, so evidence-bundle binding cannot run, and the validator stops before its validity-window and revocation checks (each reported as `NOT_RUN`). For a passport that passes the structure and signature checks, expect `verification_primary_status: BOUND_INPUTS_UNAVAILABLE`, `artifact_validation_status: INCOMPLETE`, `fully_validated: false`, and `reference_policy_disposition: NOT_PERMITTED`. Supplying `revocation_list_json` or `at_time` does not currently produce a revocation or validity verdict in this mode, and the `REVOKED` result shown by `example: "signed-revoked"` (which runs with a bundled evidence set) does not carry over to caller-supplied passports. The output's `mode` field states this.
 - The agentic validator is an experimental alpha, and toolkit `main` is ahead of tag v2.3.0. Pin to tags before publishing.
 
-## Support and contact
-Questions, integrations, and pilot requests: [Pilots and integrations: start here (Discussion #29)](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE/discussions/29). Do not post confidential or regulated information in public Discussions. Security issues: report them privately as described in the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md), not in a public issue or Discussion.
+## Security
+Report security issues privately as described in the [Global AI Governance security policy](https://github.com/GLOBAL-AI-GOVERNANCE/.github/blob/main/SECURITY.md).
 
 ## License
 Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0).

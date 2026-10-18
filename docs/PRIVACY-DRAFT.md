@@ -14,7 +14,7 @@ _Owner must review, edit, and publish at a stable HTTPS URL before any directory
 
 **Retention.** Tool inputs: not retained beyond the request. Operational logs: **[N] days** (host default).
 
-**Your controls.** Use the local stdio version (no network) to keep all data on your own machine. Contact us to ask about any request.
+**Your controls.** Use the local stdio version (no network) to keep all data on your own machine.
 
 **Authority boundary.** Tool results carry `authority_effect: NONE`. They do not approve, certify, authorize, or accept risk.
 
