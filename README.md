@@ -41,6 +41,51 @@ pytest                                # 53 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
+## Sample call
+
+After the install steps above, including `./scripts/fetch_upstreams.sh`.
+
+Success — synthetic sample, pinned evaluation time used by the test suite:
+
+```bash
+python -c 'from gag_mcp.core import check_inventory
+out = check_inventory(use_sample=True, evaluation_time="2026-10-16T00:00:00Z")
+assert out["authority_effect"] == "NONE"
+assert out["human_decision_state"] == "PENDING_HUMAN_DECISION"
+assert out["tool"] == "check_inventory"
+r = out["result"]
+assert r["validation_state"] == "VALID"
+assert r["finding_count"] == len(r["findings"]) > 0
+assert r["findings_by_severity"].get("CRITICAL", 0) >= 1
+print(r["validation_state"], r["finding_count"])'
+```
+
+Expected: `VALID` and a finding count greater than zero, including at least one `CRITICAL` finding. `authority_effect` stays `NONE`. `human_decision_state` stays `PENDING_HUMAN_DECISION`. The findings are reference results for human review. They do not authorize deployment.
+
+Failure — both inputs at once:
+
+```bash
+python -c 'from gag_mcp.core import check_inventory, GagInputError
+try:
+    check_inventory(inventory_csv="a,b\n", use_sample=True)
+except GagInputError as exc:
+    print(exc)'
+```
+
+Expected: `Provide inventory_csv or use_sample=true, not both.`
+
+Failure — no input:
+
+```bash
+python -c 'from gag_mcp.core import check_inventory, GagInputError
+try:
+    check_inventory()
+except GagInputError as exc:
+    print(exc)'
+```
+
+Expected: `inventory_csv is empty. Supply CSV text or set use_sample=true.`
+
 Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`. The tools also need the two pinned upstream checkouts; set `GAG_TOOLKIT_PATH` and `GAG_AGENTIC_PATH` to them (see `scripts/fetch_upstreams.sh` for the pinned commits). Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
