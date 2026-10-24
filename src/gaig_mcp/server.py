@@ -4,8 +4,8 @@ Run:
   gaig-mcp                      # stdio (Claude Desktop, local clients)
   gaig-mcp --http --port 8000   # Streamable HTTP at http://127.0.0.1:8000/mcp
 
-``gag-mcp`` is a deprecated alias installed with the same entry point.
-Environment settings use ``GAIG_*`` names; deprecated ``GAG_*`` names are still honored.
+Environment settings use ``GAIG_*`` names. If a removed pre-v0.3.0 setting name is present, the server
+refuses to start and names its ``GAIG_*`` replacement.
 """
 
 from __future__ import annotations
@@ -14,7 +14,6 @@ import argparse
 import hmac
 import json
 import os
-import sys
 from typing import Annotated, Any, Literal
 
 from pydantic import ConfigDict, Field, model_validator
@@ -160,7 +159,7 @@ def _is_loopback_name(entry: str) -> bool:
 
 
 class _BearerAuth:
-    """Static bearer token (GAIG_MCP_BEARER_TOKEN; deprecated GAG_MCP_BEARER_TOKEN), compared in constant time.
+    """Static bearer token (GAIG_MCP_BEARER_TOKEN), compared in constant time.
 
     Required on non-loopback binds; optional on loopback.
 
@@ -214,18 +213,10 @@ def build_http_app(host: str = "127.0.0.1"):
 
 
 PRIMARY_PROG = "gaig-mcp"
-DEPRECATED_PROG = "gag-mcp"
-
-
-def program_name(argv0: str | None = None) -> str:
-    """Return ``gag-mcp`` when invoked through the deprecated alias, else ``gaig-mcp``."""
-    name = os.path.basename(argv0 if argv0 is not None else (sys.argv[0] if sys.argv else ""))
-    stem = name[:-4] if name.lower().endswith(".exe") else name
-    return DEPRECATED_PROG if stem == DEPRECATED_PROG else PRIMARY_PROG
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog=program_name(), description="Non-authorizing Global AI Governance MCP server.")
+    parser = argparse.ArgumentParser(prog=PRIMARY_PROG, description="Non-authorizing Global AI Governance MCP server.")
     parser.add_argument("--http", action="store_true", help="Serve Streamable HTTP instead of stdio.")
     parser.add_argument("--host", default=os.environ.get("HOST", "127.0.0.1"))
     parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))

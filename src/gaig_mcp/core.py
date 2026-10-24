@@ -49,45 +49,39 @@ class GaigInputError(ValueError):
     """Caller input was rejected (fail closed)."""
 
 
-GagInputError = GaigInputError  # Deprecated alias of GaigInputError.
-
-
 class ConfigurationError(ValueError):
     """Server configuration is inconsistent; the server refuses to start or run."""
 
 
 # --------------------------------------------------------------------------- environment
 ENV_PREFIX = "GAIG_"
-DEPRECATED_ENV_PREFIX = "GAG_"
 ENV_SETTINGS = ("MCP_ALLOWED_HOSTS", "MCP_BEARER_TOKEN", "MCP_CORS_ORIGINS", "TOOLKIT_PATH", "AGENTIC_PATH")
-_warned: set[str] = set()
+# Names removed in v0.3.0. They are never read; if one is set, the server refuses to start (fail closed),
+# so a security setting left under the old name cannot silently drop away.
+REMOVED_ENV_PREFIX = "GAG_"
+
+
+def _refuse_removed(suffix: str) -> None:
+    old_name = REMOVED_ENV_PREFIX + suffix
+    if old_name in os.environ:
+        new_name = ENV_PREFIX + suffix
+        raise ConfigurationError(f"{old_name} is no longer read (removed in v0.3.0). "
+                                 f"Rename it to {new_name} and unset {old_name}.")
 
 
 def env_setting(suffix: str) -> str:
-    """Return ``GAIG_<suffix>``, falling back to the deprecated ``GAG_<suffix>``.
+    """Return ``GAIG_<suffix>``. Values are never echoed.
 
-    The deprecated name is honored (never silently ignored) with a one-time warning on stderr.
-    Both names set to different values is a configuration error. Values are never echoed.
+    Raises ConfigurationError if the removed name for the same setting is present in the environment.
     """
-    new_name, old_name = ENV_PREFIX + suffix, DEPRECATED_ENV_PREFIX + suffix
-    new, old = os.environ.get(new_name), os.environ.get(old_name)
-    if new is not None and old is not None and new != old:
-        raise ConfigurationError(f"{new_name} and the deprecated {old_name} are both set to different values. "
-                                 f"Unset {old_name} and keep {new_name}.")
-    if new is not None:
-        return new
-    if old is not None:
-        if old_name not in _warned:
-            _warned.add(old_name)
-            print(f"gaig-mcp: {old_name} is deprecated; set {new_name} instead.", file=sys.stderr)
-        return old
-    return ""
+    _refuse_removed(suffix)
+    return os.environ.get(ENV_PREFIX + suffix, "")
 
 
 def check_environment() -> None:
-    """Raise ConfigurationError if any GAIG_*/GAG_* pair conflicts."""
+    """Raise ConfigurationError if any removed setting name is present."""
     for suffix in ENV_SETTINGS:
-        env_setting(suffix)
+        _refuse_removed(suffix)
 
 
 # Toolkit validation errors keep these diagnostic fields only; supplied values never leave the server.

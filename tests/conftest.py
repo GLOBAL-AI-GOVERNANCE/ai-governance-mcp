@@ -47,9 +47,10 @@ def assert_non_authorizing(out: dict):
 
 @pytest.fixture(autouse=True)
 def _isolate_mcp_env(monkeypatch):
-    """Each test starts with no GAIG_MCP_* or deprecated GAG_MCP_* settings from the caller."""
-    for prefix in ("GAIG_", "GAG_"):
-        for suffix in ("MCP_ALLOWED_HOSTS", "MCP_BEARER_TOKEN", "MCP_CORS_ORIGINS"):
+    """Each test starts with no current or removed setting names from the caller."""
+    from gaig_mcp import core
+    for prefix in (core.ENV_PREFIX, core.REMOVED_ENV_PREFIX):
+        for suffix in core.ENV_SETTINGS:
             monkeypatch.delenv(prefix + suffix, raising=False)
 
 

@@ -3,8 +3,8 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gag-mcp"
-version = "0.2.1"
+name = "gaig-mcp"
+version = "0.3.0"
 description = "AI Governance Model Context Protocol Server (AI Governance MCP): non-authorizing tools for Global AI Governance reference tooling (authority_effect NONE)."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -25,12 +25,10 @@ Repository = "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp"
 
 [project.scripts]
 gaig-mcp = "gaig_mcp.server:main"
-# Deprecated alias of gaig-mcp.
-gag-mcp = "gaig_mcp.server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["gaig_mcp", "gaig_mcp.*", "gag_mcp"]
+include = ["gaig_mcp", "gaig_mcp.*"]
 
 [tool.setuptools.package-data]
 gaig_mcp = ["_upstream/**/*", "examples/*.csv"]
