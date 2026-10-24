@@ -104,7 +104,7 @@ async def main() -> int:
     ap.add_argument("--transcript")
     a = ap.parse_args()
     log("# gaig-mcp verification transcript")
-    log(f"\nGenerated {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')} on a local machine. "
+    log(f"\nGenerated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} on a local machine. "
         "Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.")
     await exercise("stdio (subprocess)", StdioServerParameters(command=sys.executable, args=["-m", "gaig_mcp.server"],
                                                                env=dict(os.environ)))
