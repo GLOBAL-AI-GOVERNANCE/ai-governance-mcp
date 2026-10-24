@@ -1,0 +1,27 @@
+{
+  "exercise_id": "SYNTH-MAGNAV-001",
+  "seed": 230,
+  "algorithm": "classical-nearest-map-value-v1",
+  "measurements": [{"id":"M1","value":10.2},{"id":"M2","value":19.8},{"id":"M3","value":30.1},{"id":"M4","value":39.9}],
+  "reference_map": [{"label":"A","value":10.0},{"label":"B","value":20.0},{"label":"C","value":30.0},{"label":"D","value":40.0}],
+  "fixture_threshold": 0.25,
+  "bias_limit": 0.25,
+  "quality": {"uncertainty":0.25,"units":"synthetic-unit","missing_count":0,"saturation":false,"clock_drift":0.0},
+  "measurement_boundary": {"source":"generated fixture","calibration":"synthetic-v1","coverage":"four artificial points"},
+  "calibration": {"id":"synthetic-v1","status":"CURRENT_FOR_FIXTURE"},
+  "confidence": {"basis":"SYNTHETIC_FIXTURE_ONLY","level":"BOUNDED"},
+  "run_evidence": {
+    "input_snapshot": {
+      "seed": 230,
+      "measurements": [{"id":"M1","value":10.2},{"id":"M2","value":19.8},{"id":"M3","value":30.1},{"id":"M4","value":39.9}],
+      "reference_map": [{"label":"A","value":10.0},{"label":"B","value":20.0},{"label":"C","value":30.0},{"label":"D","value":40.0}],
+      "algorithm": "classical-nearest-map-value-v1"
+    },
+    "scope": "SYNTHETIC_EMULATION_ONLY"
+  },
+  "evidence_digest": "sha256:d27622456f72c6e5d23f0e5e8dfdddccd8bb3053c73d4ae8490e5e0cc54a38a1",
+  "human_boundary": {"required":true,"autonomous_action":false},
+  "handoff": {"authority_effect":"NONE"},
+  "fallback": {"required":true,"available":true,"mode":"SYNTHETIC_CLASSICAL_BASELINE"},
+  "run_evidence_id": "SYNTH-RUN-230"
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI System Inventory Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "system_id",
+    "system_name",
+    "owner",
+    "business_unit",
+    "vendor_internal",
+    "use_case",
+    "data_sensitivity",
+    "impact_people",
+    "impact_money",
+    "impact_security",
+    "impact_rights",
+    "impact_safety",
+    "autonomy_level",
+    "public_facing",
+    "monitoring_active",
+    "shutdown_path_exists",
+    "evidence_complete"
+  ],
+  "properties": {
+    "system_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "system_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string"
+    },
+    "business_unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vendor_internal": {
+      "type": "string",
+      "enum": [
+        "Vendor",
+        "Internal",
+        "Hybrid"
+      ]
+    },
+    "use_case": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data_sensitivity": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Internal",
+        "Personal",
+        "Regulated",
+        "Critical"
+      ]
+    },
+    "impact_people": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "impact_money": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "impact_security": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "impact_rights": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "impact_safety": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "autonomy_level": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Partial",
+        "Full"
+      ]
+    },
+    "public_facing": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "monitoring_active": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "shutdown_path_exists": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    },
+    "evidence_complete": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    }
+  }
+}

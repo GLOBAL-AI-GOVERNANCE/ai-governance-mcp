@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/main/automation/contracts/profiles/organizational-ai-maturity.schema.json",
+  "title": "Organizational AI Maturity Evidence Assessment",
+  "description": "A human process selects maturity. The evaluator checks whether submitted evidence can carry that determination. evidence_supported_level is not an independent maturity finding. authority_effect is NONE.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "framework_id",
+    "framework_version",
+    "assessment_id",
+    "assessment_scope",
+    "assessment_coverage",
+    "accountable_owner",
+    "categories"
+  ],
+  "properties": {
+    "framework_id": {
+      "type": "string",
+      "const": "unesco-ai-maturity-2025"
+    },
+    "framework_version": {
+      "type": "string",
+      "const": "2025"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assessment_scope": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "assessment_coverage": {
+      "enum": [
+        "PARTIAL",
+        "FULL_FRAMEWORK"
+      ]
+    },
+    "accountable_owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_effect": {
+      "const": "NONE"
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pillar_id",
+          "category_id",
+          "claimed_level"
+        ],
+        "properties": {
+          "pillar_id": {
+            "enum": [
+              "strategy-value",
+              "people-culture",
+              "technology-infrastructure",
+              "ai-operations-ecosystem",
+              "ai-governance-ethics-risk",
+              "data-ai-specific-focus"
+            ]
+          },
+          "category_id": {
+            "enum": [
+              "strategy-value.ai-vision-ambition",
+              "strategy-value.strategic-alignment",
+              "strategy-value.roadmap-planning",
+              "strategy-value.value-identification-measurement",
+              "strategy-value.innovation-experimentation",
+              "people-culture.talent-skills",
+              "people-culture.organizational-structure",
+              "people-culture.leadership-sponsorship",
+              "people-culture.change-management-adoption",
+              "people-culture.ai-literacy-awareness",
+              "technology-infrastructure.ai-development-platforms-tools",
+              "technology-infrastructure.cloud-compute-infrastructure",
+              "technology-infrastructure.ai-specific-architectures",
+              "technology-infrastructure.data-science-environment",
+              "ai-operations-ecosystem.model-deployment-management-mlops",
+              "ai-operations-ecosystem.performance-monitoring-optimization",
+              "ai-operations-ecosystem.integration-interoperability",
+              "ai-operations-ecosystem.external-collaboration-partnerships",
+              "ai-operations-ecosystem.reusability-shared-components",
+              "ai-governance-ethics-risk.ai-governance-framework",
+              "ai-governance-ethics-risk.ethical-principles-guidelines",
+              "ai-governance-ethics-risk.risk-assessment-mitigation",
+              "ai-governance-ethics-risk.compliance-legal",
+              "ai-governance-ethics-risk.transparency-explainability",
+              "data-ai-specific-focus.ai-use-case-data-identification",
+              "data-ai-specific-focus.data-readiness-for-ai",
+              "data-ai-specific-focus.data-access-for-ai-teams",
+              "data-ai-specific-focus.synthetic-data-generation-use",
+              "data-ai-specific-focus.domain-specific-data-understanding"
+            ]
+          },
+          "claimed_level": {
+            "enum": [
+              "BASIC",
+              "READY",
+              "DYNAMIC",
+              "ADVANCED"
+            ]
+          },
+          "target_level": {
+            "enum": [
+              "BASIC",
+              "READY",
+              "DYNAMIC",
+              "ADVANCED"
+            ]
+          },
+          "human_determination": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "level",
+              "status",
+              "accountable_role",
+              "determined_at"
+            ],
+            "description": "Accountable human maturity judgment. The machine does not change this status to ACCEPTED.",
+            "properties": {
+              "level": {
+                "enum": [
+                  "BASIC",
+                  "READY",
+                  "DYNAMIC",
+                  "ADVANCED"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "PENDING",
+                  "ACCEPTED",
+                  "ACCEPTED_WITH_CONDITIONS",
+                  "REJECTED",
+                  "RETURNED_FOR_REASSESSMENT"
+                ]
+              },
+              "accountable_role": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "determined_at": {
+                "type": "string",
+                "minLength": 1
+              },
+              "basis_references": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "conditions": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "reference",
+                "evidence_class",
+                "scope"
+              ],
+              "properties": {
+                "reference": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "evidence_class": {
+                  "enum": [
+                    "OPERATING",
+                    "POLICY",
+                    "SYNTHETIC",
+                    "PILOT",
+                    "OTHER"
+                  ]
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "observed_at": {
+                  "type": "string"
+                },
+                "valid_through": {
+                  "type": "string"
+                },
+                "representative_period": {
+                  "type": "string"
+                },
+                "is_representative": {
+                  "type": "boolean"
+                },
+                "verification_method": {
+                  "type": "string"
+                },
+                "integrity_asserted": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "contradictions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "corrective_actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "reassessment_triggers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "material_change_events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "organization_defined_critical": {
+            "type": "boolean"
+          },
+          "critical_rationale": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

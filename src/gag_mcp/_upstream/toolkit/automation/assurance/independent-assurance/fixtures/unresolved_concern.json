@@ -1,0 +1,10 @@
+{
+  "subject_id": "system-001",
+  "authority_effect": "NONE",
+  "evaluator": {
+    "identity": "evaluator-001",
+    "interests_disclosed": true
+  },
+  "scope": "bounded",
+  "unresolved_concern": true
+}

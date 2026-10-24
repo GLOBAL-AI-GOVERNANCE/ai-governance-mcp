@@ -1,0 +1,17 @@
+{
+  "framework_id": "unesco-ai-maturity-2025",
+  "framework_version": "2025",
+  "assessment_id": "assess-007",
+  "assessment_scope": "enterprise operations",
+  "accountable_owner": "governance-function",
+  "authority_effect": "NONE",
+  "categories": [
+    {
+      "claimed_level": "DYNAMIC",
+      "evidence": [],
+      "pillar_id": "ai-governance-ethics-risk",
+      "category_id": "ai-governance-ethics-risk.ai-governance-framework"
+    }
+  ],
+  "assessment_coverage": "PARTIAL"
+}

@@ -1,0 +1,159 @@
+{
+  "generated_at": "2026-07-11 05:07:48 UTC",
+  "source": "automation/sample-data/sample-sovereignty-assessment.csv",
+  "results": [
+    {
+      "system_name": "Public FAQ Chatbot",
+      "sensitivity_tier": "S0",
+      "sensitivity_label": "Public / No Institutional Signal",
+      "compute_assurance_level": "tier4_standard",
+      "verdict": "PASS",
+      "score": 100,
+      "hard_gate_failures": [],
+      "advisories": []
+    },
+    {
+      "system_name": "Internal Drafting Assistant",
+      "sensitivity_tier": "S1",
+      "sensitivity_label": "Internal Productivity",
+      "compute_assurance_level": "tier3_zdr_cloud",
+      "verdict": "CONDITIONAL",
+      "score": 93,
+      "hard_gate_failures": [],
+      "advisories": [
+        {
+          "id": "A02",
+          "principle": "No model liquidity, no strategic dependency.",
+          "finding": "The system depends on a single model provider and cannot switch with low friction.",
+          "action": "Add model-agnostic routing and a documented exit path to restore negotiating leverage."
+        }
+      ]
+    },
+    {
+      "system_name": "Client Analytics Copilot",
+      "sensitivity_tier": "S3",
+      "sensitivity_label": "High-Alpha / Regulated / Client-Impacting",
+      "compute_assurance_level": "tier3_zdr_cloud",
+      "verdict": "PASS",
+      "score": 100,
+      "hard_gate_failures": [],
+      "advisories": []
+    },
+    {
+      "system_name": "Procurement Automation Agent",
+      "sensitivity_tier": "S3",
+      "sensitivity_label": "High-Alpha / Regulated / Client-Impacting",
+      "compute_assurance_level": "tier3_zdr_cloud",
+      "verdict": "FAIL",
+      "score": 86,
+      "hard_gate_failures": [
+        {
+          "id": "G05",
+          "law": "No granular permissions, no tool access.",
+          "finding": "An agent has tool or data access without granular, role/classification/purpose-based permissions.",
+          "action": "Define and enforce agent permissions before granting tool, data, or action access."
+        },
+        {
+          "id": "G07",
+          "law": "No rollback path, no autonomous action.",
+          "finding": "System takes autonomous actions without branching, rollback, or reversibility.",
+          "action": "Restrict the system to human-in-the-loop, or implement branch-before-commit with rollback."
+        }
+      ],
+      "advisories": []
+    },
+    {
+      "system_name": "Core IP Research Assistant",
+      "sensitivity_tier": "S4",
+      "sensitivity_label": "Sovereign / Core Institutional Knowledge",
+      "compute_assurance_level": "tier3_zdr_cloud",
+      "verdict": "FAIL",
+      "score": 93,
+      "hard_gate_failures": [
+        {
+          "id": "G10",
+          "law": "Sovereign workloads require structural assurance.",
+          "finding": "S4 (sovereign / core institutional knowledge) workload runs on contractual-only assurance.",
+          "action": "Move S4 workloads to owned hardware or attested compute. Contracts are not isolation."
+        }
+      ],
+      "advisories": []
+    },
+    {
+      "system_name": "Shadow Marketing Tool",
+      "sensitivity_tier": "S2",
+      "sensitivity_label": "Sensitive Enterprise Workflow",
+      "compute_assurance_level": "tier4_standard",
+      "verdict": "FAIL",
+      "score": 36,
+      "hard_gate_failures": [
+        {
+          "id": "G01",
+          "law": "No owner, no deployment.",
+          "finding": "No accountable owner is assigned to this AI system.",
+          "action": "Assign a named accountable owner before any deployment or continued use."
+        },
+        {
+          "id": "G02",
+          "law": "No inventory, no governance.",
+          "finding": "System is not fully recorded in the AI system inventory.",
+          "action": "Complete the inventory record: purpose, data touched, models, providers, integrations."
+        },
+        {
+          "id": "G03",
+          "law": "No ZDR or equivalent protection, no sensitive data.",
+          "finding": "Sensitive data (S2+) flows to an external model without confirmed ZDR or structural compute assurance.",
+          "action": "Confirm a zero-data-retention agreement, move the workload to structural assurance (owned or attested compute), or downgrade the data sent."
+        },
+        {
+          "id": "G04",
+          "law": "No training on institutional data.",
+          "finding": "Provider training on institutional/customer data is not contractually prohibited for an S2+ workload.",
+          "action": "Obtain a contractual prohibition on training with institutional and customer data before S2+ use."
+        },
+        {
+          "id": "G06",
+          "law": "No audit trail, no production agent.",
+          "finding": "S2+ workload runs without append-only audit logging of initiator, prompt, model, data accessed, and result.",
+          "action": "Enable audit logging that can replay any decision and answer 'who touched what' before continued use."
+        }
+      ],
+      "advisories": [
+        {
+          "id": "A01",
+          "principle": "ZDR alone is not enough \u2014 review derived metadata.",
+          "finding": "Retention of derived metadata (classifier outputs, monitoring logs, telemetry) has not been reviewed.",
+          "action": "Review provider terms for metadata and telemetry retention that falls outside content-only ZDR language."
+        },
+        {
+          "id": "A02",
+          "principle": "No model liquidity, no strategic dependency.",
+          "finding": "The system depends on a single model provider and cannot switch with low friction.",
+          "action": "Add model-agnostic routing and a documented exit path to restore negotiating leverage."
+        },
+        {
+          "id": "A03",
+          "principle": "Route every workload deliberately.",
+          "finding": "No documented routing decision (sensitivity -> assurance -> model path) exists for this workload.",
+          "action": "Record a model routing decision using templates/ai-model-routing-record.md."
+        },
+        {
+          "id": "A04",
+          "principle": "No owned context layer, no compounding institutional knowledge.",
+          "finding": "Workflow signal and know-how are captured inside a provider's system, not an organization-owned context layer.",
+          "action": "Capture decisions, actions, and structured context in an ontology/knowledge layer the organization owns."
+        }
+      ]
+    },
+    {
+      "system_name": "Sovereign Modeling Environment",
+      "sensitivity_tier": "S4",
+      "sensitivity_label": "Sovereign / Core Institutional Knowledge",
+      "compute_assurance_level": "tier1_owned",
+      "verdict": "PASS",
+      "score": 100,
+      "hard_gate_failures": [],
+      "advisories": []
+    }
+  ]
+}

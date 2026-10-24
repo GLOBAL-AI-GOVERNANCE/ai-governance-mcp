@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/tool-inventory.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Alpha.1 Tool Inventory",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "inventory_type",
+    "agent_id",
+    "tools",
+    "production_use"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "inventory_type": {
+      "const": "tool"
+    },
+    "agent_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "tool_id",
+          "action_level",
+          "effects"
+        ],
+        "properties": {
+          "tool_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "action_level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "effects": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/toolEffect"
+            },
+            "uniqueItems": true
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "production_use": {
+      "type": "boolean"
+    }
+  },
+  "unevaluatedProperties": false
+}

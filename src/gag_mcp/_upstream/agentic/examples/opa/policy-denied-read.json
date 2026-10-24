@@ -1,0 +1,53 @@
+{
+  "bridge_contract_version": "1.0.0",
+  "request_id": "request.synthetic.denied-001",
+  "evaluation_time": "2026-08-30T12:05:00Z",
+  "validated_result": {
+    "validation_state": "ESTABLISHED",
+    "verification_result_ref": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "passport_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "verified_at": "2026-08-30T12:00:00Z",
+    "valid_until": "2026-08-30T13:00:00Z",
+    "primary_status": "VALID",
+    "operating_disposition": "PERMITTED",
+    "revocation_status": "CURRENT_NOT_REVOKED",
+    "maximum_action_level": 1,
+    "allowed_actions": [
+      "read:approved-public-information"
+    ],
+    "allowed_resources": [
+      "resource.synthetic.public-catalog"
+    ],
+    "evidence_refs": [
+      "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    ]
+  },
+  "request": {
+    "action": "read:approved-public-information",
+    "resource": "resource.synthetic.public-catalog",
+    "action_level": 1
+  },
+  "policy": {
+    "policy_id": "global-ai-governance.opa-enforcement-bridge",
+    "policy_version": "1.0.0-unreleased",
+    "profile_id": "global-ai-governance.mcp-governance",
+    "profile_version": "0.1.0-alpha.1",
+    "allowed_actions": [
+      "read:approved-public-information"
+    ],
+    "allowed_resources": [
+      "resource.synthetic.public-catalog"
+    ],
+    "denied_actions": [
+      "read:approved-public-information"
+    ],
+    "required_context": [
+      "purpose"
+    ],
+    "approval_required_actions": [],
+    "max_validation_age_seconds": 900
+  },
+  "context": {
+    "purpose": "synthetic-public-reference-read"
+  }
+}

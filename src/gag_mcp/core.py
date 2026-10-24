@@ -68,21 +68,30 @@ def _toolkit_rejection(exc: Exception) -> str:
 
 
 # --------------------------------------------------------------------------- paths
-def _vendor_root() -> Path:
-    return Path(__file__).resolve().parents[2] / "vendor"
+_BUNDLED = Path(__file__).resolve().parent / "_upstream"
+
+
+def bundled_lock() -> dict[str, Any]:
+    """Source lock for the upstream files bundled in this package."""
+    try:
+        return json.loads((_BUNDLED / "UPSTREAM_LOCK.json").read_text(encoding="utf-8"))["upstreams"]
+    except (OSError, ValueError, KeyError):
+        return {}
 
 
 def toolkit_root() -> Path:
-    p = Path(os.environ.get("GAG_TOOLKIT_PATH") or _vendor_root() / "global-ai-governance-toolkit")
+    override = os.environ.get("GAG_TOOLKIT_PATH")
+    p = Path(override) if override else _BUNDLED / "toolkit"
     if not (p / "automation" / "scripts" / "run_governance_checks.py").is_file():
-        raise RuntimeError(f"Toolkit not found at {p}. Run scripts/fetch_upstreams.sh or set GAG_TOOLKIT_PATH.")
+        raise RuntimeError(f"Toolkit not found at {p}. Reinstall gag-mcp or set GAG_TOOLKIT_PATH to a toolkit checkout.")
     return p
 
 
 def agentic_root() -> Path:
-    p = Path(os.environ.get("GAG_AGENTIC_PATH") or _vendor_root() / "agentic-ai-governance")
+    override = os.environ.get("GAG_AGENTIC_PATH")
+    p = Path(override) if override else _BUNDLED / "agentic"
     if not (p / "tools" / "validate_artifact.py").is_file():
-        raise RuntimeError(f"agentic-ai-governance not found at {p}. Run scripts/fetch_upstreams.sh or set GAG_AGENTIC_PATH.")
+        raise RuntimeError(f"agentic-ai-governance not found at {p}. Reinstall gag-mcp or set GAG_AGENTIC_PATH to a checkout.")
     return p
 
 
@@ -93,6 +102,13 @@ def _git_commit(path: Path) -> str | None:
         return out.stdout.strip() or None
     except Exception:  # pragma: no cover - git missing in some hosts
         return None
+
+
+def _source_commit(name: str, env_var: str, root: Path) -> str | None:
+    if os.environ.get(env_var):
+        return _git_commit(root)
+    commit = bundled_lock().get(name, {}).get("commit")
+    return commit[:7] if commit else None
 
 
 def _import_toolkit():
@@ -119,7 +135,7 @@ def envelope(tool: str, result: dict[str, Any], *, source: dict[str, Any]) -> di
 
 def _toolkit_source() -> dict[str, Any]:
     root = toolkit_root()
-    return {"repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit", "commit": _git_commit(root)}
+    return {"repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit", "commit": _source_commit("toolkit", "GAG_TOOLKIT_PATH", root)}
 
 
 # --------------------------------------------------------------------------- inventory
@@ -310,6 +326,6 @@ def validate_passport(example: str | None = None, passport: dict | str | None = 
             "and its own policy decide whether any action may proceed."
         ),
     }
-    source = {"repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance", "commit": _git_commit(root),
+    source = {"repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance", "commit": _source_commit("agentic", "GAG_AGENTIC_PATH", root),
               "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"}
     return envelope("validate_passport", body, source=source)

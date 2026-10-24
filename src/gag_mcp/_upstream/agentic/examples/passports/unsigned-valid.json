@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "framework": {
+    "id": "global-ai-governance.agentic-ai-governance",
+    "version": "v0.1.0-alpha.1"
+  },
+  "profile": {
+    "id": "global-ai-governance.mcp-governance",
+    "version": "0.1.0-alpha.1"
+  },
+  "passport_id": "sha256:67253fd35a5e68a14125bdf8c8bcbfbbdf0457d3fba1f9f16f3eed973b82af95",
+  "issuer": {
+    "issuer_id": "global-ai-governance.test-issuer"
+  },
+  "subject": {
+    "agent_id": "agent.synthetic.quickstart",
+    "display_name": "Synthetic Quickstart Research Agent"
+  },
+  "issued_assessment": {
+    "result": "APPROVED",
+    "evaluated_at": "2026-07-17T20:00:00Z",
+    "control_summary": {
+      "PASS": 1,
+      "FAIL": 0,
+      "NOT_APPLICABLE": 0,
+      "NOT_EVALUATED": 0,
+      "ERROR": 0
+    },
+    "maximum_action_level": 2,
+    "assessment_id": "sha256:afbf307f18751867326382a4bd887ec70d02857d95bf0d7458fe0d4fc9865acc",
+    "data_authority_status": "VERIFIED"
+  },
+  "assurance": {
+    "evidence_basis": "DECLARED",
+    "validation_method": "STRUCTURAL",
+    "attestation_status": "NONE"
+  },
+  "bindings": {
+    "assessment_bundle": "sha256:3286713eefa76efd9898ffc749e855e0c554f8c48fbbf221c9c77bcc087963d7",
+    "agent_inventory": "sha256:31e14fabd2440b9bdba60ba9a42b717f3fc8686799a2d69d5440e474359a689e",
+    "mcp_inventory": "sha256:00e73682f17db56bd459800fefe4a8ef1217623be8c38bc38a6b444827f30676",
+    "tool_inventory": "sha256:a642bcd7061a19d5718f78c6e818b98e9f8b7c23ba237e43efb8006dfccd88c5",
+    "control_profile": "sha256:4e1d0ad65cd8652bec2e33de7e8ed1172e26de4e11ae31bd58262f6b19b50652",
+    "data_authority_evidence": [
+      "sha256:4cd988a745d8e44bebd98cf7b81ada2d6595f3cbd254ed457bdae1ad346054e4"
+    ],
+    "evaluator_version": "reference-validator-0.1.0-alpha.1",
+    "assessment_policy_version": "0.1.0-alpha.1",
+    "action_authority_graph": "sha256:afbc0a71a0632521c4585b91b3c3d70de7d3525bea7cf6fda790e98ff4707745",
+    "control_profile_descriptor": "sha256:a06b2455a4a4133c13f3cba32aed1b442f43f17828dede5bf110a9d802ae1d6d",
+    "evaluator_id": "global-ai-governance.reference-validator",
+    "assessment_policy_id": "global-ai-governance.alpha1-reference-policy"
+  },
+  "validity": {
+    "not_before": "2026-07-17T20:00:00Z",
+    "expires_at": "2026-08-17T20:00:00Z"
+  },
+  "conditions": [],
+  "extensions": {},
+  "critical_extensions": []
+}

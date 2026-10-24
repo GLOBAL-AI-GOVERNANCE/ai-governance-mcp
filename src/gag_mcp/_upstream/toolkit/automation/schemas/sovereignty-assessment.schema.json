@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/schemas/sovereignty-assessment.schema.json",
+  "title": "AI Sovereignty Assessment Record",
+  "description": "One record per AI system. Used by automation/scripts/sovereignty_check.py to evaluate the system against the Sovereignty Law hard gates and advisory controls.",
+  "type": "object",
+  "required": [
+    "system_name",
+    "sensitivity_tier",
+    "compute_assurance_level",
+    "owner_present",
+    "system_inventory_complete",
+    "zdr_confirmed",
+    "training_on_customer_data_prohibited",
+    "metadata_retention_reviewed",
+    "model_provider_switchable",
+    "model_routing_documented",
+    "agent_tool_access",
+    "agent_permissions_defined",
+    "autonomous_actions",
+    "rollback_or_branching_available",
+    "audit_logging_enabled",
+    "human_oversight_defined",
+    "context_capture_owned_by_org",
+    "shutdown_path_defined"
+  ],
+  "properties": {
+    "system_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable name of the AI system or workload."
+    },
+    "sensitivity_tier": {
+      "type": "string",
+      "enum": ["S0", "S1", "S2", "S3", "S4"],
+      "description": "S0 Public / No Institutional Signal; S1 Internal Productivity; S2 Sensitive Enterprise Workflow; S3 High-Alpha / Regulated / Client-Impacting; S4 Sovereign / Core Institutional Knowledge."
+    },
+    "compute_assurance_level": {
+      "type": "string",
+      "enum": ["tier1_owned", "tier2_attested", "tier3_zdr_cloud", "tier4_standard"],
+      "description": "tier1_owned = owned/air-gapped hardware (structural); tier2_attested = rented compute with hardware attestation (structural); tier3_zdr_cloud = closed model under zero-data-retention agreement (contractual); tier4_standard = default third-party usage without ZDR (contractual, weakest)."
+    },
+    "owner_present": { "type": "boolean", "description": "A named, accountable owner exists for this system." },
+    "system_inventory_complete": { "type": "boolean", "description": "System is fully recorded in the AI inventory: purpose, data touched, models, providers, integrations." },
+    "zdr_confirmed": { "type": "boolean", "description": "A zero-data-retention agreement (no storage, no training, no routine human review) is confirmed with each external provider this system uses." },
+    "training_on_customer_data_prohibited": { "type": "boolean", "description": "Provider training on institutional and customer data is contractually prohibited." },
+    "metadata_retention_reviewed": { "type": "boolean", "description": "Provider retention of derived metadata (classifier outputs, monitoring logs, telemetry) has been reviewed, not just content retention." },
+    "model_provider_switchable": { "type": "boolean", "description": "The system can switch models/providers with low friction (model liquidity)." },
+    "model_routing_documented": { "type": "boolean", "description": "A routing decision record exists mapping this workload's sensitivity to its assurance level and model path." },
+    "agent_tool_access": { "type": "boolean", "description": "The system includes an agent with access to tools, data, or actions." },
+    "agent_permissions_defined": { "type": "boolean", "description": "Granular role-, classification-, and purpose-based permissions govern what the agent can load, invoke, and suggest." },
+    "autonomous_actions": { "type": "boolean", "description": "The system can commit actions without a human approving each one." },
+    "rollback_or_branching_available": { "type": "boolean", "description": "Actions are taken in reversible branches or have a rollback path before affecting production." },
+    "audit_logging_enabled": { "type": "boolean", "description": "Append-only, queryable logging of initiator, prompt, model, data accessed, and result." },
+    "human_oversight_defined": { "type": "boolean", "description": "A documented human review, override, and escalation model exists." },
+    "context_capture_owned_by_org": { "type": "boolean", "description": "Workflow signal and know-how are captured in an organization-owned context/knowledge layer rather than only inside a provider's system." },
+    "shutdown_path_defined": { "type": "boolean", "description": "Shutdown authority, speed, and handling of in-flight work are defined." }
+  },
+  "additionalProperties": true
+}

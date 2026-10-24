@@ -1,0 +1,24 @@
+{
+  "acceptance_id": "auditable-ai-v1-stable-acceptance-v1",
+  "authority_effect": "NONE",
+  "frozen": true,
+  "profile_candidate": "1.0.0-rc.2",
+  "publication_scope": "INTERNAL/CURRENT-MAIN",
+  "required_gates": [
+    "COMMON_PROFILE_RESULT_CONTRACT_V1",
+    "DETERMINISTIC_CANONICAL_OUTPUT",
+    "REGISTRY_AND_RUNTIME_ALLOW_LIST",
+    "COMPLETE_TRACE_LINKS",
+    "EVIDENCE_REFERENCE_AND_DIGEST_INTEGRITY",
+    "EXPLICIT_TIME_EXPIRY",
+    "FAIL_CLOSED_ADVANCEMENT",
+    "AUTHORITY_EFFECT_NONE",
+    "POSITIVE_AND_ADVERSARIAL_FIXTURES",
+    "FULL_REPOSITORY_NATIVE_VALIDATION"
+  ],
+  "external_gates_not_established": [
+    "INDEPENDENT_REVIEW",
+    "FINAL_STABLE_RELEASE_DECISION"
+  ],
+  "stable_release_declared": false
+}

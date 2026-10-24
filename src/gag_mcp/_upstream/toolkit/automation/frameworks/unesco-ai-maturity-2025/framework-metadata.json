@@ -1,0 +1,24 @@
+{
+  "framework_id": "unesco-ai-maturity-2025",
+  "name": "AI maturity framework: a self-positioning guide for public administrations",
+  "publisher": "UNESCO",
+  "corporate_authors": ["UNESCO", "StratejAI (Belgium)"],
+  "year": 2025,
+  "version": "2025",
+  "document_code": "SHS/REI/AI/FLMAT Rev. 3",
+  "source": "https://unesdoc.unesco.org/ark:/48223/pf0000397145",
+  "license": "CC BY-SA 3.0 IGO",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/",
+  "maturity_levels": ["BASIC", "READY", "DYNAMIC", "ADVANCED"],
+  "pillars": [
+    "Strategy & Value",
+    "People & Culture",
+    "Technology & Infrastructure",
+    "AI Operations & Ecosystem",
+    "AI Governance, Ethics & Risk",
+    "Data (AI-Specific Focus)"
+  ],
+  "authority_effect": "NONE",
+  "adaptation": "Identity, license, and structural labels only. Framework prose is not copied into the original engine.",
+  "notes": "Third-party framework material is isolated in this directory. Use does not imply endorsement, certification, affiliation, or a legal determination."
+}

@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/verification-result.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Agent Trust Passport Verification Result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "passport_id",
+    "verified_at",
+    "issued_assessment_result",
+    "attestation_status",
+    "components",
+    "primary_status",
+    "findings",
+    "operating_disposition"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "passport_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "verified_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "issued_assessment_result": {
+      "$ref": "common.schema.json#/$defs/assessmentResult"
+    },
+    "attestation_status": {
+      "$ref": "common.schema.json#/$defs/attestationStatus"
+    },
+    "components": {
+      "type": "object",
+      "required": [
+        "structure",
+        "version",
+        "identifier",
+        "critical_extensions",
+        "signature",
+        "signing_key",
+        "issuer_authentication",
+        "bindings",
+        "revocation",
+        "validity",
+        "conditions"
+      ],
+      "properties": {
+        "structure": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "version": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "identifier": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "critical_extensions": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "signature": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "signing_key": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "issuer_authentication": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "bindings": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "revocation": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "validity": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        },
+        "conditions": {
+          "$ref": "common.schema.json#/$defs/componentStatus"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "primary_status": {
+      "enum": [
+        "VALID",
+        "INVALID_STRUCTURE",
+        "UNSUPPORTED_VERSION",
+        "INVALID_IDENTIFIER",
+        "UNSUPPORTED_CRITICAL_EXTENSION",
+        "INVALID_SIGNATURE",
+        "UNKNOWN_SIGNING_KEY",
+        "UNTRUSTED_ISSUER",
+        "BOUND_INPUTS_UNAVAILABLE",
+        "BOUND_INPUTS_INCOMPLETE",
+        "INPUT_MISMATCH",
+        "DATA_AUTHORITY_INVALID",
+        "DATA_AUTHORITY_UNKNOWN",
+        "UNSUPPORTED_POLICY",
+        "UNSUPPORTED_EVALUATOR",
+        "UNSUPPORTED_PROFILE",
+        "SIGNING_KEY_REVOKED",
+        "SIGNING_KEY_COMPROMISED",
+        "SIGNING_KEY_NOT_YET_VALID",
+        "SIGNING_KEY_EXPIRED",
+        "REVOKED",
+        "REVOCATION_STATUS_UNKNOWN",
+        "NOT_YET_VALID",
+        "EXPIRED"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "severity",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+$"
+          },
+          "severity": {
+            "enum": [
+              "INFO",
+              "WARNING",
+              "ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "operating_disposition": {
+      "enum": [
+        "PERMITTED",
+        "PERMITTED_WITH_CONDITIONS",
+        "RESTRICTED",
+        "NOT_PERMITTED",
+        "INDETERMINATE"
+      ]
+    }
+  },
+  "unevaluatedProperties": false
+}

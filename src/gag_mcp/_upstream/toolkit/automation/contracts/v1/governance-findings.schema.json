@@ -1,0 +1,30 @@
+{
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/v1/governance-findings.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "generator_version": {"const": "1.0.0"},
+    "policy_id": {"minLength": 1, "type": "string"},
+    "policy_version": {"minLength": 1, "type": "string"},
+    "input_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "findings": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "finding_id": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+          "rule_id": {"minLength": 1, "type": "string"},
+          "system_id": {"minLength": 1, "type": "string"},
+          "system_name": {"minLength": 1, "type": "string"},
+          "severity": {"enum": ["HIGH", "CRITICAL"]},
+          "message": {"minLength": 1, "type": "string"}
+        },
+        "required": ["finding_id", "rule_id", "system_id", "system_name", "severity", "message"],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": ["schema_version", "generator_version", "policy_id", "policy_version", "input_digest", "findings"],
+  "type": "object"
+}

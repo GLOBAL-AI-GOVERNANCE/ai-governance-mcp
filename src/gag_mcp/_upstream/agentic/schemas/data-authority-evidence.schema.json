@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/data-authority-evidence.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Generic Data Authority Evidence Binding",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "evidence_type",
+    "scheme",
+    "scheme_version",
+    "issuer_id",
+    "artifact_hash",
+    "subject",
+    "scope",
+    "validity"
+  ],
+  "properties": {
+    "evidence_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "evidence_type": {
+      "const": "data_authority"
+    },
+    "scheme": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "scheme_version": {
+      "$ref": "common.schema.json#/$defs/version"
+    },
+    "issuer_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "artifact_hash": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "data_classes",
+        "purposes",
+        "systems",
+        "jurisdictions",
+        "prohibited_uses"
+      ],
+      "properties": {
+        "data_classes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "systems": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "jurisdictions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "prohibited_uses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "validity": {
+      "type": "object",
+      "required": [
+        "not_before",
+        "expires_at"
+      ],
+      "properties": {
+        "not_before": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "subject": {
+      "type": "object",
+      "required": [
+        "agent_id"
+      ],
+      "properties": {
+        "agent_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "inventory_type": "agent",
+  "agent_id": "agent.synthetic.quickstart",
+  "declared_capabilities": [
+    "draft:internal-summary",
+    "read:approved-public-information"
+  ],
+  "production_use": false,
+  "data_use": {
+    "data_classes": [
+      "SYNTHETIC"
+    ],
+    "purposes": [
+      "conformance-testing"
+    ],
+    "systems": [
+      "synthetic.fixture"
+    ],
+    "jurisdictions": [
+      "TEST"
+    ]
+  }
+}

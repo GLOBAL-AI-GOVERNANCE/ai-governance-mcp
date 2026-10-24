@@ -1,0 +1,19 @@
+{
+  "artifact_digest": "sha256:2e487ac8f5b7babed72eb57ce8b3e1b62ab0939e30bbfbafdc14c2e0950b6b7d",
+  "authority_effect": "NONE",
+  "authority_refs": [
+    "human-review.synthetic.001"
+  ],
+  "configuration_ref": null,
+  "decision_pack_id": "decision-pack.synthetic.001",
+  "evidence_refs": [
+    "evidence.synthetic.001"
+  ],
+  "handoff_id": "handoff.synthetic.toolkit.001",
+  "review_boundary": "Synthetic interoperability example only; human review remains required.",
+  "schema_version": "1.0.0",
+  "source_artifact_type": "AI_GOVERNANCE_DECISION_PACK_REFERENCE",
+  "source_repository": "global-ai-governance-toolkit",
+  "system_id": "ai-system.synthetic.001",
+  "target_repository": "agentic-ai-governance"
+}

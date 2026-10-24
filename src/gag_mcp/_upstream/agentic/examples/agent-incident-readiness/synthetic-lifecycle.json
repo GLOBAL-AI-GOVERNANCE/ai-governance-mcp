@@ -1,0 +1,237 @@
+{
+  "trace_version": "1.0.0-unreleased",
+  "scenario": "Agent Incident Readiness",
+  "synthetic": true,
+  "external_enforcement": "NOT_PERFORMED",
+  "human_authority": {
+    "authority_id": "global-ai-governance.synthetic-steward",
+    "approval_ref": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "attribution_verified": true
+  },
+  "passports": {
+    "revoked": {
+      "passport_id": "sha256:ee9847a2778a38d068cc61659f36bced09a5ac3c569d915b4608612175529bee",
+      "source_artifact": "examples/passports/signed-revoked.json",
+      "trust": "VALIDATED",
+      "signature": "VALID",
+      "binding": "VALID",
+      "authority_actions": ["read:synthetic-record", "request:synthetic-peer-command"],
+      "authority_resources": ["resource.synthetic.case-001"]
+    },
+    "replacement": {
+      "passport_id": "sha256:3bff2559b8dba5091534959df0c587a94873703dd4ee735da9ce7842e57908e7",
+      "source_artifact": "examples/passports/signed-unrevoked.json",
+      "trust": "VALIDATED",
+      "signature": "VALID",
+      "binding": "VALID",
+      "authority_actions": ["read:synthetic-record"],
+      "authority_resources": ["resource.synthetic.case-001"]
+    }
+  },
+  "revocation_continuity": {
+    "authority": "global-ai-governance.synthetic-steward",
+    "trusted_sequence": 2,
+    "trusted_list_id": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "previous_list_id": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "revoked_passport_ids": ["sha256:ee9847a2778a38d068cc61659f36bced09a5ac3c569d915b4608612175529bee"],
+    "rollback_attempt_sequence": 1,
+    "rollback_result": "REJECTED",
+    "same_sequence_conflict_result": "REJECTED",
+    "current_evidence": "TRUSTED"
+  },
+  "events": [
+    {
+      "state": "AUTHORIZED",
+      "at": "2026-08-30T12:00:00Z",
+      "decision": "The validated original passport and bounded policy permit the synthetic read request.",
+      "consequence": "The reference returns PERMITTED and performs no external action.",
+      "remaining_risk": "An external system could ignore the policy decision.",
+      "next_action": "Preserve the decision and evidence references for human review.",
+      "timeline": "T0",
+      "technical_evidence": "Canonical validation result and OPA bridge decision.",
+      "bridge_input": {
+        "bridge_contract_version": "1.0.0",
+        "request_id": "air.synthetic.authorized",
+        "evaluation_time": "2026-08-30T12:00:00Z",
+        "validated_result": {
+          "validation_state": "ESTABLISHED",
+          "verification_result_ref": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "passport_id": "sha256:ee9847a2778a38d068cc61659f36bced09a5ac3c569d915b4608612175529bee",
+          "verified_at": "2026-08-30T11:59:30Z",
+          "valid_until": "2026-08-30T13:00:00Z",
+          "primary_status": "VALID",
+          "operating_disposition": "PERMITTED",
+          "revocation_status": "CURRENT_NOT_REVOKED",
+          "maximum_action_level": 1,
+          "allowed_actions": ["read:synthetic-record", "request:synthetic-peer-command"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "evidence_refs": ["sha256:4444444444444444444444444444444444444444444444444444444444444444"]
+        },
+        "request": {"action": "read:synthetic-record", "resource": "resource.synthetic.case-001", "action_level": 1},
+        "policy": {
+          "policy_id": "global-ai-governance.opa-enforcement-bridge",
+          "policy_version": "1.0.0-unreleased",
+          "profile_id": "global-ai-governance.mcp-governance",
+          "profile_version": "0.1.0-alpha.1",
+          "allowed_actions": ["read:synthetic-record", "request:synthetic-peer-command"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "denied_actions": [],
+          "required_context": ["environment"],
+          "approval_required_actions": [],
+          "max_validation_age_seconds": 300
+        },
+        "context": {"environment": "synthetic-reference"}
+      }
+    },
+    {
+      "state": "POLICY_DENIED",
+      "at": "2026-08-30T12:01:00Z",
+      "decision": "Bounded context policy denies the synthetic peer-command request while the passport remains current.",
+      "consequence": "The reference returns NOT_PERMITTED without changing revocation state.",
+      "remaining_risk": "Policy denial does not terminate credentials, sessions, tools, or workloads.",
+      "next_action": "Human authority determines whether a separate revocation update is warranted.",
+      "timeline": "T1",
+      "technical_evidence": "POLICY_DENIED without REVOCATION_NOT_CURRENT.",
+      "bridge_input": {
+        "bridge_contract_version": "1.0.0",
+        "request_id": "air.synthetic.policy-denied",
+        "evaluation_time": "2026-08-30T12:01:00Z",
+        "validated_result": {
+          "validation_state": "ESTABLISHED",
+          "verification_result_ref": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "passport_id": "sha256:ee9847a2778a38d068cc61659f36bced09a5ac3c569d915b4608612175529bee",
+          "verified_at": "2026-08-30T12:00:30Z",
+          "valid_until": "2026-08-30T13:00:00Z",
+          "primary_status": "VALID",
+          "operating_disposition": "PERMITTED",
+          "revocation_status": "CURRENT_NOT_REVOKED",
+          "maximum_action_level": 1,
+          "allowed_actions": ["read:synthetic-record", "request:synthetic-peer-command"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "evidence_refs": ["sha256:4444444444444444444444444444444444444444444444444444444444444444"]
+        },
+        "request": {"action": "request:synthetic-peer-command", "resource": "resource.synthetic.case-001", "action_level": 1},
+        "policy": {
+          "policy_id": "global-ai-governance.opa-enforcement-bridge",
+          "policy_version": "1.0.0-unreleased",
+          "profile_id": "global-ai-governance.mcp-governance",
+          "profile_version": "0.1.0-alpha.1",
+          "allowed_actions": ["read:synthetic-record", "request:synthetic-peer-command"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "denied_actions": ["request:synthetic-peer-command"],
+          "required_context": ["environment"],
+          "approval_required_actions": [],
+          "max_validation_age_seconds": 300
+        },
+        "context": {"environment": "synthetic-reference"}
+      }
+    },
+    {
+      "state": "REVOKED",
+      "at": "2026-08-30T12:02:00Z",
+      "decision": "A subsequent trusted cumulative revocation update terminally revokes the original passport.",
+      "consequence": "Attempted reuse of the original passport fails closed.",
+      "remaining_risk": "Continuity depends on an intact trusted local store and is not host-level rollback resistance.",
+      "next_action": "Retain terminal revocation and reject the old identity artifact.",
+      "timeline": "T2",
+      "technical_evidence": "Trusted sequence 2 contains the original passport and validation reports REVOKED.",
+      "bridge_input": {
+        "bridge_contract_version": "1.0.0",
+        "request_id": "air.synthetic.revoked-reuse",
+        "evaluation_time": "2026-08-30T12:02:00Z",
+        "validated_result": {
+          "validation_state": "ESTABLISHED",
+          "verification_result_ref": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "passport_id": "sha256:ee9847a2778a38d068cc61659f36bced09a5ac3c569d915b4608612175529bee",
+          "verified_at": "2026-08-30T12:01:30Z",
+          "valid_until": "2026-08-30T13:00:00Z",
+          "primary_status": "REVOKED",
+          "operating_disposition": "NOT_PERMITTED",
+          "revocation_status": "REVOKED",
+          "maximum_action_level": 1,
+          "allowed_actions": ["read:synthetic-record", "request:synthetic-peer-command"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "evidence_refs": ["sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"]
+        },
+        "request": {"action": "read:synthetic-record", "resource": "resource.synthetic.case-001", "action_level": 1},
+        "policy": {
+          "policy_id": "global-ai-governance.opa-enforcement-bridge",
+          "policy_version": "1.0.0-unreleased",
+          "profile_id": "global-ai-governance.mcp-governance",
+          "profile_version": "0.1.0-alpha.1",
+          "allowed_actions": ["read:synthetic-record"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "denied_actions": [],
+          "required_context": ["environment"],
+          "approval_required_actions": [],
+          "max_validation_age_seconds": 300
+        },
+        "context": {"environment": "synthetic-reference"}
+      }
+    },
+    {
+      "state": "ROLLBACK_REJECTED",
+      "at": "2026-08-30T12:03:00Z",
+      "decision": "An older trusted sequence and a conflicting same-sequence state are rejected.",
+      "consequence": "Trusted sequence 2 remains current and the original passport remains revoked.",
+      "remaining_risk": "The reference does not prevent host replacement, deletion, or rollback of the trusted store.",
+      "next_action": "Human-governed operations restore trustworthy current evidence if continuity is unavailable.",
+      "timeline": "T3",
+      "technical_evidence": "Stateful Revocation rollback and conflict results are REJECTED.",
+      "bridge_input": null
+    },
+    {
+      "state": "NEW_PASSPORT_REAUTHORIZED",
+      "at": "2026-08-30T12:04:00Z",
+      "decision": "A distinct newly validated passport with bounded authority is evaluated against current policy.",
+      "consequence": "The new passport receives PERMITTED while the original passport remains revoked.",
+      "remaining_risk": "The result remains a non-enforcing reference policy decision.",
+      "next_action": "An accountable external system independently decides whether and how to act.",
+      "timeline": "T4",
+      "technical_evidence": "Distinct passport identifier, valid trust/signature/binding, current revocation evidence, and OPA bridge result.",
+      "bridge_input": {
+        "bridge_contract_version": "1.0.0",
+        "request_id": "air.synthetic.new-passport",
+        "evaluation_time": "2026-08-30T12:04:00Z",
+        "validated_result": {
+          "validation_state": "ESTABLISHED",
+          "verification_result_ref": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "passport_id": "sha256:3bff2559b8dba5091534959df0c587a94873703dd4ee735da9ce7842e57908e7",
+          "verified_at": "2026-08-30T12:03:30Z",
+          "valid_until": "2026-08-30T13:00:00Z",
+          "primary_status": "VALID",
+          "operating_disposition": "PERMITTED",
+          "revocation_status": "CURRENT_NOT_REVOKED",
+          "maximum_action_level": 1,
+          "allowed_actions": ["read:synthetic-record"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "evidence_refs": ["sha256:7777777777777777777777777777777777777777777777777777777777777777"]
+        },
+        "request": {"action": "read:synthetic-record", "resource": "resource.synthetic.case-001", "action_level": 1},
+        "policy": {
+          "policy_id": "global-ai-governance.opa-enforcement-bridge",
+          "policy_version": "1.0.0-unreleased",
+          "profile_id": "global-ai-governance.mcp-governance",
+          "profile_version": "0.1.0-alpha.1",
+          "allowed_actions": ["read:synthetic-record"],
+          "allowed_resources": ["resource.synthetic.case-001"],
+          "denied_actions": [],
+          "required_context": ["environment"],
+          "approval_required_actions": [],
+          "max_validation_age_seconds": 300
+        },
+        "context": {"environment": "synthetic-reference"}
+      }
+    }
+  ],
+  "non_claims": [
+    "external enforcement",
+    "runtime containment",
+    "production IAM",
+    "credential or session termination",
+    "autonomous restoration",
+    "certification",
+    "compliance",
+    "real-world effectiveness"
+  ]
+}

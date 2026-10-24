@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:global-ai-governance:agentic-ai-governance:schema:prohibited-claims:1.0.0",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Agentic AI Governance Prohibited Claims",
+  "type": "object",
+  "required": [
+    "register_version",
+    "claims"
+  ],
+  "properties": {
+    "register_version": {
+      "const": "1.0.0"
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "repository_globs",
+          "repository_exclusions",
+          "external_surfaces",
+          "prohibited_wording",
+          "rationale",
+          "permitted_alternative",
+          "enforcement"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "pattern": "^PROHIBITED-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          },
+          "prohibited_wording": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "permitted_alternative": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enforcement": {
+            "enum": [
+              "REPOSITORY_VERIFICATION",
+              "RELEASE_REVIEW",
+              "BOTH"
+            ]
+          },
+          "repository_globs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "repository_exclusions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "external_surfaces": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "enforcement": {
+                  "enum": [
+                    "REPOSITORY_VERIFICATION",
+                    "BOTH"
+                  ]
+                }
+              },
+              "required": [
+                "enforcement"
+              ]
+            },
+            "then": {
+              "properties": {
+                "repository_globs": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "enforcement": {
+                  "enum": [
+                    "RELEASE_REVIEW",
+                    "BOTH"
+                  ]
+                }
+              },
+              "required": [
+                "enforcement"
+              ]
+            },
+            "then": {
+              "properties": {
+                "external_surfaces": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

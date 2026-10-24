@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/v1/profile-result.schema.json",
+  "title": "Optional Governance Profile Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile_id", "profile_version", "source_artifact_sha256", "decision_pack_manifest", "authority_effect", "evaluation_time", "status", "summary", "findings", "evidence_references", "details"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile_id": {"type": "string", "minLength": 1},
+    "profile_version": {"type": "string", "minLength": 1},
+    "source_artifact_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "decision_pack_manifest": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["reference", "sha256"], "properties": {"reference": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}}]},
+    "authority_effect": {"const": "NONE"},
+    "evaluation_time": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+    "status": {"enum": ["PASS", "CONDITIONAL", "FAIL"]},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 240},
+    "findings": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "severity", "message", "action"], "properties": {"id": {"type": "string", "pattern": "^[a-z0-9.-]+:[A-Z0-9_-]+$"}, "severity": {"enum": ["INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]}, "message": {"type": "string", "minLength": 1}, "action": {"type": "string", "minLength": 1}}}},
+    "evidence_references": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["type", "reference"], "properties": {"type": {"enum": ["LOCAL_PATH", "URI", "ARTIFACT_ID"]}, "reference": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}}},
+    "details": {"type": "object"}
+  }
+}

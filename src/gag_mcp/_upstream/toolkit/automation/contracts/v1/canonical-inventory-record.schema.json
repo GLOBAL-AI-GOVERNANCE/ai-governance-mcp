@@ -1,0 +1,34 @@
+{
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/v1/canonical-inventory-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0", "type": "string"},
+    "system_id": {"minLength": 1, "type": "string"},
+    "system_name": {"minLength": 1, "type": "string"},
+    "owner": {"type": "string"},
+    "business_unit": {"minLength": 1, "type": "string"},
+    "vendor_internal": {"enum": ["Vendor", "Internal", "Hybrid"], "type": "string"},
+    "use_case": {"minLength": 1, "type": "string"},
+    "data_sensitivity": {"enum": ["None", "Internal", "Personal", "Regulated", "Critical"], "type": "string"},
+    "impact_people": {"enum": ["Yes", "No"], "type": "string"},
+    "impact_money": {"enum": ["Yes", "No"], "type": "string"},
+    "impact_security": {"enum": ["Yes", "No"], "type": "string"},
+    "impact_rights": {"enum": ["Yes", "No"], "type": "string"},
+    "impact_safety": {"enum": ["Yes", "No"], "type": "string"},
+    "autonomy_level": {"enum": ["None", "Partial", "Full"], "type": "string"},
+    "public_facing": {"enum": ["Yes", "No"], "type": "string"},
+    "monitoring_active": {"enum": ["Yes", "No"], "type": "string"},
+    "shutdown_path_exists": {"enum": ["Yes", "No"], "type": "string"},
+    "evidence_complete": {"enum": ["Yes", "No"], "type": "string"}
+  },
+  "required": [
+    "schema_version", "system_id", "system_name", "owner", "business_unit",
+    "vendor_internal", "use_case", "data_sensitivity", "impact_people",
+    "impact_money", "impact_security", "impact_rights", "impact_safety",
+    "autonomy_level", "public_facing", "monitoring_active",
+    "shutdown_path_exists", "evidence_complete"
+  ],
+  "title": "Canonical AI System Inventory Record v1",
+  "type": "object"
+}

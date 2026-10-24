@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/revocation-entry.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Agent Trust Passport Revocation Entry",
+  "type": "object",
+  "required": [
+    "revocation_id",
+    "passport_id",
+    "framework",
+    "revoked_at",
+    "reason_code",
+    "reason",
+    "superseding_passport_id",
+    "authority"
+  ],
+  "properties": {
+    "revocation_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "passport_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "framework": {
+      "const": "global-ai-governance.agentic-ai-governance"
+    },
+    "revoked_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "reason_code": {
+      "enum": [
+        "INPUT_CHANGED",
+        "EVIDENCE_INVALID",
+        "ISSUER_COMPROMISED",
+        "SIGNING_KEY_COMPROMISED",
+        "CONTROL_FAILURE_DISCOVERED",
+        "PASSPORT_REPLACED",
+        "PASSPORT_ISSUED_IN_ERROR",
+        "SYSTEM_DECOMMISSIONED",
+        "OTHER"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "superseding_passport_id": {
+      "oneOf": [
+        {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "authority": {
+      "$ref": "common.schema.json#/$defs/id"
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -15,9 +15,7 @@
       "command": "python3",
       "args": ["-m", "gag_mcp.server"],
       "env": {
-        "PYTHONPATH": "${__dirname}/src:${__dirname}/lib",
-        "GAG_TOOLKIT_PATH": "${__dirname}/vendor/global-ai-governance-toolkit",
-        "GAG_AGENTIC_PATH": "${__dirname}/vendor/agentic-ai-governance"
+        "PYTHONPATH": "${__dirname}/src:${__dirname}/lib"
       }
     }
   },

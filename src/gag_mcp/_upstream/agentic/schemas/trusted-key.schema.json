@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/trusted-key.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Trusted Ed25519 Verification Key",
+  "type": "object",
+  "required": [
+    "issuer_id",
+    "kid",
+    "jwk",
+    "not_before",
+    "expires_at",
+    "status",
+    "allowed_algorithms"
+  ],
+  "properties": {
+    "issuer_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "kid": {
+      "type": "string",
+      "pattern": "^urn:ietf:params:oauth:jwk-thumbprint:sha-256:[A-Za-z0-9_-]{43}$"
+    },
+    "jwk": {
+      "type": "object",
+      "required": [
+        "kty",
+        "crv",
+        "x",
+        "alg",
+        "use",
+        "key_ops"
+      ],
+      "properties": {
+        "kty": {
+          "const": "OKP"
+        },
+        "crv": {
+          "const": "Ed25519"
+        },
+        "x": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "alg": {
+          "const": "Ed25519"
+        },
+        "use": {
+          "const": "sig"
+        },
+        "key_ops": {
+          "const": [
+            "verify"
+          ]
+        },
+        "kid": {
+          "type": "string"
+        }
+      },
+      "not": {
+        "required": [
+          "d"
+        ]
+      },
+      "unevaluatedProperties": false
+    },
+    "not_before": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "expires_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "RETIRED",
+        "REVOKED",
+        "COMPROMISED",
+        "NOT_YET_VALID",
+        "EXPIRED"
+      ]
+    },
+    "allowed_algorithms": {
+      "const": [
+        "Ed25519"
+      ]
+    }
+  },
+  "unevaluatedProperties": false
+}

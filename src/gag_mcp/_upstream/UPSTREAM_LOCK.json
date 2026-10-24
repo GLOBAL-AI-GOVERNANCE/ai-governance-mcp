@@ -1,0 +1,17 @@
+{
+  "generated_by": "scripts/bundle_upstreams.py",
+  "upstreams": {
+    "agentic": {
+      "commit": "58bdfb291df0de7c9437b4476e370a609c4b1d5f",
+      "file_count": 65,
+      "repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance",
+      "tree_digest": "sha256:28ec97075c29e17eedb576ae1e890ba8afec370f01e308b08917b8c9ebb01292"
+    },
+    "toolkit": {
+      "commit": "afcd06d027f2bfd168233c993405060e4f18dfa1",
+      "file_count": 112,
+      "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
+      "tree_digest": "sha256:d4cd8b9e50094eca1e07736175bf6b2211564621b24b07e6569da848cceee078"
+    }
+  }
+}

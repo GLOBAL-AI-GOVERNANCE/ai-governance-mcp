@@ -1,0 +1,32 @@
+{
+  "evidence_id": "evidence.data-authority.synthetic",
+  "evidence_type": "data_authority",
+  "scheme": "global-ai-governance.synthetic-authority",
+  "scheme_version": "0.1.0",
+  "issuer_id": "global-ai-governance.test-issuer",
+  "artifact_hash": "sha256:f3d810d025217adb07d82af642ee0cb6f4083bf3d590052c90fae431be3ceae0",
+  "scope": {
+    "data_classes": [
+      "SYNTHETIC"
+    ],
+    "purposes": [
+      "conformance-testing"
+    ],
+    "systems": [
+      "synthetic.fixture"
+    ],
+    "jurisdictions": [
+      "TEST"
+    ],
+    "prohibited_uses": [
+      "production-use"
+    ]
+  },
+  "validity": {
+    "not_before": "2026-07-01T00:00:00Z",
+    "expires_at": "2026-12-31T00:00:00Z"
+  },
+  "subject": {
+    "agent_id": "agent.synthetic.quickstart"
+  }
+}

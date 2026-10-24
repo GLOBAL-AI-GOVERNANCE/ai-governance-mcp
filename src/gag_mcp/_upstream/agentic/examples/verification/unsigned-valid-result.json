@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "passport_id": "sha256:67253fd35a5e68a14125bdf8c8bcbfbbdf0457d3fba1f9f16f3eed973b82af95",
+  "verified_at": "2026-07-18T12:00:00Z",
+  "issued_assessment_result": "APPROVED",
+  "attestation_status": "NONE",
+  "components": {
+    "structure": "PASS",
+    "version": "PASS",
+    "identifier": "PASS",
+    "critical_extensions": "PASS",
+    "signature": "NOT_PRESENT",
+    "signing_key": "NOT_APPLICABLE",
+    "issuer_authentication": "NOT_ESTABLISHED",
+    "bindings": "PASS",
+    "revocation": "NOT_APPLICABLE",
+    "validity": "PASS",
+    "conditions": "PASS"
+  },
+  "primary_status": "VALID",
+  "findings": [
+    {
+      "code": "UNSIGNED_ARTIFACT",
+      "severity": "WARNING",
+      "message": "Artifact is valid for its unsigned branch but is not issuer-authenticated."
+    }
+  ],
+  "operating_disposition": "INDETERMINATE"
+}

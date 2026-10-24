@@ -1,0 +1,24 @@
+{
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/v1/normalized-inventory.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "normalization_version": {"const": "1.0.0"},
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {"minLength": 1, "type": "string"},
+        "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "format": {"enum": ["canonical_csv", "generated_human_csv", "legacy_csv"]}
+      },
+      "required": ["name", "sha256", "format"],
+      "type": "object"
+    },
+    "mappings_applied": {"items": {"type": "string"}, "type": "array"},
+    "warnings": {"items": {"type": "string"}, "type": "array"},
+    "records": {"items": {"$ref": "canonical-inventory-record.schema.json"}, "minItems": 1, "type": "array"}
+  },
+  "required": ["schema_version", "normalization_version", "source", "mappings_applied", "warnings", "records"],
+  "type": "object"
+}

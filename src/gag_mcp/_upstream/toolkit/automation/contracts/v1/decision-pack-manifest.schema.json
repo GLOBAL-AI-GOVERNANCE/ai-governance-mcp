@@ -1,0 +1,50 @@
+{
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/v1/decision-pack-manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "manifest_schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.0"},
+    "generator_version": {"const": "1.0.0"},
+    "normalization_version": {"const": "1.0.0"},
+    "policy_id": {"minLength": 1, "type": "string"},
+    "policy_version": {"minLength": 1, "type": "string"},
+    "evaluation_time": {"pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$", "type": ["string", "null"]},
+    "canonical_inventory_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "decision_status": {"const": "pending_human_decision"},
+    "generator": {"enum": ["automation/scripts/generate_decision_pack.py", "web/governance-engine.mjs"]},
+    "governance_gate_result": {"enum": ["PASSED CURRENT AUTOMATED CHECKS", "HUMAN REVIEW REQUIRED", "BLOCKED BY CRITICAL FINDINGS"]},
+    "hash_mode": {"const": "sha256-text-lf"},
+    "generated_files": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {"minLength": 1, "type": "string"},
+          "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+        },
+        "required": ["path", "sha256"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "source_artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {"minLength": 1, "type": "string"},
+          "role": {"minLength": 1, "type": "string"},
+          "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+        },
+        "required": ["path", "role", "sha256"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "system_count": {"minimum": 1, "type": "integer"},
+    "system_ids": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true}
+  },
+  "required": ["manifest_schema_version", "schema_version", "generator", "generator_version", "normalization_version", "policy_id", "policy_version", "evaluation_time", "canonical_inventory_digest", "decision_status", "governance_gate_result", "hash_mode", "generated_files", "source_artifacts", "system_count", "system_ids"],
+  "type": "object"
+}

@@ -1,0 +1,168 @@
+{
+  "framework_id": "unesco-ai-maturity-2025",
+  "framework_version": "2025",
+  "source": "https://unesdoc.unesco.org/ark:/48223/pf0000397145",
+  "license": "CC BY-SA 3.0 IGO",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/",
+  "adaptation": "Structural pillar labels, category labels, and stable identifiers only. Maturity descriptor prose is not included.",
+  "levels": [
+    "BASIC",
+    "READY",
+    "DYNAMIC",
+    "ADVANCED"
+  ],
+  "pillars": [
+    {
+      "id": "strategy-value",
+      "label": "Strategy & Value",
+      "categories": [
+        {
+          "id": "strategy-value.ai-vision-ambition",
+          "label": "AI Vision & Ambition"
+        },
+        {
+          "id": "strategy-value.strategic-alignment",
+          "label": "Strategic Alignment"
+        },
+        {
+          "id": "strategy-value.roadmap-planning",
+          "label": "Roadmap & Planning"
+        },
+        {
+          "id": "strategy-value.value-identification-measurement",
+          "label": "Value Identification & Measurement"
+        },
+        {
+          "id": "strategy-value.innovation-experimentation",
+          "label": "Innovation & Experimentation"
+        }
+      ]
+    },
+    {
+      "id": "people-culture",
+      "label": "People & Culture",
+      "categories": [
+        {
+          "id": "people-culture.talent-skills",
+          "label": "Talent & Skills"
+        },
+        {
+          "id": "people-culture.organizational-structure",
+          "label": "Organizational Structure"
+        },
+        {
+          "id": "people-culture.leadership-sponsorship",
+          "label": "Leadership & Sponsorship"
+        },
+        {
+          "id": "people-culture.change-management-adoption",
+          "label": "Change Management & Adoption"
+        },
+        {
+          "id": "people-culture.ai-literacy-awareness",
+          "label": "AI Literacy & Awareness"
+        }
+      ]
+    },
+    {
+      "id": "technology-infrastructure",
+      "label": "Technology & Infrastructure",
+      "categories": [
+        {
+          "id": "technology-infrastructure.ai-development-platforms-tools",
+          "label": "AI Development Platforms & Tools"
+        },
+        {
+          "id": "technology-infrastructure.cloud-compute-infrastructure",
+          "label": "Cloud & Compute Infrastructure"
+        },
+        {
+          "id": "technology-infrastructure.ai-specific-architectures",
+          "label": "AI-Specific Architectures"
+        },
+        {
+          "id": "technology-infrastructure.data-science-environment",
+          "label": "Data Science Environment"
+        }
+      ]
+    },
+    {
+      "id": "ai-operations-ecosystem",
+      "label": "AI Operations & Ecosystem",
+      "categories": [
+        {
+          "id": "ai-operations-ecosystem.model-deployment-management-mlops",
+          "label": "Model Deployment & Management (MLOps)"
+        },
+        {
+          "id": "ai-operations-ecosystem.performance-monitoring-optimization",
+          "label": "Performance Monitoring & Optimization"
+        },
+        {
+          "id": "ai-operations-ecosystem.integration-interoperability",
+          "label": "Integration & Interoperability"
+        },
+        {
+          "id": "ai-operations-ecosystem.external-collaboration-partnerships",
+          "label": "External Collaboration & Partnerships"
+        },
+        {
+          "id": "ai-operations-ecosystem.reusability-shared-components",
+          "label": "Reusability & Shared Components"
+        }
+      ]
+    },
+    {
+      "id": "ai-governance-ethics-risk",
+      "label": "AI Governance, Ethics & Risk",
+      "categories": [
+        {
+          "id": "ai-governance-ethics-risk.ai-governance-framework",
+          "label": "AI Governance Framework"
+        },
+        {
+          "id": "ai-governance-ethics-risk.ethical-principles-guidelines",
+          "label": "Ethical Principles & Guidelines"
+        },
+        {
+          "id": "ai-governance-ethics-risk.risk-assessment-mitigation",
+          "label": "Risk Assessment & Mitigation"
+        },
+        {
+          "id": "ai-governance-ethics-risk.compliance-legal",
+          "label": "Compliance & Legal"
+        },
+        {
+          "id": "ai-governance-ethics-risk.transparency-explainability",
+          "label": "Transparency & Explainability"
+        }
+      ]
+    },
+    {
+      "id": "data-ai-specific-focus",
+      "label": "Data (AI-Specific Focus)",
+      "categories": [
+        {
+          "id": "data-ai-specific-focus.ai-use-case-data-identification",
+          "label": "AI Use Case Data Identification"
+        },
+        {
+          "id": "data-ai-specific-focus.data-readiness-for-ai",
+          "label": "Data Readiness for AI"
+        },
+        {
+          "id": "data-ai-specific-focus.data-access-for-ai-teams",
+          "label": "Data Access for AI Teams"
+        },
+        {
+          "id": "data-ai-specific-focus.synthetic-data-generation-use",
+          "label": "Synthetic Data Generation & Use"
+        },
+        {
+          "id": "data-ai-specific-focus.domain-specific-data-understanding",
+          "label": "Domain-Specific Data Understanding"
+        }
+      ]
+    }
+  ]
+}

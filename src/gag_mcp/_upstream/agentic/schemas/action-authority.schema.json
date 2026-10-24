@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/action-authority.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Agent Action Authority Graph",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "agent_id",
+    "requested_level",
+    "computed_level",
+    "dimensions",
+    "nodes",
+    "edges"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "agent_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "requested_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "computed_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "delegation",
+        "unattended",
+        "code_execution",
+        "credential_change",
+        "identity_change",
+        "external_publication",
+        "data_movement",
+        "self_modification",
+        "reversibility",
+        "blast_radius"
+      ],
+      "properties": {
+        "delegation": {
+          "type": "boolean"
+        },
+        "unattended": {
+          "type": "boolean"
+        },
+        "code_execution": {
+          "type": "boolean"
+        },
+        "credential_change": {
+          "type": "boolean"
+        },
+        "identity_change": {
+          "type": "boolean"
+        },
+        "external_publication": {
+          "type": "boolean"
+        },
+        "data_movement": {
+          "type": "boolean"
+        },
+        "self_modification": {
+          "type": "boolean"
+        },
+        "reversibility": {
+          "enum": [
+            "FULL",
+            "PARTIAL",
+            "NONE"
+          ]
+        },
+        "blast_radius": {
+          "enum": [
+            "LOCAL",
+            "TEAM",
+            "ORGANIZATION",
+            "EXTERNAL",
+            "CRITICAL"
+          ]
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "node_id",
+          "node_type",
+          "base_level"
+        ],
+        "properties": {
+          "node_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "node_type": {
+            "enum": [
+              "AGENT",
+              "SUBAGENT",
+              "TOOL",
+              "MCP_SERVER",
+              "RESOURCE",
+              "APPROVAL_GATE"
+            ]
+          },
+          "base_level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "edge_type"
+        ],
+        "properties": {
+          "from": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "to": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "edge_type": {
+            "enum": [
+              "DELEGATES",
+              "INVOKES",
+              "READS",
+              "WRITES",
+              "APPROVES",
+              "PUBLISHES"
+            ]
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

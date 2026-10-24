@@ -1,0 +1,2 @@
+system_id,system_name,owner,business_unit,vendor_internal,use_case,data_sensitivity,impact_people,impact_money,impact_security,impact_rights,impact_safety,autonomy_level,public_facing,monitoring_active,shutdown_path_exists,evidence_complete
+TEST-BLOCK-001,Unowned AI Assistant,,Operations,Internal,Unapproved organizational assistance,Internal,No,No,No,No,No,None,No,Yes,No,Yes

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/revocation-list.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Cumulative Agent Trust Passport Revocation List",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "framework",
+    "list_id",
+    "issuer_id",
+    "sequence_number",
+    "issued_at",
+    "next_update",
+    "previous_list_hash",
+    "entries",
+    "proof"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "framework": {
+      "const": "global-ai-governance.agentic-ai-governance"
+    },
+    "list_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "issuer_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "sequence_number": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "issued_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "next_update": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "previous_list_hash": {
+      "oneOf": [
+        {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "revocation-entry.schema.json"
+      },
+      "uniqueItems": true
+    },
+    "proof": {
+      "$ref": "common.schema.json#/$defs/proof"
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/agent-inventory.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Alpha.1 Agent Inventory",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "inventory_type",
+    "agent_id",
+    "declared_capabilities",
+    "data_use",
+    "production_use"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "inventory_type": {
+      "const": "agent"
+    },
+    "agent_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "declared_capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/agentCapability"
+      },
+      "uniqueItems": true
+    },
+    "data_use": {
+      "type": "object",
+      "required": [
+        "data_classes",
+        "purposes",
+        "systems",
+        "jurisdictions"
+      ],
+      "properties": {
+        "data_classes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "systems": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "jurisdictions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "production_use": {
+      "type": "boolean"
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "framework": "global-ai-governance.agentic-ai-governance",
+  "list_id": "sha256:5a26b0860c042009f27ec811361cafaac4161e6ca15e38cb678e0805fdcb9713",
+  "issuer_id": "global-ai-governance.test-issuer",
+  "sequence_number": 1,
+  "issued_at": "2026-07-18T00:00:00Z",
+  "next_update": "2026-07-19T00:00:00Z",
+  "previous_list_hash": null,
+  "entries": [
+    {
+      "revocation_id": "sha256:32aa65dde215a2b410c851f4f4cc83416c7ea4f53690675e402d7bc8567c9abe",
+      "passport_id": "sha256:ee9847a2778a38d068cc61659f36bced09a5ac3c569d915b4608612175529bee",
+      "framework": "global-ai-governance.agentic-ai-governance",
+      "revoked_at": "2026-07-18T00:00:00Z",
+      "reason_code": "PASSPORT_REPLACED",
+      "reason": "Synthetic conformance revocation.",
+      "superseding_passport_id": "sha256:3bff2559b8dba5091534959df0c587a94873703dd4ee735da9ce7842e57908e7",
+      "authority": "global-ai-governance.test-issuer"
+    }
+  ],
+  "proof": {
+    "jws": "eyJhbGciOiJFZDI1NTE5IiwiY3R5IjoiYXBwbGljYXRpb24vYWdlbnQtcmV2b2NhdGlvbi1saXN0K2pzb24iLCJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjoxSUcydE1IN0oyd2JKWm5PZjhMSnpRaXRLZjdMTXZvQUVsc3VETVZNNTRZIiwidHlwIjoiYXRwLXJldm9jYXRpb24randzIn0..L6V9yO3x05XcZ5r51dve1fL-bTvdAk3rhDk6wDandlKENAbFolAM9YCWKGjdg5Sx5kg3Mgu8dXP_n9LGunv5Dg"
+  }
+}
