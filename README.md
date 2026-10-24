@@ -1,5 +1,11 @@
 # AI Governance Model Context Protocol Server (AI Governance MCP)
 
+<!-- gaig:nav -->
+[![Global AI Governance](https://img.shields.io/badge/Global_AI_Governance-portfolio-0b100d)](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE) ![Status](https://img.shields.io/badge/status-v0.3.0_preview-orange) ![authority_effect](https://img.shields.io/badge/authority__effect-NONE-lightgrey)
+
+**[Connect your agent](https://global-ai-governance.github.io/global-ai-governance-toolkit/connect.html#agents)** · **[Read the spec](https://global-ai-governance.github.io/global-ai-governance-toolkit/connect.html#spec)** · [All products](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE#product-map)
+<!-- /gaig:nav -->
+
 Governance checks your AI agents can call. Start the server with one command, and your agent can check an AI system inventory, prepare a Decision Pack, or verify an Agent Trust Passport. Every result is read-only and leaves the decision with a person.
 
 ```bash
