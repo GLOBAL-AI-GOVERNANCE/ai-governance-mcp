@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
     try: code, _ = run_profile(args.profile_id, args.input, args.outdir, args.decision_pack_manifest, args.evaluation_time)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
-        print(f"gag profile: {exc}"); raise SystemExit(2) from exc
+        print(f"gaig profile: {exc}"); raise SystemExit(2) from exc
     raise SystemExit(code)
 
 

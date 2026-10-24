@@ -6,7 +6,7 @@ import time
 import pytest
 import uvicorn
 
-from gag_mcp.server import build_http_app
+from gaig_mcp.server import build_http_app
 
 EVAL_TIME = "2026-10-16T00:00:00Z"
 
@@ -43,6 +43,14 @@ def assert_non_authorizing(out: dict):
             assert value == "NONE", f"non-NONE authority_effect at {path}"
         if value == "PERMITTED":
             assert key == "reference_policy_disposition", f"PERMITTED outside relabeled field at {path}"
+
+
+@pytest.fixture(autouse=True)
+def _isolate_mcp_env(monkeypatch):
+    """Each test starts with no GAIG_MCP_* or deprecated GAG_MCP_* settings from the caller."""
+    for prefix in ("GAIG_", "GAG_"):
+        for suffix in ("MCP_ALLOWED_HOSTS", "MCP_BEARER_TOKEN", "MCP_CORS_ORIGINS"):
+            monkeypatch.delenv(prefix + suffix, raising=False)
 
 
 @pytest.fixture

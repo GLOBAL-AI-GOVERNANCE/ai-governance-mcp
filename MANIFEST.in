@@ -1,3 +1,3 @@
-graft src/gag_mcp/_upstream
+graft src/gaig_mcp/_upstream
 include scripts/*.sh scripts/*.py
 global-exclude __pycache__ *.py[cod]
