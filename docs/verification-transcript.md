@@ -1,6 +1,6 @@
-# gag-mcp verification transcript
+# gaig-mcp verification transcript
 
-Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.
+Generated 2026-10-23 18:28 PDT on a local machine. Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.
 
 ## Transport: stdio (subprocess)
 
@@ -47,7 +47,7 @@ Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Pyt
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "afcd06d"
+    "commit": "f454bf9"
   },
   "result_excerpt": {
     "validation_state": "VALID",
@@ -76,7 +76,7 @@ Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Pyt
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "afcd06d"
+    "commit": "f454bf9"
   },
   "result_excerpt": {
     "decision_status": "pending_human_decision",
@@ -135,9 +135,9 @@ Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Pyt
 `tools/call check_inventory` with a malformed CSV → isError=True (expected True: fail closed)
 > Error executing tool check_inventory: Inventory rejected by toolkit validation: {"error": {"code": "MISSING_REQUIRED_COLUMN", "expected": ["owner", "business_unit", "vendor_internal", "use_case", "data_sensitivity", "impact_people", "impact_money", "impact_security", "impact_rights", "impact_safety"
 
-`GET /health` → `{'status': 'ok', 'server': 'gag-mcp', 'version': '0.1.0', 'authority_effect': 'NONE'}`
+`GET /health` → `{'status': 'ok', 'server': 'gaig-mcp', 'version': '0.2.0', 'authority_effect': 'NONE'}`
 
-## Transport: Streamable HTTP (http://127.0.0.1:39355/mcp)
+## Transport: Streamable HTTP (http://127.0.0.1:60677/mcp)
 
 `tools/list` →
 ```json
@@ -182,7 +182,7 @@ Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Pyt
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "afcd06d"
+    "commit": "f454bf9"
   },
   "result_excerpt": {
     "validation_state": "VALID",
@@ -211,7 +211,7 @@ Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Pyt
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "afcd06d"
+    "commit": "f454bf9"
   },
   "result_excerpt": {
     "decision_status": "pending_human_decision",
@@ -272,7 +272,7 @@ Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Pyt
 
 ## Raw HTTP: handshake-era client (protocol 2025-11-25), as older hosted clients may send
 
-- initialize → protocolVersion `2025-11-25`, server `gag-mcp`
+- initialize → protocolVersion `2025-11-25`, server `gaig-mcp`
 - tools/call validate_passport → authority_effect `NONE`, status `REVOKED`
 
 **Result:** PASS

@@ -7,21 +7,21 @@ import tomllib
 ROOT = pathlib.Path(__file__).parents[1]
 CONFIGS = ROOT / "examples" / "client-configs"
 STACKS = ROOT / "examples" / "agent-stacks"
-PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0", "gag-mcp"]
+PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0", "gaig-mcp"]
 
 
 def test_cursor_config_launches_pinned_command():
-    server = json.loads((CONFIGS / "cursor.mcp.json").read_text())["mcpServers"]["gag"]
+    server = json.loads((CONFIGS / "cursor.mcp.json").read_text())["mcpServers"]["gaig"]
     assert server["command"] == "uvx" and server["args"] == PINNED
 
 
 def test_vscode_config_launches_pinned_command():
-    server = json.loads((CONFIGS / "vscode.mcp.json").read_text())["servers"]["gag"]
+    server = json.loads((CONFIGS / "vscode.mcp.json").read_text())["servers"]["gaig"]
     assert server["type"] == "stdio" and server["command"] == "uvx" and server["args"] == PINNED
 
 
 def test_codex_config_launches_pinned_command():
-    server = tomllib.loads((CONFIGS / "codex.config.toml").read_text())["mcp_servers"]["gag"]
+    server = tomllib.loads((CONFIGS / "codex.config.toml").read_text())["mcp_servers"]["gaig"]
     assert server["command"] == "uvx" and server["args"] == PINNED
 
 

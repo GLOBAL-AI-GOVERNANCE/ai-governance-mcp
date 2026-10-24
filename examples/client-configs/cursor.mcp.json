@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "gag": {
+    "gaig": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0", "gag-mcp"]
+      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0", "gaig-mcp"]
     }
   }
 }

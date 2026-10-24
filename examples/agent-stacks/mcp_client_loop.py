@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MCP client loop: discover gag-mcp tools over stdio and call each one.
+"""MCP client loop: discover gaig-mcp tools over stdio and call each one.
 
 Status: TESTED (tests/test_examples.py runs this file against the local server).
 Run:    python examples/agent-stacks/mcp_client_loop.py           # server from the current environment
@@ -13,7 +13,7 @@ import sys
 
 from mcp import Client, StdioServerParameters
 
-PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0"
+PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0"
 EVAL = "2026-10-16T00:00:00Z"
 CALLS = [
     ("check_inventory", {"use_sample": True, "evaluation_time": EVAL}),
@@ -25,8 +25,8 @@ CALLS = [
 
 def server_params(use_uvx: bool) -> StdioServerParameters:
     if use_uvx:
-        return StdioServerParameters(command="uvx", args=["--from", PINNED, "gag-mcp"], env=dict(os.environ))
-    return StdioServerParameters(command=sys.executable, args=["-m", "gag_mcp.server"], env=dict(os.environ))
+        return StdioServerParameters(command="uvx", args=["--from", PINNED, "gaig-mcp"], env=dict(os.environ))
+    return StdioServerParameters(command=sys.executable, args=["-m", "gaig_mcp.server"], env=dict(os.environ))
 
 
 async def run(use_uvx: bool = False) -> int:

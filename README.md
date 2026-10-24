@@ -2,15 +2,17 @@
 
 **Model Context Protocol (MCP)** is an open standard that lets AI assistants discover and call external tools through a common interface. This repository is a non-authorizing MCP server for Global AI Governance reference tooling.
 
-**Status:** v0.1.0 preview. Source is public in this repository (formerly `gag-mcp`; the old URL redirects). **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
+**Status:** v0.2.0 preview. Source is public in this repository (formerly `gag-mcp`; the old URL redirects). **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
 
-**Names that did not change:** the Python distribution and console command are still `gag-mcp`, the import package is still `gag_mcp`, the MCP server name reported to clients is still `gag-mcp`, and environment variables keep the `GAG_MCP_` / `GAG_` prefixes. Existing configurations keep working.
+**Names:** the console command is `gaig-mcp`, the import package is `gaig_mcp`, the MCP server name reported to clients is `gaig-mcp`, and environment variables use the `GAIG_MCP_` / `GAIG_` prefixes. The Python distribution name and the desktop-extension manifest `name` stay `gag-mcp` so existing installs upgrade in place.
+
+**Deprecated aliases (kept so existing configurations keep working):** the `gag-mcp` command and `python -m gag_mcp.server` start the same server; `import gag_mcp` resolves to `gaig_mcp`; and each `GAG_*` environment variable is still read when its `GAIG_*` name is unset, with a deprecation warning on stderr. If both names are set to different values, the server refuses to start.
 
 AI Governance MCP exposes the real Global AI Governance reference tooling to MCP clients:
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
-| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `afcd06d027f2bfd168233c993405060e4f18dfa1`) |
+| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `f454bf921b774f17982e70f28ce01a224d3c6410`, release v2.6.0) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
 | `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `58bdfb291df0de7c9437b4476e370a609c4b1d5f`) |
 
@@ -29,10 +31,10 @@ Compatible with MCP-based agents. Not affiliated with or endorsed by xAI, OpenAI
 
 ## Install and run (local)
 
-No clone needed. The pinned toolkit and agentic files are bundled in the package (`src/gag_mcp/_upstream/`, source lock in `UPSTREAM_LOCK.json`), so this runs with no other checkout:
+No clone needed. The pinned toolkit and agentic files are bundled in the package (`src/gaig_mcp/_upstream/`, source lock in `UPSTREAM_LOCK.json`), so this runs with no other checkout:
 
 ```bash
-uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0 gag-mcp      # stdio
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0 gaig-mcp      # stdio
 ```
 
 TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, and Codex are in [`examples/client-configs/`](examples/client-configs/); agent-framework patterns are in [`examples/agent-stacks/`](examples/agent-stacks/).
@@ -44,9 +46,9 @@ git clone https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git
 cd ai-governance-mcp
 python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
-gag-mcp                               # stdio
-gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 64 tests
+gaig-mcp                              # stdio
+gaig-mcp --http --port 8000           # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
+pytest                                # 89 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -57,7 +59,7 @@ After the from-source install steps above.
 Success — synthetic sample, pinned evaluation time used by the test suite:
 
 ```bash
-python -c 'from gag_mcp.core import check_inventory
+python -c 'from gaig_mcp.core import check_inventory
 out = check_inventory(use_sample=True, evaluation_time="2026-10-16T00:00:00Z")
 assert out["authority_effect"] == "NONE"
 assert out["human_decision_state"] == "PENDING_HUMAN_DECISION"
@@ -74,10 +76,10 @@ Expected: `VALID` and a finding count greater than zero, including at least one 
 Failure — both inputs at once:
 
 ```bash
-python -c 'from gag_mcp.core import check_inventory, GagInputError
+python -c 'from gaig_mcp.core import check_inventory, GaigInputError
 try:
     check_inventory(inventory_csv="a,b\n", use_sample=True)
-except GagInputError as exc:
+except GaigInputError as exc:
     print(exc)'
 ```
 
@@ -86,16 +88,16 @@ Expected: `Provide inventory_csv or use_sample=true, not both.`
 Failure — no input:
 
 ```bash
-python -c 'from gag_mcp.core import check_inventory, GagInputError
+python -c 'from gaig_mcp.core import check_inventory, GaigInputError
 try:
     check_inventory()
-except GagInputError as exc:
+except GaigInputError as exc:
     print(exc)'
 ```
 
 Expected: `inventory_csv is empty. Supply CSV text or set use_sample=true.`
 
-Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
+Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
 
@@ -103,24 +105,26 @@ Environment variables (HTTP mode):
 
 | Var | Purpose |
 |---|---|
-| `GAG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Required for any non-loopback bind:** with `HOST`/`--host` other than `127.0.0.1`, `localhost`, or `::1`, the server refuses to start until this is set. |
-| `GAG_MCP_CORS_ORIGINS` | Comma-separated origins for browser-based clients (e.g., MCP Inspector). Off by default |
-| `GAG_MCP_BEARER_TOKEN` | Static bearer token, at least 32 characters (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). **Required whenever other machines can reach the server:** a non-loopback bind, or a `GAG_MCP_ALLOWED_HOSTS` entry that is not loopback (reverse proxy or tunnel). Without it the server refuses to start. Optional for loopback-only use. This is **not OAuth**; see "Auth" below |
-| `GAG_TOOLKIT_PATH`, `GAG_AGENTIC_PATH` | Use other checkouts instead of the bundled pinned files |
+| `GAIG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Required for any non-loopback bind:** with `HOST`/`--host` other than `127.0.0.1`, `localhost`, or `::1`, the server refuses to start until this is set. |
+| `GAIG_MCP_CORS_ORIGINS` | Comma-separated origins for browser-based clients (e.g., MCP Inspector). Off by default |
+| `GAIG_MCP_BEARER_TOKEN` | Static bearer token, at least 32 characters (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). **Required whenever other machines can reach the server:** a non-loopback bind, or a `GAIG_MCP_ALLOWED_HOSTS` entry that is not loopback (reverse proxy or tunnel). Without it the server refuses to start. Optional for loopback-only use. This is **not OAuth**; see "Auth" below |
+| `GAIG_TOOLKIT_PATH`, `GAIG_AGENTIC_PATH` | Use other checkouts instead of the bundled pinned files |
 | `HOST`, `PORT` | Bind address (defaults `127.0.0.1:8000`) |
+
+The deprecated `GAG_MCP_ALLOWED_HOSTS`, `GAG_MCP_CORS_ORIGINS`, `GAG_MCP_BEARER_TOKEN`, `GAG_TOOLKIT_PATH`, and `GAG_AGENTIC_PATH` names are still honored as fallbacks with the same fail-closed rules, including the loopback-plus-tunnel case.
 
 ## Client configuration (copy-paste)
 
-Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, and Codex: [`examples/client-configs/`](examples/client-configs/). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
+Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, and Codex: [`examples/client-configs/`](examples/client-configs/). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAIG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
 
 ### Claude Desktop (local, stdio)
 `claude_desktop_config.json` (Settings → Developer → Edit Config):
 ```json
 {
   "mcpServers": {
-    "gag": {
+    "gaig": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0", "gag-mcp"]
+      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0", "gaig-mcp"]
     }
   }
 }
@@ -139,9 +143,9 @@ curl https://api.anthropic.com/v1/messages \
   -H "anthropic-version: 2023-06-01" -H "anthropic-beta: mcp-client-2026-09-15" \
   -d '{
     "model": "CLAUDE_MODEL_ID", "max_tokens": 1500,
-    "messages": [{"role": "user", "content": "Use gag to check the sample AI inventory and summarize the critical findings."}],
-    "mcp_servers": [{"type": "url", "name": "gag", "url": "https://YOUR-HOST/mcp", "authorization_token": "TOKEN"}],
-    "tools": [{"type": "mcp_toolset", "mcp_server_name": "gag"}]
+    "messages": [{"role": "user", "content": "Use gaig to check the sample AI inventory and summarize the critical findings."}],
+    "mcp_servers": [{"type": "url", "name": "gaig", "url": "https://YOUR-HOST/mcp", "authorization_token": "TOKEN"}],
+    "tools": [{"type": "mcp_toolset", "mcp_server_name": "gaig"}]
   }'
 ```
 (`mcp-client-2025-11-20` is the previous header. `authorization_token` is required, because the server rejects requests without the token.)
@@ -152,9 +156,9 @@ curl https://api.openai.com/v1/responses \
   -H "content-type: application/json" -H "authorization: Bearer $OPENAI_API_KEY" \
   -d '{
     "model": "OPENAI_MODEL_ID",
-    "input": "Use gag to verify the signed-revoked example passport and explain the result.",
+    "input": "Use gaig to verify the signed-revoked example passport and explain the result.",
     "tools": [{
-      "type": "mcp", "server_label": "gag", "server_url": "https://YOUR-HOST/mcp",
+      "type": "mcp", "server_label": "gaig", "server_url": "https://YOUR-HOST/mcp",
       "headers": {"Authorization": "Bearer TOKEN"},
       "allowed_tools": ["check_inventory", "build_decision_pack", "validate_passport"],
       "require_approval": "never"
@@ -174,44 +178,45 @@ curl https://api.x.ai/v1/responses \
   -H "content-type: application/json" -H "authorization: Bearer $XAI_API_KEY" \
   -d '{
     "model": "GROK_MODEL_ID",
-    "input": "Use gag to run check_inventory on the sample and list critical findings.",
+    "input": "Use gaig to run check_inventory on the sample and list critical findings.",
     "tools": [{
-      "type": "mcp", "server_label": "gag", "server_url": "https://YOUR-HOST/mcp",
+      "type": "mcp", "server_label": "gaig", "server_url": "https://YOUR-HOST/mcp",
       "server_description": "Non-authorizing AI governance checks (authority_effect NONE)",
       "headers": {"Authorization": "Bearer TOKEN"},
       "allowed_tools": ["check_inventory", "build_decision_pack", "validate_passport"]
     }]
   }'
 ```
-xAI supports only Streamable HTTP or SSE; `require_approval` is not supported. In the xAI Python SDK, use `mcp(server_url=..., server_label="gag", allowed_tool_names=[...], extra_headers={"Authorization": "Bearer TOKEN"})`.
+xAI supports only Streamable HTTP or SSE; `require_approval` is not supported. In the xAI Python SDK, use `mcp(server_url=..., server_label="gaig", allowed_tool_names=[...], extra_headers={"Authorization": "Bearer TOKEN"})`.
 
 ### Grok (grok.com consumer connectors)
 grok.com/connectors → New Connector → Custom → enter `https://YOUR-HOST/mcp`. The server must be reachable on the public internet. Whether this connector can send a static `Authorization: Bearer` header is **unverified**. If it cannot, grok.com cannot connect to this server; use the xAI API above instead.
 
 ## Auth
 - **Local stdio:** no auth. The MCP spec says stdio servers take credentials from the environment.
-- **Loopback HTTP** (`127.0.0.1`, `localhost`, `::1`, with no public `GAG_MCP_ALLOWED_HOSTS` entry): the token is optional, as before.
-- **Any network exposure** (non-loopback bind, reverse proxy, or tunnel): `GAG_MCP_BEARER_TOKEN` is **required**, and the server refuses to start without it. There is no anonymous mode. An authenticating gateway in front of the server does not replace the token, because the server cannot verify a gateway's claim.
+- **Loopback HTTP** (`127.0.0.1`, `localhost`, `::1`, with no public `GAIG_MCP_ALLOWED_HOSTS` entry): the token is optional, as before.
+- **Any network exposure** (non-loopback bind, reverse proxy, or tunnel): `GAIG_MCP_BEARER_TOKEN` is **required**, and the server refuses to start without it. There is no anonymous mode. An authenticating gateway in front of the server does not replace the token, because the server cannot verify a gateway's claim.
 - **Bearer token:** sent as `Authorization: Bearer TOKEN` (`authorization_token` in the Anthropic API, `headers` in the OpenAI and xAI APIs). It is one static shared secret for every caller: no rotation (restart with a new value), no per-user identity, no scopes, and no expiry. It is compared in constant time, every rejection gets the same `401` body, and the presented value is never echoed. Serve it only over HTTPS.
 - **OAuth 2.1:** not implemented. Clients that offer only OAuth or no authentication cannot connect. Adding OAuth would require Protected Resource Metadata (RFC 9728) plus an authorization server.
 
 ## Self-hosting (needed for every remote platform; Global AI Governance operates no endpoint)
 
-Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the hostname clients use>`, and `GAG_MCP_BEARER_TOKEN=<random secret of 32+ characters>`. The server refuses to start on a non-loopback bind, or with a non-loopback allow-list entry, unless both are set.
+Every remote deployment needs, at minimum: HTTPS, `GAIG_MCP_ALLOWED_HOSTS=<the hostname clients use>`, and `GAIG_MCP_BEARER_TOKEN=<random secret of 32+ characters>`. The server refuses to start on a non-loopback bind, or with a non-loopback allow-list entry, unless both are set.
 
 | Option | Cost (per provider docs, Oct 2026) | Fit |
 |---|---|---|
-| Cloudflare Quick Tunnel (`cloudflared tunnel --url http://localhost:8000`) | Free, no account | **Testing only.** Random temporary URL. Set `GAG_MCP_ALLOWED_HOSTS` to the tunnel hostname and set `GAG_MCP_BEARER_TOKEN` |
+| Cloudflare Quick Tunnel (`cloudflared tunnel --url http://localhost:8000`) | Free, no account | **Testing only.** Random temporary URL. Set `GAIG_MCP_ALLOWED_HOSTS` to the tunnel hostname and set `GAIG_MCP_BEARER_TOKEN` |
 | Render free web service (`deploy/Dockerfile`) | $0; 512 MB; spins down after 15 min idle (about 1 min cold start) | Cheapest always-addressable URL; cold starts may time out some clients (unverified) |
 | Google Cloud Run (`deploy/Dockerfile`) | Free tier of 2M requests/month; billing account required | Scales to zero, HTTPS, custom domain |
 
 **Privacy note:** a hosted endpoint changes the toolkit's "LOCAL · NO UPLOAD" promise for that mode. Label it clearly, and keep stdio as the private default.
 
 ## Files
-- `src/gag_mcp/core.py`: transport-independent logic plus the authority envelope
-- `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
-- `src/gag_mcp/_upstream/`: pinned toolkit and agentic files bundled into the package, with `UPSTREAM_LOCK.json` (commit, file count, tree digest per upstream)
-- `tests/`: 64 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
+- `src/gaig_mcp/core.py`: transport-independent logic plus the authority envelope
+- `src/gaig_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
+- `src/gaig_mcp/_upstream/`: pinned toolkit and agentic files bundled into the package, with `UPSTREAM_LOCK.json` (commit, file count, tree digest per upstream)
+- `src/gag_mcp/`: deprecated import alias of `gaig_mcp`
+- `tests/`: 89 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones; `scripts/bundle_upstreams.py`: copies them into the package and checks the bundle (`--check`, run in CI)
 - `examples/client-configs/`, `examples/agent-stacks/`: copy-paste client configs and agent-framework patterns, each labelled TESTED or untested
@@ -230,4 +235,4 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 This repository does not operate an external security-report intake. Do not place secrets, credentials, personal data, sensitive operational information, or vulnerability material in public GitHub surfaces.
 
 ## License
-Apache-2.0. See [LICENSE](LICENSE). The bundled pinned upstream files keep their own licenses, included alongside them in `src/gag_mcp/_upstream/` (toolkit: MIT; agentic: Apache-2.0).
+Apache-2.0. See [LICENSE](LICENSE). The bundled pinned upstream files keep their own licenses, included alongside them in `src/gaig_mcp/_upstream/` (toolkit: MIT; agentic: Apache-2.0).

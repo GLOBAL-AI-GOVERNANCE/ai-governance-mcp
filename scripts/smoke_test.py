@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke test: a real MCP client calls every gag-mcp tool over stdio and Streamable HTTP.
+"""Smoke test: a real MCP client calls every gaig-mcp tool over stdio and Streamable HTTP.
 
 Usage: python scripts/smoke_test.py [--transcript docs/verification-transcript.md]
 Exit code 0 only if every call succeeds and every result carries authority_effect NONE.
@@ -103,13 +103,13 @@ async def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--transcript")
     a = ap.parse_args()
-    log("# gag-mcp verification transcript")
+    log("# gaig-mcp verification transcript")
     log(f"\nGenerated {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')} on a local machine. "
         "Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.")
-    await exercise("stdio (subprocess)", StdioServerParameters(command=sys.executable, args=["-m", "gag_mcp.server"],
+    await exercise("stdio (subprocess)", StdioServerParameters(command=sys.executable, args=["-m", "gaig_mcp.server"],
                                                                env=dict(os.environ)))
     port = free_port()
-    proc = subprocess.Popen([sys.executable, "-m", "gag_mcp.server", "--http", "--port", str(port)],
+    proc = subprocess.Popen([sys.executable, "-m", "gaig_mcp.server", "--http", "--port", str(port)],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     base = f"http://127.0.0.1:{port}"
     try:

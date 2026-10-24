@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy the pinned upstream files that gag-mcp runs into src/gag_mcp/_upstream.
+"""Copy the pinned upstream files that gaig-mcp runs into src/gaig_mcp/_upstream.
 
 Run ./scripts/fetch_upstreams.sh first. Only git-tracked files from the exact
 source-lock commits in scripts/fetch_upstreams.sh are copied.
@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VENDOR = ROOT / "vendor"
-BUNDLE = ROOT / "src" / "gag_mcp" / "_upstream"
+BUNDLE = ROOT / "src" / "gaig_mcp" / "_upstream"
 LOCK_FILE = "UPSTREAM_LOCK.json"
 
 UPSTREAMS = {

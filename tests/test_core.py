@@ -1,6 +1,6 @@
 import pytest
 
-from gag_mcp import core
+from gaig_mcp import core
 from conftest import EVAL_TIME, assert_non_authorizing
 
 
@@ -30,19 +30,19 @@ def test_check_inventory_is_reproducible(gap_csv):
 
 
 def test_check_inventory_rejects_bad_csv():
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.check_inventory(inventory_csv="system_id,system_name\nX,Y\n")
 
 
 def test_check_inventory_requires_input():
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.check_inventory()
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.check_inventory(inventory_csv="a,b\n", use_sample=True)
 
 
 def test_check_inventory_size_cap():
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.check_inventory(inventory_csv="x" * (core.MAX_INPUT_BYTES + 1))
 
 
@@ -96,9 +96,9 @@ def test_validate_passport_caller_supplied_tampered_fails_closed():
 
 
 def test_validate_passport_input_errors():
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.validate_passport()
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.validate_passport(example="nope")
-    with pytest.raises(core.GagInputError):
+    with pytest.raises(core.GaigInputError):
         core.validate_passport(passport="{not json", trusted_key="{}")

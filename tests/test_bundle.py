@@ -3,11 +3,11 @@ import pathlib
 import re
 import unittest
 
-from gag_mcp import core
+from gaig_mcp import core
 
 ROOT = pathlib.Path(__file__).parents[1]
 SCRIPT = (ROOT / "scripts" / "fetch_upstreams.sh").read_text()
-LOCK = ROOT / "src" / "gag_mcp" / "_upstream" / "UPSTREAM_LOCK.json"
+LOCK = ROOT / "src" / "gaig_mcp" / "_upstream" / "UPSTREAM_LOCK.json"
 
 
 def _pin(name: str) -> str:
@@ -25,12 +25,12 @@ class BundleTests(unittest.TestCase):
 
     def test_bundled_upstreams_resolve_without_env(self):
         import os
-        if os.environ.get("GAG_TOOLKIT_PATH") or os.environ.get("GAG_AGENTIC_PATH"):
+        if any(os.environ.get(p + s) for p in ("GAIG_", "GAG_") for s in ("TOOLKIT_PATH", "AGENTIC_PATH")):
             self.skipTest("explicit upstream override set")
         self.assertTrue((core.toolkit_root() / "LICENSE").is_file())
         self.assertTrue((core.agentic_root() / "LICENSE").is_file())
-        self.assertEqual(core._source_commit("toolkit", "GAG_TOOLKIT_PATH", core.toolkit_root()), _pin("TOOLKIT")[:7])
-        self.assertEqual(core._source_commit("agentic", "GAG_AGENTIC_PATH", core.agentic_root()), _pin("AGENTIC")[:7])
+        self.assertEqual(core._source_commit("toolkit", "TOOLKIT_PATH", core.toolkit_root()), _pin("TOOLKIT")[:7])
+        self.assertEqual(core._source_commit("agentic", "AGENTIC_PATH", core.agentic_root()), _pin("AGENTIC")[:7])
 
 
 if __name__ == "__main__":

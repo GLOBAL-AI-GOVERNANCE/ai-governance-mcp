@@ -1,3 +1,5 @@
-"""gag-mcp: non-authorizing MCP server for Global AI Governance reference tooling."""
+"""Deprecated alias of ``gaig_mcp``. Import ``gaig_mcp`` instead."""
 
-__version__ = "0.1.0"
+from gaig_mcp import __version__
+
+__all__ = ["__version__"]
