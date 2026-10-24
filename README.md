@@ -1,7 +1,7 @@
 # AI Governance Model Context Protocol Server (AI Governance MCP)
 
 <!-- gaig:nav -->
-[![Global AI Governance](https://img.shields.io/badge/Global_AI_Governance-portfolio-0b100d)](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE) ![Status](https://img.shields.io/badge/status-v0.3.1_preview-orange) ![authority_effect](https://img.shields.io/badge/authority__effect-NONE-lightgrey)
+[![Global AI Governance](https://img.shields.io/badge/Global_AI_Governance-portfolio-0b100d)](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE) ![Status](https://img.shields.io/badge/status-v0.3.2_preview-orange) ![authority_effect](https://img.shields.io/badge/authority__effect-NONE-lightgrey)
 
 **[Connect your agent](https://ai-governance.solutions/connect.html#agents)** · **[Read the spec](https://ai-governance.solutions/connect.html#spec)** · [All products](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE#product-map)
 <!-- /gaig:nav -->
@@ -9,12 +9,12 @@
 Governance checks your AI agents can call. Start the server with one command, and your agent can check an AI system inventory, prepare a Decision Pack, or verify an Agent Trust Passport. Every result is read-only and leaves the decision with a person.
 
 ```bash
-uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1 gaig-mcp
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2 gaig-mcp
 ```
 
 **Model Context Protocol (MCP)** is an open standard that lets AI assistants discover and call external tools through a common interface. This repository is a non-authorizing MCP server for Global AI Governance reference tooling.
 
-**Status:** v0.3.1 preview. Source is public in this repository. **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
+**Status:** v0.3.2 preview. Source is public in this repository. **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
 
 **Names:** the console command is `gaig-mcp`, the import package is `gaig_mcp`, the MCP server name reported to clients is `gaig-mcp`, and environment variables use the `GAIG_MCP_` / `GAIG_` prefixes. The Python distribution and the desktop-extension manifest `name` are also `gaig-mcp` (wheel `gaig_mcp`).
 
@@ -24,7 +24,7 @@ AI Governance MCP exposes the real Global AI Governance reference tooling to MCP
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
-| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `4deb5b70b07d8f91cf157ef07d7ddd7dfe68731c`, release v2.7.1) |
+| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cc5f5997a9d44958099b292a2081c86b52ee515c`, release v2.7.1) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
 | `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `58bdfb291df0de7c9437b4476e370a609c4b1d5f`) |
 
@@ -46,10 +46,10 @@ Compatible with MCP-based agents. Not affiliated with or endorsed by xAI, OpenAI
 No clone needed. The pinned toolkit and agentic files are bundled in the package (`src/gaig_mcp/_upstream/`, source lock in `UPSTREAM_LOCK.json`), so this runs with no other checkout:
 
 ```bash
-uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1 gaig-mcp      # stdio
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2 gaig-mcp      # stdio
 ```
 
-TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, Codex, Claude Code, and the Grok CLI are in [`examples/client-configs/`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/tree/v0.3.1/examples/client-configs); agent-framework patterns and the Action Level guard are in [`examples/agent-stacks/`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/tree/v0.3.1/examples/agent-stacks).
+TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, Codex, Claude Code, and the Grok CLI are in [`examples/client-configs/`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/tree/v0.3.2/examples/client-configs); agent-framework patterns and the Action Level guard are in [`examples/agent-stacks/`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/tree/v0.3.2/examples/agent-stacks).
 
 From source:
 
@@ -118,9 +118,9 @@ out = check_inventory(inventory_csv=Path("docs/examples/minimal-inventory.csv").
 print(out["result"]["validation_state"], out["result"]["finding_count"])'
 ```
 
-Expected last line: `VALID 0` (the toolkit also prints its progress lines). [`docs/examples/minimal-inventory.csv`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/docs/examples/minimal-inventory.csv) holds the required header row and one synthetic system; replace the row with your own systems. The same file is installed with the package, so a pip or uvx install without a clone can use `from gaig_mcp.core import minimal_inventory_csv` and pass `minimal_inventory_csv()` as `inventory_csv`. If a column is missing, `check_inventory` fails closed with `MISSING_REQUIRED_COLUMN`, lists the required columns, and points to this file.
+Expected last line: `VALID 0` (the toolkit also prints its progress lines). [`docs/examples/minimal-inventory.csv`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/docs/examples/minimal-inventory.csv) holds the required header row and one synthetic system; replace the row with your own systems. The same file is installed with the package, so a pip or uvx install without a clone can use `from gaig_mcp.core import minimal_inventory_csv` and pass `minimal_inventory_csv()` as `inventory_csv`. If a column is missing, `check_inventory` fails closed with `MISSING_REQUIRED_COLUMN`, lists the required columns, and points to this file.
 
-Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gaig-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
+Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gaig-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
 
@@ -138,7 +138,7 @@ Only these `GAIG_*` names are read. A setting name from before v0.3.0 makes the 
 
 ## Client configuration (copy-paste)
 
-Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, Codex, Claude Code, and the Grok CLI: [`examples/client-configs/`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/tree/v0.3.1/examples/client-configs). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAIG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
+Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, Codex, Claude Code, and the Grok CLI: [`examples/client-configs/`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/tree/v0.3.2/examples/client-configs). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAIG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
 
 ### Claude Desktop (local, stdio)
 `claude_desktop_config.json` (Settings → Developer → Edit Config):
@@ -147,7 +147,7 @@ Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio config
   "mcpServers": {
     "gaig": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1", "gaig-mcp"]
+      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2", "gaig-mcp"]
     }
   }
 }
@@ -158,15 +158,15 @@ One-click desktop extension: `manifest.json` (MCPB `manifest_version` 0.4) passe
 
 ### Claude Code (local, stdio)
 ```bash
-claude mcp add gaig --scope project -- uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1 gaig-mcp
+claude mcp add gaig --scope project -- uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2 gaig-mcp
 ```
-This writes a project `.mcp.json` like [`examples/client-configs/claude-code.mcp.json`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/client-configs/claude-code.mcp.json). Tools appear as `mcp__gaig__check_inventory` and so on. Launch command TESTED with the MCP Python SDK stdio client; not tested inside Claude Code (untested).
+This writes a project `.mcp.json` like [`examples/client-configs/claude-code.mcp.json`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/client-configs/claude-code.mcp.json). Tools appear as `mcp__gaig__check_inventory` and so on. Launch command TESTED with the MCP Python SDK stdio client; not tested inside Claude Code (untested).
 
 ### Grok CLI (local, stdio)
 ```bash
-grok mcp add gaig -- uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1 gaig-mcp
+grok mcp add gaig -- uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2 gaig-mcp
 ```
-Or add [`examples/client-configs/grok-cli.config.toml`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/client-configs/grok-cli.config.toml) to `~/.grok/config.toml`. The Grok CLI also reads a project `.mcp.json`, so the Claude Code file works there too; check with `grok mcp doctor`. Tools appear as `gaig__check_inventory` and so on. Launch command TESTED with the MCP Python SDK stdio client; not tested inside the Grok CLI (untested).
+Or add [`examples/client-configs/grok-cli.config.toml`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/client-configs/grok-cli.config.toml) to `~/.grok/config.toml`. The Grok CLI also reads a project `.mcp.json`, so the Claude Code file works there too; check with `grok mcp doctor`. Tools appear as `gaig__check_inventory` and so on. Launch command TESTED with the MCP Python SDK stdio client; not tested inside the Grok CLI (untested).
 
 ### Claude.ai / Claude Desktop / mobile (remote custom connector)
 Add custom connector → URL `https://YOUR-HOST/mcp`, sign-in "None", then under **Request headers** add `authorization` with the value `Bearer TOKEN`. Anthropic documents request headers as a beta available to a limited set of organizations. If your organization does not see that section, Claude.ai cannot connect to this server: it does not implement OAuth and does not accept anonymous network requests. Which plans can add custom connectors: **unverified**; check the Claude Help Center.
@@ -229,7 +229,7 @@ grok.com/connectors → New Connector → Custom → enter `https://YOUR-HOST/mc
 
 ## Guard agent tool calls by Action Level
 
-gaig-mcp tools are read-only, but the agents that call them usually have other tools too. [`examples/agent-stacks/action_level_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/agent-stacks/action_level_guard.py) (standard library only) checks every tool call before it runs, using the Action Levels in the [action-authority spec](https://github.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/blob/main/spec/08-action-authority.md):
+gaig-mcp tools are read-only, but the agents that call them usually have other tools too. [`examples/agent-stacks/action_level_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/agent-stacks/action_level_guard.py) (standard library only) checks every tool call before it runs, using the Action Levels in the [action-authority spec](https://github.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/blob/main/spec/08-action-authority.md):
 
 | Level | Meaning | Guard decision |
 |---|---|---|
@@ -242,11 +242,11 @@ You list your tools and their levels (`ActionLevelGuard({"send_external_email": 
 
 | Stack | File | How Level 4 and Level 5 are enforced | Status |
 |---|---|---|---|
-| OpenAI Agents SDK (Python) | [`openai_agents_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/agent-stacks/openai_agents_guard.py) | `require_approval` callable pauses Level 4 for `state.approve` / `state.reject`; a tool input guardrail rejects Level 5 | TESTED offline: openai-agents 0.24.0 runner, real gaig-mcp stdio server, scripted stand-in model |
-| Claude Agent SDK (Python) | [`claude_agent_sdk_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/agent-stacks/claude_agent_sdk_guard.py) | `PreToolUse` hook returns `ask` or `deny` | TESTED offline: claude-agent-sdk 0.2.174 hook called directly; not run against Claude |
-| Claude Code | [`tool_call_hook.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/agent-stacks/tool_call_hook.py) + [`claude-code.settings.json`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/client-configs/claude-code.settings.json) | `PreToolUse` command hook returns `ask` or `deny` | Hook contract TESTED with recorded-format input; not run inside Claude Code (untested) |
-| Grok CLI | same hook + [`grok-cli.hooks.json`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/client-configs/grok-cli.hooks.json) | Grok hooks can only deny, so Level 4 and Level 5 are denied with the reason | Hook contract TESTED with recorded-format input; not run inside the Grok CLI (untested) |
-| OpenAI Responses API (hosted MCP) | [`remote_mcp_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/examples/agent-stacks/remote_mcp_guard.py) | `require_approval` for Level 4; `mcp_approval_response` never approves Level 5; Level 5 tools are not exposed | Request shapes and approval answers TESTED offline; no live request (untested) |
+| OpenAI Agents SDK (Python) | [`openai_agents_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/agent-stacks/openai_agents_guard.py) | `require_approval` callable pauses Level 4 for `state.approve` / `state.reject`; a tool input guardrail rejects Level 5 | TESTED offline: openai-agents 0.24.0 runner, real gaig-mcp stdio server, scripted stand-in model |
+| Claude Agent SDK (Python) | [`claude_agent_sdk_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/agent-stacks/claude_agent_sdk_guard.py) | `PreToolUse` hook returns `ask` or `deny` | TESTED offline: claude-agent-sdk 0.2.174 hook called directly; not run against Claude |
+| Claude Code | [`tool_call_hook.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/agent-stacks/tool_call_hook.py) + [`claude-code.settings.json`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/client-configs/claude-code.settings.json) | `PreToolUse` command hook returns `ask` or `deny` | Hook contract TESTED with recorded-format input; not run inside Claude Code (untested) |
+| Grok CLI | same hook + [`grok-cli.hooks.json`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/client-configs/grok-cli.hooks.json) | Grok hooks can only deny, so Level 4 and Level 5 are denied with the reason | Hook contract TESTED with recorded-format input; not run inside the Grok CLI (untested) |
+| OpenAI Responses API (hosted MCP) | [`remote_mcp_guard.py`](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/examples/agent-stacks/remote_mcp_guard.py) | `require_approval` for Level 4; `mcp_approval_response` never approves Level 5; Level 5 tools are not exposed | Request shapes and approval answers TESTED offline; no live request (untested) |
 | Anthropic Messages API (MCP connector) | same file | Only Level 0-3 tools are enabled in `mcp_toolset` | Request shape TESTED offline; no live request (untested) |
 | xAI API (remote MCP) | same file | Only Level 0-3 tools in `allowed_tools`; xAI has no `require_approval` | Request shape TESTED offline; no live request (untested) |
 
@@ -296,4 +296,4 @@ Every remote deployment needs, at minimum: HTTPS, `GAIG_MCP_ALLOWED_HOSTS=<the h
 This repository does not operate an external security-report intake. Do not place secrets, credentials, personal data, sensitive operational information, or vulnerability material in public GitHub surfaces.
 
 ## License
-Apache-2.0. See [LICENSE](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.1/LICENSE). The bundled pinned upstream files keep their own licenses, included alongside them in `src/gaig_mcp/_upstream/` (toolkit: MIT; agentic: Apache-2.0).
+Apache-2.0. See [LICENSE](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/LICENSE). The bundled pinned upstream files keep their own licenses, included alongside them in `src/gaig_mcp/_upstream/` (toolkit: MIT; agentic: Apache-2.0).

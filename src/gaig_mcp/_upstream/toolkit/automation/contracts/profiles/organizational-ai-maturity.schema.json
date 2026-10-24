@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/main/automation/contracts/profiles/organizational-ai-maturity.schema.json",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/v2.7.2/automation/contracts/profiles/organizational-ai-maturity.schema.json",
   "title": "Organizational AI Maturity Evidence Assessment",
   "description": "A human process selects maturity. The evaluator checks whether submitted evidence can carry that determination. evidence_supported_level is not an independent maturity finding. authority_effect is NONE.",
   "type": "object",

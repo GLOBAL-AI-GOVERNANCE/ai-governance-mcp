@@ -42,6 +42,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Require every schema $id to resolve to the document in this tag
+        run: python -B scripts/check_schema_ids.py --online
+
       - name: Build wheel and sdist from the tag
         shell: bash
         run: |
