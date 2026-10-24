@@ -48,7 +48,7 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 gaig-mcp                              # stdio
 gaig-mcp --http --port 8000           # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 91 tests
+pytest                                # 94 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -106,7 +106,7 @@ out = check_inventory(inventory_csv=Path("docs/examples/minimal-inventory.csv").
 print(out["result"]["validation_state"], out["result"]["finding_count"])'
 ```
 
-Expected last line: `VALID 0` (the toolkit also prints its progress lines). [`docs/examples/minimal-inventory.csv`](docs/examples/minimal-inventory.csv) holds the required header row and one synthetic system; replace the row with your own systems. If a column is missing, `check_inventory` fails closed with `MISSING_REQUIRED_COLUMN`, lists the required columns, and points to this file.
+Expected last line: `VALID 0` (the toolkit also prints its progress lines). [`docs/examples/minimal-inventory.csv`](docs/examples/minimal-inventory.csv) holds the required header row and one synthetic system; replace the row with your own systems. The same file is installed with the package, so a pip or uvx install without a clone can use `from gaig_mcp.core import minimal_inventory_csv` and pass `minimal_inventory_csv()` as `inventory_csv`. If a column is missing, `check_inventory` fails closed with `MISSING_REQUIRED_COLUMN`, lists the required columns, and points to this file.
 
 Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
@@ -227,7 +227,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAIG_MCP_ALLOWED_HOSTS=<the h
 - `src/gaig_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
 - `src/gaig_mcp/_upstream/`: pinned toolkit and agentic files bundled into the package, with `UPSTREAM_LOCK.json` (commit, file count, tree digest per upstream)
 - `src/gag_mcp/`: deprecated import alias of `gaig_mcp`
-- `tests/`: 91 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
+- `tests/`: 94 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones; `scripts/bundle_upstreams.py`: copies them into the package and checks the bundle (`--check`, run in CI)
 - `examples/client-configs/`, `examples/agent-stacks/`: copy-paste client configs and agent-framework patterns, each labelled TESTED or untested

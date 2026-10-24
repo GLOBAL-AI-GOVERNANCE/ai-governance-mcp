@@ -33,7 +33,7 @@ where = ["src"]
 include = ["gaig_mcp", "gaig_mcp.*", "gag_mcp"]
 
 [tool.setuptools.package-data]
-gaig_mcp = ["_upstream/**/*"]
+gaig_mcp = ["_upstream/**/*", "examples/*.csv"]
 
 [tool.setuptools.exclude-package-data]
 gaig_mcp = ["**/__pycache__/*", "**/*.pyc"]
