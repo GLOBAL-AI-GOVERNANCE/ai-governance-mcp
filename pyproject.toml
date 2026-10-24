@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gaig-mcp"
-version = "0.3.0"
+version = "0.3.1"
 description = "AI Governance Model Context Protocol Server (AI Governance MCP): non-authorizing tools for Global AI Governance reference tooling (authority_effect NONE)."
 readme = "README.md"
 requires-python = ">=3.11"
