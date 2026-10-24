@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/mcp-inventory.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Alpha.1 MCP Inventory",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "inventory_type",
+    "agent_id",
+    "servers",
+    "production_use"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "inventory_type": {
+      "const": "mcp"
+    },
+    "agent_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "servers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "server_id",
+          "transport",
+          "declared_scope"
+        ],
+        "properties": {
+          "server_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "transport": {
+            "enum": [
+              "stdio",
+              "streamable-http",
+              "sse"
+            ]
+          },
+          "declared_scope": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/mcpScope"
+            },
+            "uniqueItems": true
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "production_use": {
+      "type": "boolean"
+    }
+  },
+  "unevaluatedProperties": false
+}

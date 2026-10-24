@@ -1,6 +1,6 @@
 # gag-mcp verification transcript
 
-Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.
+Generated 2026-10-23 17:53 PDT on a local machine. Real MCP client (official Python SDK `mcp` 2.3.0) calling the local server. Results are excerpted.
 
 ## Transport: stdio (subprocess)
 
@@ -47,7 +47,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "cf906ef"
+    "commit": "afcd06d"
   },
   "result_excerpt": {
     "validation_state": "VALID",
@@ -76,7 +76,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "cf906ef"
+    "commit": "afcd06d"
   },
   "result_excerpt": {
     "decision_status": "pending_human_decision",
@@ -101,7 +101,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance",
-    "commit": "2124aea",
+    "commit": "58bdfb2",
     "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"
   },
   "result_excerpt": {
@@ -120,7 +120,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance",
-    "commit": "2124aea",
+    "commit": "58bdfb2",
     "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"
   },
   "result_excerpt": {
@@ -137,7 +137,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
 
 `GET /health` → `{'status': 'ok', 'server': 'gag-mcp', 'version': '0.1.0', 'authority_effect': 'NONE'}`
 
-## Transport: Streamable HTTP (http://127.0.0.1:55627/mcp)
+## Transport: Streamable HTTP (http://127.0.0.1:39355/mcp)
 
 `tools/list` →
 ```json
@@ -182,7 +182,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "cf906ef"
+    "commit": "afcd06d"
   },
   "result_excerpt": {
     "validation_state": "VALID",
@@ -211,7 +211,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-    "commit": "cf906ef"
+    "commit": "afcd06d"
   },
   "result_excerpt": {
     "decision_status": "pending_human_decision",
@@ -236,7 +236,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance",
-    "commit": "2124aea",
+    "commit": "58bdfb2",
     "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"
   },
   "result_excerpt": {
@@ -255,7 +255,7 @@ Generated 2026-10-16 21:49 PDT on a local development machine. Real MCP client (
   "human_decision_state": "PENDING_HUMAN_DECISION",
   "source": {
     "repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance",
-    "commit": "2124aea",
+    "commit": "58bdfb2",
     "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"
   },
   "result_excerpt": {

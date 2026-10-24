@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/agent-trust-passport.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Agent Trust Passport",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "framework",
+    "profile",
+    "passport_id",
+    "issuer",
+    "subject",
+    "issued_assessment",
+    "assurance",
+    "bindings",
+    "validity",
+    "conditions",
+    "extensions",
+    "critical_extensions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "framework": {
+      "type": "object",
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "const": "global-ai-governance.agentic-ai-governance"
+        },
+        "version": {
+          "const": "v0.1.0-alpha.1"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "profile": {
+      "type": "object",
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "version": {
+          "$ref": "common.schema.json#/$defs/version"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "passport_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "issuer": {
+      "type": "object",
+      "required": [
+        "issuer_id"
+      ],
+      "properties": {
+        "issuer_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "subject": {
+      "type": "object",
+      "required": [
+        "agent_id"
+      ],
+      "properties": {
+        "agent_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "issued_assessment": {
+      "type": "object",
+      "required": [
+        "assessment_id",
+        "data_authority_status",
+        "result",
+        "evaluated_at",
+        "control_summary",
+        "maximum_action_level"
+      ],
+      "properties": {
+        "result": {
+          "$ref": "common.schema.json#/$defs/assessmentResult"
+        },
+        "evaluated_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "control_summary": {
+          "type": "object",
+          "required": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE",
+            "NOT_EVALUATED",
+            "ERROR"
+          ],
+          "properties": {
+            "PASS": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "FAIL": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NOT_APPLICABLE": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NOT_EVALUATED": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ERROR": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "maximum_action_level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "assessment_id": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "data_authority_status": {
+          "$ref": "common.schema.json#/$defs/dataAuthorityStatus"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "assurance": {
+      "type": "object",
+      "required": [
+        "evidence_basis",
+        "validation_method",
+        "attestation_status"
+      ],
+      "properties": {
+        "evidence_basis": {
+          "const": "DECLARED"
+        },
+        "validation_method": {
+          "const": "STRUCTURAL"
+        },
+        "attestation_status": {
+          "$ref": "common.schema.json#/$defs/attestationStatus"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "bindings": {
+      "type": "object",
+      "required": [
+        "assessment_bundle",
+        "action_authority_graph",
+        "agent_inventory",
+        "mcp_inventory",
+        "tool_inventory",
+        "control_profile",
+        "control_profile_descriptor",
+        "data_authority_evidence",
+        "evaluator_id",
+        "evaluator_version",
+        "assessment_policy_id",
+        "assessment_policy_version"
+      ],
+      "properties": {
+        "assessment_bundle": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "agent_inventory": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "mcp_inventory": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "tool_inventory": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "control_profile": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "data_authority_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/hash"
+          },
+          "uniqueItems": true
+        },
+        "evaluator_version": {
+          "$ref": "common.schema.json#/$defs/version"
+        },
+        "assessment_policy_version": {
+          "$ref": "common.schema.json#/$defs/version"
+        },
+        "action_authority_graph": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "control_profile_descriptor": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "evaluator_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "assessment_policy_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "validity": {
+      "type": "object",
+      "required": [
+        "not_before",
+        "expires_at"
+      ],
+      "properties": {
+        "not_before": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "condition_id",
+          "control_id",
+          "owner",
+          "deadline",
+          "required_evidence",
+          "temporary_restriction",
+          "closure_rule"
+        ],
+        "properties": {
+          "condition_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "control_id": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}-\\d{3}$"
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deadline": {
+            "$ref": "common.schema.json#/$defs/timestamp"
+          },
+          "required_evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "temporary_restriction": {
+            "type": "object",
+            "required": [
+              "maximum_action_level"
+            ],
+            "properties": {
+              "maximum_action_level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4
+              }
+            },
+            "unevaluatedProperties": false
+          },
+          "closure_rule": {
+            "type": "object",
+            "required": [
+              "all_required_evidence_valid"
+            ],
+            "properties": {
+              "all_required_evidence_valid": {
+                "const": true
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "common.schema.json#/$defs/extensionKey"
+      },
+      "additionalProperties": true
+    },
+    "critical_extensions": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/extensionKey"
+      },
+      "uniqueItems": true
+    },
+    "proof": {
+      "$ref": "common.schema.json#/$defs/proof"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "assurance": {
+          "properties": {
+            "attestation_status": {
+              "const": "NONE"
+            }
+          }
+        }
+      },
+      "not": {
+        "required": [
+          "proof"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "assurance": {
+          "properties": {
+            "attestation_status": {
+              "const": "ISSUER_SIGNED"
+            }
+          }
+        }
+      },
+      "required": [
+        "proof"
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

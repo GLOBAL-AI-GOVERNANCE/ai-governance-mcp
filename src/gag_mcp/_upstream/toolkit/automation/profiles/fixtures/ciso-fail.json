@@ -1,0 +1,1 @@
+{"governed_system_reference":"SYSTEM-SYNTH-CS-FAIL","accountable_roles":{"business_owner":"Customer Operations"},"governance_decision":"hold","decision_expiration":"2026-01-01T00:00:00Z","top_condition":null,"stop_condition":"","evidence":[],"dependencies":[{"id":"agentic-stateful-revocation","state":"NOT_YET_ESTABLISHED"}]}

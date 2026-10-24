@@ -1,0 +1,22 @@
+{
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/v1/governance-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "generator_version": {"const": "1.0.0"},
+    "normalization_version": {"const": "1.0.0"},
+    "policy_id": {"minLength": 1, "type": "string"},
+    "policy_version": {"minLength": 1, "type": "string"},
+    "evaluation_time": {"pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$", "type": ["string", "null"]},
+    "input_digest": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "validation_state": {"const": "VALID"},
+    "governance_gate_state": {"enum": ["PASSED_CURRENT_AUTOMATED_CHECKS", "REVIEW_REQUIRED", "BLOCKED"]},
+    "human_decision_state": {"const": "PENDING_HUMAN_DECISION"},
+    "blocking_threshold": {"enum": ["none", "high", "critical"]},
+    "finding_count": {"minimum": 0, "type": "integer"},
+    "system_ids": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true}
+  },
+  "required": ["schema_version", "generator_version", "normalization_version", "policy_id", "policy_version", "evaluation_time", "input_digest", "validation_state", "governance_gate_state", "human_decision_state", "blocking_threshold", "finding_count", "system_ids"],
+  "type": "object"
+}

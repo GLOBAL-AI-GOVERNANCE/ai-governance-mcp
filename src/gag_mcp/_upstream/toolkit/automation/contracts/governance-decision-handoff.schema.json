@@ -1,0 +1,81 @@
+{
+  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/contracts/governance-decision-handoff.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "authority_effect": {
+      "const": "NONE"
+    },
+    "authority_refs": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "configuration_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decision_pack_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "evidence_refs": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "handoff_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "review_boundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "source_artifact_type": {
+      "const": "AI_GOVERNANCE_DECISION_PACK_REFERENCE"
+    },
+    "source_repository": {
+      "const": "global-ai-governance-toolkit"
+    },
+    "system_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "target_repository": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "handoff_id",
+    "source_repository",
+    "source_artifact_type",
+    "decision_pack_id",
+    "system_id",
+    "target_repository",
+    "artifact_digest",
+    "evidence_refs",
+    "authority_refs",
+    "authority_effect",
+    "review_boundary"
+  ],
+  "title": "Governance Decision Handoff Reference",
+  "type": "object"
+}

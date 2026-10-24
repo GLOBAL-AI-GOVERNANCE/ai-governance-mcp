@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "template_id": "mission-metrics-template",
+  "synthetic": true,
+  "reference_only": true,
+  "authority_effect": "NONE",
+  "metrics": [
+    {"id": "requirement_to_supported_capability_median", "definition": "Median elapsed time from an accepted requirement to a referenced supported capability.", "unit": "hours", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "requirement_to_supported_capability_p90", "definition": "90th percentile of the same elapsed time.", "unit": "hours", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "requalification_time", "definition": "Elapsed time from a material change to a completed requalification record.", "unit": "hours", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "mean_time_to_restore", "definition": "Mean elapsed time from a declared loss to a demonstrated recovery record.", "unit": "hours", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "succession_relief_success", "definition": "Share of succession or relief exercises recorded as SUCCESS.", "unit": "ratio", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "fallback_success", "definition": "Share of exercises with fallback_demonstrated true.", "unit": "ratio", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "evidence_freshness", "definition": "Age of the newest accepted evidence reference at evaluation time.", "unit": "hours", "measurement_window": "evaluation instant", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "unresolved_decision_age", "definition": "Age of the oldest decision that still lacks a human disposition.", "unit": "hours", "measurement_window": "evaluation instant", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "dependency_exit_time", "definition": "Elapsed time of a completed dependency-exit exercise.", "unit": "hours", "measurement_window": "declared exercise", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "documented_exceptional_intervention", "definition": "Count of documented exceptional or hero interventions.", "unit": "count", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "failed_or_declined_missions", "definition": "Count of missions recorded as failed or declined.", "unit": "count", "measurement_window": "declared review window", "source_reference": null, "limitations": ["no measured value"], "value": null},
+    {"id": "comparator_result", "definition": "Recorded comparison against the incumbent method. This template does not supply a result.", "unit": "record", "measurement_window": "declared comparison", "source_reference": null, "limitations": ["no measured value"], "value": null}
+  ],
+  "limitations": ["template only; no measured values are supplied"]
+}

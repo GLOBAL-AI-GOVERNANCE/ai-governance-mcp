@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "agent_id": "agent.synthetic.quickstart",
+  "requested_level": 2,
+  "computed_level": 2,
+  "dimensions": {
+    "delegation": false,
+    "unattended": false,
+    "code_execution": false,
+    "credential_change": false,
+    "identity_change": false,
+    "external_publication": false,
+    "data_movement": false,
+    "self_modification": false,
+    "reversibility": "FULL",
+    "blast_radius": "LOCAL"
+  },
+  "nodes": [
+    {
+      "node_id": "agent.synthetic.quickstart",
+      "node_type": "AGENT",
+      "base_level": 2
+    },
+    {
+      "node_id": "mcp.synthetic.public-catalog",
+      "node_type": "MCP_SERVER",
+      "base_level": 1
+    },
+    {
+      "node_id": "tool.synthetic.retrieve-public",
+      "node_type": "TOOL",
+      "base_level": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "agent.synthetic.quickstart",
+      "to": "mcp.synthetic.public-catalog",
+      "edge_type": "INVOKES"
+    },
+    {
+      "from": "mcp.synthetic.public-catalog",
+      "to": "tool.synthetic.retrieve-public",
+      "edge_type": "INVOKES"
+    }
+  ]
+}

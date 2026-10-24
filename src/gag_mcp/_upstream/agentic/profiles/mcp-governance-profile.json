@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "profile_id": "global-ai-governance.mcp-governance",
+  "profile_version": "0.1.0-alpha.1",
+  "assessment_policy": {
+    "id": "global-ai-governance.alpha1-reference-policy",
+    "version": "0.1.0-alpha.1"
+  },
+  "evaluator": {
+    "id": "global-ai-governance.reference-validator",
+    "version": "reference-validator-0.1.0-alpha.1"
+  },
+  "control_profile": {
+    "media_type": "application/agentic-ai-control-profile+markdown",
+    "hash": "sha256:4e1d0ad65cd8652bec2e33de7e8ed1172e26de4e11ae31bd58262f6b19b50652"
+  },
+  "supported_control_ids": [
+    "AID-001"
+  ],
+  "supported_data_authority_schemes": [
+    {
+      "scheme": "global-ai-governance.synthetic-authority",
+      "scheme_version": "0.1.0",
+      "requires_signature": false
+    }
+  ],
+  "trusted_data_authority_issuers": [
+    "global-ai-governance.test-issuer"
+  ],
+  "production_use_permitted": false
+}

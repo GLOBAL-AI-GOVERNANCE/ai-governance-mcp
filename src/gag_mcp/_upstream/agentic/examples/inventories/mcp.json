@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "inventory_type": "mcp",
+  "agent_id": "agent.synthetic.quickstart",
+  "servers": [
+    {
+      "server_id": "mcp.synthetic.public-catalog",
+      "transport": "stdio",
+      "declared_scope": [
+        "public-information:read"
+      ]
+    }
+  ],
+  "production_use": false
+}

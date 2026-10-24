@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/bundle-manifest.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Canonical Assessment Bundle Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "bundle_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/file"
+      },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "required": [
+        "path",
+        "media_type",
+        "size_bytes",
+        "hash",
+        "canonicalization"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*//)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))[^\\u0000-\\u001f\\u007f-\\u009f]+$",
+          "description": "Bundle-relative NFC path. Semantic validation enforces dot segments, drive prefixes, controls, Unicode normalization, and case-folded collisions."
+        },
+        "media_type": {
+          "type": "string",
+          "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+$"
+        },
+        "size_bytes": {
+          "$ref": "common.schema.json#/$defs/safeInteger",
+          "minimum": 0
+        },
+        "hash": {
+          "$ref": "common.schema.json#/$defs/hash"
+        },
+        "canonicalization": {
+          "enum": [
+            "JCS",
+            "EXACT_BYTES"
+          ]
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  },
+  "unevaluatedProperties": false
+}

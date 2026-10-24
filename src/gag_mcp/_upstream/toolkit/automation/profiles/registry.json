@@ -1,0 +1,80 @@
+{
+  "registry_version": "1.0.0",
+  "authority_effect": "NONE",
+  "profiles": [
+    {
+      "id": "auditable-ai-v1",
+      "version": "1.0.0-rc.2",
+      "maturity": "repository-native release candidate profile",
+      "purpose": "Verify submitted assurance-case structure and evidence integrity.",
+      "input_schema": "automation/contracts/profiles/auditable-ai-assurance-case.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": true,
+      "authority_effect": "NONE"
+    },
+    {
+      "id": "quantum-ai-convergence-v0.1",
+      "version": "0.1.0",
+      "maturity": "synthetic research assurance profile",
+      "purpose": "Reproduce a bounded synthetic magnetic-navigation assurance exercise.",
+      "input_schema": "automation/contracts/profiles/quantum-ai-convergence.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": true,
+      "authority_effect": "NONE"
+    },
+    {
+      "id": "ciso-ai-risk-v0.1",
+      "version": "0.1.0",
+      "maturity": "experimental decision/accountability profile",
+      "purpose": "Check a referenced CISO decision record for accountability, evidence, conditions, and expiry.",
+      "input_schema": "automation/contracts/profiles/ciso-ai-risk.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": true,
+      "authority_effect": "NONE"
+    },
+    {
+      "id": "independent-assurance-v0.1",
+      "version": "0.1.0",
+      "maturity": "optional non-authorizing profile",
+      "purpose": "Assemble reference evidence for independent evaluation.",
+      "input_schema": "automation/contracts/profiles/independent-assurance-case.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": false,
+      "authority_effect": "NONE",
+      "input_schema_enforcement": "PRE_EVALUATOR"
+    },
+    {
+      "id": "mission-assurance-v0.1",
+      "version": "0.1.0",
+      "maturity": "experimental non-authorizing mission assurance profile",
+      "purpose": "Assemble submitted references into a staged mission-assurance review without redefining native repository semantics.",
+      "input_schema": "automation/contracts/profiles/mission-assurance.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": false,
+      "authority_effect": "NONE",
+      "input_schema_enforcement": "PRE_EVALUATOR"
+    },
+    {
+      "id": "machine-learning-assurance-v0.1",
+      "version": "0.1.0",
+      "maturity": "experimental non-authorizing profile",
+      "purpose": "Check submitted dataset, model, evaluation, drift, and context references for structural consistency.",
+      "input_schema": "automation/contracts/profiles/machine-learning-assurance.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": false,
+      "authority_effect": "NONE",
+      "input_schema_enforcement": "PRE_EVALUATOR"
+    },
+    {
+      "id": "organizational-ai-maturity-v0.1",
+      "version": "0.1.0",
+      "maturity": "experimental non-authorizing organizational maturity evidence profile",
+      "purpose": "Evaluate submitted organizational AI maturity evidence against a versioned framework adapter while preserving accountable human determination.",
+      "input_schema": "automation/contracts/profiles/organizational-ai-maturity.schema.json",
+      "result_schema": "automation/contracts/v1/profile-result.schema.json",
+      "browser_support": true,
+      "authority_effect": "NONE",
+      "input_schema_enforcement": "PRE_EVALUATOR"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "authority_effect": "NONE",
+  "human_decision_required": true,
+  "native_artifact_references": [
+    {
+      "artifact_digest": "sha256:51d3e06011e72a85ad14c3f888b42fe34a3b6aca24d58fdec71dd26561c39297",
+      "artifact_id": "sha256:3bff2559b8dba5091534959df0c587a94873703dd4ee735da9ce7842e57908e7",
+      "artifact_type": "agent-trust-passport",
+      "authority_effect": "NONE",
+      "generated_at": "2026-10-14T12:00:00Z",
+      "schema_version": "0.1.0-alpha.1",
+      "source_repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance",
+      "subject_id": "system.synthetic.001"
+    },
+    {
+      "artifact_digest": "sha256:7a27441209ffbdfc06e023a51d28870433bdcce25df9f7730a44fb999daa9dd9",
+      "artifact_id": "change-synthetic-001",
+      "artifact_type": "change-impact",
+      "authority_effect": "NONE",
+      "generated_at": "2026-10-14T12:00:00Z",
+      "schema_version": "1.0.0",
+      "source_repository": "GLOBAL-AI-GOVERNANCE/ai-cyber-resilience-framework",
+      "subject_id": "system.synthetic.001"
+    },
+    {
+      "artifact_digest": "sha256:1184dc814d92adf870e0c944bf7529270b46fe1ac44a8e272c5f5d634795325f",
+      "artifact_id": "disposition-synthetic-001",
+      "artifact_type": "operating-disposition",
+      "authority_effect": "NONE",
+      "generated_at": "2026-10-14T12:00:00Z",
+      "schema_version": "1.0.0",
+      "source_repository": "GLOBAL-AI-GOVERNANCE/ai-cyber-resilience-framework",
+      "subject_id": "system.synthetic.001"
+    },
+    {
+      "artifact_digest": "sha256:e0c243f8f4dc302c6315d5bff558c4ae7593bbdf7642b7a669cbd5790dbfc247",
+      "artifact_id": "finding-synthetic-001",
+      "artifact_type": "governed-closure-receipt",
+      "authority_effect": "NONE",
+      "generated_at": "2026-10-14T12:00:00Z",
+      "schema_version": "1.0.0",
+      "source_repository": "GLOBAL-AI-GOVERNANCE/verified-vulnerability-governance",
+      "subject_id": "system.synthetic.001"
+    }
+  ],
+  "reference_only": true,
+  "subject_id": "system.synthetic.001"
+}

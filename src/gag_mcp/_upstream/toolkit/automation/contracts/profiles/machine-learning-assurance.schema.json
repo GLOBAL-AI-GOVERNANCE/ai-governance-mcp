@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "machine-learning-assurance.schema.json",
+  "title": "Machine Learning Assurance Profile Input",
+  "description": "Optional non-authorizing review of submitted dataset, model, evaluation, context, and optional drift references. drift_reference is omitted when material_drift is false. Material drift remains a semantic failure even when a drift reference is present. A PASS is structural consistency only. It does not approve deployment or establish real-world accuracy.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "subject_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "configuration_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "reference_only": {
+      "type": "boolean",
+      "const": true
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "const": true
+    },
+    "authority_effect": {
+      "type": "string",
+      "const": "NONE"
+    },
+    "evidence_stale": {
+      "type": "boolean"
+    },
+    "material_drift": {
+      "type": "boolean"
+    },
+    "automatic_requalification": {
+      "type": "boolean",
+      "const": false
+    },
+    "automatic_promotion": {
+      "type": "boolean",
+      "const": false
+    },
+    "blocking_unknowns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dataset_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "artifact_type",
+        "artifact_id",
+        "schema_version",
+        "subject_id",
+        "configuration_digest",
+        "artifact_digest",
+        "authority_effect"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "authority_effect": {
+          "type": "string",
+          "const": "NONE"
+        },
+        "expires_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "model_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "artifact_type",
+        "artifact_id",
+        "schema_version",
+        "subject_id",
+        "configuration_digest",
+        "artifact_digest",
+        "authority_effect"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "authority_effect": {
+          "type": "string",
+          "const": "NONE"
+        },
+        "expires_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "evaluation_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "artifact_type",
+        "artifact_id",
+        "schema_version",
+        "subject_id",
+        "configuration_digest",
+        "artifact_digest",
+        "authority_effect"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "authority_effect": {
+          "type": "string",
+          "const": "NONE"
+        },
+        "expires_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "context_binding_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "artifact_type",
+        "artifact_id",
+        "schema_version",
+        "subject_id",
+        "configuration_digest",
+        "artifact_digest",
+        "authority_effect"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "authority_effect": {
+          "type": "string",
+          "const": "NONE"
+        },
+        "expires_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "drift_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "artifact_type",
+        "artifact_id",
+        "schema_version",
+        "subject_id",
+        "configuration_digest",
+        "artifact_digest",
+        "authority_effect"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "authority_effect": {
+          "type": "string",
+          "const": "NONE"
+        },
+        "expires_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    }
+  },
+  "required": [
+    "subject_id",
+    "configuration_digest",
+    "reference_only",
+    "human_review_required",
+    "authority_effect",
+    "evidence_stale",
+    "material_drift",
+    "automatic_requalification",
+    "automatic_promotion",
+    "blocking_unknowns",
+    "dataset_reference",
+    "model_reference",
+    "evaluation_reference",
+    "context_binding_reference"
+  ]
+}

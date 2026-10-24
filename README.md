@@ -10,9 +10,9 @@ AI Governance MCP exposes the real Global AI Governance reference tooling to MCP
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
-| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cf906ef62c114a16b017a073c30f74933b8399e5`) |
+| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `afcd06d027f2bfd168233c993405060e4f18dfa1`) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
-| `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `2124aeaadf236303c584ac150a5ea61ca787d3f0`) |
+| `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `58bdfb291df0de7c9437b4476e370a609c4b1d5f`) |
 
 **Authority boundary, enforced in code and tests.** Every result carries `authority_effect: "NONE"`, the `review_boundary` text, and `human_decision_state: "PENDING_HUMAN_DECISION"`. Upstream fields that an assistant could paraphrase as an authorization are relabeled, with their values left verbatim:
 - `operating_disposition` → `reference_policy_disposition`
@@ -25,25 +25,34 @@ Compatible with MCP-based agents. Not affiliated with or endorsed by xAI, OpenAI
 **What has been tested, and what has not:**
 - **Protocol compatibility: tested** with the official MCP Python SDK client (`mcp==2.3.0`, stdio and Streamable HTTP, `scripts/smoke_test.py`) and the MCP Inspector CLI (2.11.0, stdio, and HTTP with a bearer token).
 - **Simulated provider schema checks: none performed.**
-- **Provider-client connectivity: one operator test.** Codex CLI 0.151.0 was operator-tested over local stdio against PR #8 head `c71457b9660608f0135d8e6169d60f6bfdbe0013` (discovery, tool listing, `check_inventory`, and `validate_passport` with caller-supplied JSON strings); PR #8 merged as `9abb2061a7a60e065ba999157787ae6091cb8581`. This is a single operator test, not independently reproduced evidence, and does not establish broader OpenAI compatibility, ChatGPT remote connectivity, Claude integration, or Grok connectivity. The provider sections below are configuration guidance from each provider's public documentation, not tested connections.
+- **Provider-client connectivity: one recorded test run.** Codex CLI 0.151.0, local stdio, at commit `c71457b9660608f0135d8e6169d60f6bfdbe0013` (merged as `9abb2061a7a60e065ba999157787ae6091cb8581`): discovery, tool listing, `check_inventory`, and `validate_passport` with caller-supplied JSON strings. This is one TESTED run, not independently reproduced, and does not establish broader OpenAI compatibility, ChatGPT remote connectivity, Claude integration, or Grok connectivity. The provider sections below are configuration guidance from each provider's public documentation, not tested connections.
 
 ## Install and run (local)
+
+No clone needed. The pinned toolkit and agentic files are bundled in the package (`src/gag_mcp/_upstream/`, source lock in `UPSTREAM_LOCK.json`), so this runs with no other checkout:
+
+```bash
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0 gag-mcp      # stdio
+```
+
+TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, and Codex are in [`examples/client-configs/`](examples/client-configs/); agent-framework patterns are in [`examples/agent-stacks/`](examples/agent-stacks/).
+
+From source:
 
 ```bash
 git clone https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git
 cd ai-governance-mcp
 python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
-./scripts/fetch_upstreams.sh          # read-only clones of the two public repos, pinned
 gag-mcp                               # stdio
 gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 53 tests
+pytest                                # 64 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
 ## Sample call
 
-After the install steps above, including `./scripts/fetch_upstreams.sh`.
+After the from-source install steps above.
 
 Success — synthetic sample, pinned evaluation time used by the test suite:
 
@@ -86,7 +95,7 @@ except GagInputError as exc:
 
 Expected: `inventory_csv is empty. Supply CSV text or set use_sample=true.`
 
-Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`. The tools also need the two pinned upstream checkouts; set `GAG_TOOLKIT_PATH` and `GAG_AGENTIC_PATH` to them (see `scripts/fetch_upstreams.sh` for the pinned commits). Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
+Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
 
@@ -97,12 +106,12 @@ Environment variables (HTTP mode):
 | `GAG_MCP_ALLOWED_HOSTS` | Comma-separated Host allow-list (DNS-rebinding protection). **Required for any non-loopback bind:** with `HOST`/`--host` other than `127.0.0.1`, `localhost`, or `::1`, the server refuses to start until this is set. |
 | `GAG_MCP_CORS_ORIGINS` | Comma-separated origins for browser-based clients (e.g., MCP Inspector). Off by default |
 | `GAG_MCP_BEARER_TOKEN` | Static bearer token, at least 32 characters (for example `python -c "import secrets; print(secrets.token_urlsafe(32))"`). **Required whenever other machines can reach the server:** a non-loopback bind, or a `GAG_MCP_ALLOWED_HOSTS` entry that is not loopback (reverse proxy or tunnel). Without it the server refuses to start. Optional for loopback-only use. This is **not OAuth**; see "Auth" below |
-| `GAG_TOOLKIT_PATH`, `GAG_AGENTIC_PATH` | Use other checkouts instead of `vendor/` |
+| `GAG_TOOLKIT_PATH`, `GAG_AGENTIC_PATH` | Use other checkouts instead of the bundled pinned files |
 | `HOST`, `PORT` | Bind address (defaults `127.0.0.1:8000`) |
 
 ## Client configuration (copy-paste)
 
-Replace `/ABS/PATH/ai-governance-mcp`, `https://YOUR-HOST`, and `TOKEN` with your own values. Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
+Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, and Codex: [`examples/client-configs/`](examples/client-configs/). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
 
 ### Claude Desktop (local, stdio)
 `claude_desktop_config.json` (Settings → Developer → Edit Config):
@@ -110,15 +119,14 @@ Replace `/ABS/PATH/ai-governance-mcp`, `https://YOUR-HOST`, and `TOKEN` with you
 {
   "mcpServers": {
     "gag": {
-      "command": "/ABS/PATH/ai-governance-mcp/.venv/bin/gag-mcp",
-      "env": {
-        "GAG_TOOLKIT_PATH": "/ABS/PATH/ai-governance-mcp/vendor/global-ai-governance-toolkit",
-        "GAG_AGENTIC_PATH": "/ABS/PATH/ai-governance-mcp/vendor/agentic-ai-governance"
-      }
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0", "gag-mcp"]
     }
   }
 }
 ```
+Launch command TESTED with the MCP Python SDK stdio client; this config is not tested inside Claude Desktop.
+
 One-click desktop extension: `manifest.json` (MCPB `manifest_version` 0.4) passes `mcpb validate`. Packing a `.mcpb` still needs platform-specific dependency bundling (`cryptography` has native wheels). **Not yet tested in Claude Desktop.**
 
 ### Claude.ai / Claude Desktop / mobile (remote custom connector)
@@ -202,11 +210,14 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 ## Files
 - `src/gag_mcp/core.py`: transport-independent logic plus the authority envelope
 - `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
-- `tests/`: 53 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards)
+- `src/gag_mcp/_upstream/`: pinned toolkit and agentic files bundled into the package, with `UPSTREAM_LOCK.json` (commit, file count, tree digest per upstream)
+- `tests/`: 64 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
-- `scripts/fetch_upstreams.sh`: pinned upstream clones
+- `scripts/fetch_upstreams.sh`: pinned upstream clones; `scripts/bundle_upstreams.py`: copies them into the package and checks the bundle (`--check`, run in CI)
+- `examples/client-configs/`, `examples/agent-stacks/`: copy-paste client configs and agent-framework patterns, each labelled TESTED or untested
+- `.github/workflows/release-assets.yml`: builds the wheel and sdist from a release tag, installs them in a clean environment, and attaches them with `SHA256SUMS` to the release. No build-provenance attestation is published
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
-- `deploy/Dockerfile`: container for a remote host (not built)
+- `deploy/Dockerfile`: container for a remote host (build locally; no image is published)
 - No managed endpoint is operated; no hosted-service privacy policy or terms are published.
 
 ## Known limits
@@ -219,4 +230,4 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 This repository does not operate an external security-report intake. Do not place secrets, credentials, personal data, sensitive operational information, or vulnerability material in public GitHub surfaces.
 
 ## License
-Apache-2.0. See [LICENSE](LICENSE). The pinned upstream repositories fetched by `scripts/fetch_upstreams.sh` keep their own licenses (toolkit: MIT; agentic: Apache-2.0).
+Apache-2.0. See [LICENSE](LICENSE). The bundled pinned upstream files keep their own licenses, included alongside them in `src/gag_mcp/_upstream/` (toolkit: MIT; agentic: Apache-2.0).

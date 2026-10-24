@@ -2,8 +2,8 @@ import pathlib
 import unittest
 
 SCRIPT = (pathlib.Path(__file__).parents[1] / "scripts" / "fetch_upstreams.sh").read_text()
-EXPECTED_TOOLKIT = "cf906ef62c114a16b017a073c30f74933b8399e5"
-EXPECTED_AGENTIC = "2124aeaadf236303c584ac150a5ea61ca787d3f0"
+EXPECTED_TOOLKIT = "afcd06d027f2bfd168233c993405060e4f18dfa1"
+EXPECTED_AGENTIC = "58bdfb291df0de7c9437b4476e370a609c4b1d5f"
 
 class SourceLockTests(unittest.TestCase):
     def test_default_refs_are_exact_full_shas(self):

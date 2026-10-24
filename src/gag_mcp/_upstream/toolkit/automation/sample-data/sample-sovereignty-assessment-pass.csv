@@ -1,0 +1,5 @@
+system_name,sensitivity_tier,compute_assurance_level,owner_present,system_inventory_complete,zdr_confirmed,training_on_customer_data_prohibited,metadata_retention_reviewed,model_provider_switchable,model_routing_documented,agent_tool_access,agent_permissions_defined,autonomous_actions,rollback_or_branching_available,audit_logging_enabled,human_oversight_defined,context_capture_owned_by_org,shutdown_path_defined
+Public FAQ Chatbot,S0,tier4_standard,yes,yes,no,no,no,yes,yes,no,no,no,no,yes,yes,no,yes
+Internal Drafting Assistant,S1,tier3_zdr_cloud,yes,yes,yes,yes,no,yes,yes,no,no,no,no,yes,yes,no,yes
+Client Analytics Copilot,S3,tier3_zdr_cloud,yes,yes,yes,yes,yes,yes,yes,yes,yes,no,no,yes,yes,yes,yes
+Sovereign Modeling Environment,S4,tier1_owned,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes,yes

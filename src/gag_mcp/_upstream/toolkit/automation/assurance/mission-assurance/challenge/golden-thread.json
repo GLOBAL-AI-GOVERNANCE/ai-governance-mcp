@@ -1,0 +1,362 @@
+{
+  "schema_version": "1.0.0",
+  "thread_id": "synthetic-golden-thread-001",
+  "subject_id": "synthetic-mission-alpha",
+  "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+  "reference_only": true,
+  "authority_effect": "NONE",
+  "synthetic": true,
+  "automatic_requalification": false,
+  "scenarios": [
+    {
+      "id": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "adversarial-failure",
+      "expect": "FAIL",
+      "drop": "adversarial_assurance_reference"
+    },
+    {
+      "id": "dependency-failure",
+      "expect": "NOT_CURRENT",
+      "native_reference": "dependency-exit-failed"
+    },
+    {
+      "id": "recovery-failure",
+      "expect": "FAIL",
+      "drop": "recovery_reference"
+    },
+    {
+      "id": "succession-failure",
+      "expect": "NOT_CURRENT",
+      "native_reference": "succession-evidence-failed"
+    },
+    {
+      "id": "material-change",
+      "expect": "FAIL",
+      "material_change": true
+    },
+    {
+      "id": "initial-result-after-material-change",
+      "expect": "NOT_CURRENT"
+    },
+    {
+      "id": "institutional-qualified-support",
+      "expect": "PASS",
+      "native_reference": "qualification-evidence-record"
+    },
+    {
+      "id": "qualification-conditional",
+      "expect": "FAIL"
+    },
+    {
+      "id": "qualification-not-qualified",
+      "expect": "FAIL"
+    },
+    {
+      "id": "qualification-not-yet-effective",
+      "expect": "FAIL"
+    },
+    {
+      "id": "qualification-expired",
+      "expect": "FAIL"
+    },
+    {
+      "id": "qualification-wrong-subject",
+      "expect": "FAIL"
+    },
+    {
+      "id": "qualification-wrong-configuration",
+      "expect": "FAIL"
+    },
+    {
+      "id": "qualification-missing-competence",
+      "expect": "FAIL"
+    },
+    {
+      "id": "decision-blocking-open",
+      "expect": "FAIL"
+    },
+    {
+      "id": "decision-blocking-escalated",
+      "expect": "FAIL"
+    },
+    {
+      "id": "decision-expired",
+      "expect": "FAIL"
+    },
+    {
+      "id": "decision-wrong-subject",
+      "expect": "FAIL"
+    },
+    {
+      "id": "decision-wrong-configuration",
+      "expect": "FAIL"
+    },
+    {
+      "id": "decision-resolved-without-reference",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-questioned-revalidation",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-hold",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-stale",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-active-not-resolved",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-wrong-subject",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-wrong-configuration",
+      "expect": "FAIL"
+    },
+    {
+      "id": "concern-closed-without-evidence",
+      "expect": "FAIL"
+    },
+    {
+      "id": "absence-not-nonexistence",
+      "expect": "PASS"
+    }
+  ],
+  "references": [
+    {
+      "reference_id": "succession-evidence-failed",
+      "source_repository": "ai-governance-os",
+      "source_commit": "9aa9f4d42527832828c29886db18d79bf480e021",
+      "artifact_path": "sample-data/succession-evidence-failed.json",
+      "artifact_type": "succession-evidence-record",
+      "artifact_digest": "sha256:5d0d6a48de070e1934e519886d82d8ee2836d31f1d42ec61b6b1a7fc21384a3d",
+      "subject_id": "synthetic-capability-alpha",
+      "configuration_digest": "sha256:2b1900cb48cdd75c750cad9cd03620fd34162af8fe45dbc2161ebbbb91e2c89d",
+      "expected_outcome": "FAILED",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "dependency-exit-failed",
+      "source_repository": "ai-cyber-resilience-framework",
+      "source_commit": "e14e69d81a8078b42cd83df763c8087f6d6de478",
+      "artifact_path": "examples/dependency-exit/synthetic-exit-failed.json",
+      "artifact_type": "dependency-exit-evidence",
+      "artifact_digest": "sha256:eebf99ee7c4e77967e6a994bac4eddf408904dcdd9d7a2f4ceb04cb34eedc256",
+      "subject_id": "synthetic-subject-alpha",
+      "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "expected_outcome": "FAILED",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "evidence-object",
+      "source_repository": "ai-governance-os",
+      "source_commit": "9aa9f4d42527832828c29886db18d79bf480e021",
+      "artifact_path": "sample-data/assurance-kernel/evidence-object.json",
+      "artifact_type": "evidence-object",
+      "artifact_digest": "sha256:c0281692c168a53c14535ebe8b84e70c0fc0cd891287e3b859c9510cfb4bcabc",
+      "subject_id": "synthetic-subject-alpha",
+      "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "agent-trust-passport",
+      "source_repository": "agentic-ai-governance",
+      "source_commit": "2124aeaadf236303c584ac150a5ea61ca787d3f0",
+      "artifact_path": "examples/passports/unsigned-valid.json",
+      "artifact_type": "agent-trust-passport",
+      "artifact_digest": "sha256:c63be29f6cf63061b8791b22f12596b13b5e010c95fb791f4e02e018461d973d",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "verified-closure",
+      "source_repository": "verified-vulnerability-governance",
+      "source_commit": "9eebbb3f316ef6feb42a8c270e4755420474a1be",
+      "artifact_path": "examples/governed-remediation/reference.json",
+      "artifact_type": "verified-closure",
+      "artifact_digest": "sha256:97445c8dd25680c1dbbb15b59e397eb6226fffd5632a1b7bd0f532e249b753f0",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "peace-operating-disposition",
+      "source_repository": "peace-os",
+      "source_commit": "613e393c3b056d75847a267550e3b9b703ba0edf",
+      "artifact_path": "examples/portfolio/operating-disposition-reference.json",
+      "artifact_type": "operating-disposition-reference",
+      "artifact_digest": "sha256:dea4601e4532fbbca047e2f58029c28a918a63504e925740f0dea671fd607692",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "administration-evidence-boundary",
+      "source_repository": "governed-systems-administration",
+      "source_commit": "1eaa85c415b35cac42ce186b2bb179fc856d0054",
+      "artifact_path": "schemas/administration-evidence-record.schema.json",
+      "artifact_type": "administration-evidence-record",
+      "artifact_digest": "sha256:93547eeffaa181c359d4532e226a0816bb558208e1e294debd0152b2c0f1b0a7",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "qualification-evidence-record",
+      "source_repository": "ai-governance-os",
+      "source_commit": "9aa9f4d42527832828c29886db18d79bf480e021",
+      "artifact_path": "sample-data/assurance-kernel/qualification-evidence-record.json",
+      "artifact_type": "qualification-evidence-record",
+      "artifact_digest": "sha256:71a1604fdfcbc627f31f6042ccb78187c89a357b8d8a6a9fc3679341f40e0bfc",
+      "subject_id": "synthetic-subject-alpha",
+      "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "expected_outcome": "QUALIFIED",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "unresolved-decision-record",
+      "source_repository": "ai-governance-os",
+      "source_commit": "9aa9f4d42527832828c29886db18d79bf480e021",
+      "artifact_path": "sample-data/assurance-kernel/unresolved-decision-record.json",
+      "artifact_type": "unresolved-decision-record",
+      "artifact_digest": "sha256:d4fdf59fdcb672dcc5e0a98e814bdaebb1784b29e58b566d883d539c6df1f751",
+      "subject_id": "synthetic-subject-alpha",
+      "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "authority_effect": "NONE"
+    },
+    {
+      "reference_id": "protected-concern-disposition-record",
+      "source_repository": "ai-governance-os",
+      "source_commit": "9aa9f4d42527832828c29886db18d79bf480e021",
+      "artifact_path": "sample-data/assurance-kernel/protected-concern-disposition-record.json",
+      "artifact_type": "protected-concern-disposition-record",
+      "artifact_digest": "sha256:5d2bc295f8d6f678eb27cbbad7ac6a8e25abd77bfadd0afbc4b3bf2ad133a396",
+      "subject_id": "synthetic-subject-alpha",
+      "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "authority_effect": "NONE"
+    }
+  ],
+  "limitations": [
+    "synthetic thread; native payloads are referenced, not copied or authenticated",
+    "absence of a decision reference is not proof that no unresolved decision exists",
+    "absence of a concern reference is not proof that no protected concern exists",
+    "a current qualification reference does not establish operational readiness or native authenticity"
+  ],
+  "subject_bindings": [
+    {
+      "binding_id": "binding-succession-evidence-failed",
+      "reference_id": "succession-evidence-failed",
+      "binding_type": "SUPPORTING_EVIDENCE_FOR",
+      "thread_subject_id": "synthetic-mission-alpha",
+      "thread_configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+      "native_subject_id": "synthetic-capability-alpha",
+      "native_configuration_digest": "sha256:2b1900cb48cdd75c750cad9cd03620fd34162af8fe45dbc2161ebbbb91e2c89d",
+      "limitations": [
+        "Synthetic declared binding and not external proof of real-world system identity."
+      ],
+      "authority_effect": "NONE"
+    },
+    {
+      "binding_id": "binding-dependency-exit-failed",
+      "reference_id": "dependency-exit-failed",
+      "binding_type": "SUPPORTING_EVIDENCE_FOR",
+      "thread_subject_id": "synthetic-mission-alpha",
+      "thread_configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+      "native_subject_id": "synthetic-subject-alpha",
+      "native_configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "limitations": [
+        "Synthetic declared binding and not external proof of real-world system identity."
+      ],
+      "authority_effect": "NONE"
+    },
+    {
+      "binding_id": "binding-evidence-object",
+      "reference_id": "evidence-object",
+      "binding_type": "SUPPORTING_EVIDENCE_FOR",
+      "thread_subject_id": "synthetic-mission-alpha",
+      "thread_configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+      "native_subject_id": "synthetic-subject-alpha",
+      "native_configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "limitations": [
+        "Synthetic declared binding and not external proof of real-world system identity."
+      ],
+      "authority_effect": "NONE"
+    },
+    {
+      "binding_id": "binding-qualification-evidence-record",
+      "reference_id": "qualification-evidence-record",
+      "binding_type": "SUPPORTING_EVIDENCE_FOR",
+      "thread_subject_id": "synthetic-mission-alpha",
+      "thread_configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+      "native_subject_id": "synthetic-subject-alpha",
+      "native_configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "limitations": [
+        "Synthetic declared binding and not external proof of real-world identity or operation."
+      ],
+      "authority_effect": "NONE"
+    },
+    {
+      "binding_id": "binding-unresolved-decision-record",
+      "reference_id": "unresolved-decision-record",
+      "binding_type": "SUPPORTING_EVIDENCE_FOR",
+      "thread_subject_id": "synthetic-mission-alpha",
+      "thread_configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+      "native_subject_id": "synthetic-subject-alpha",
+      "native_configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "limitations": [
+        "Synthetic declared binding and not external proof of real-world identity or operation."
+      ],
+      "authority_effect": "NONE"
+    },
+    {
+      "binding_id": "binding-protected-concern-disposition-record",
+      "reference_id": "protected-concern-disposition-record",
+      "binding_type": "SUPPORTING_EVIDENCE_FOR",
+      "thread_subject_id": "synthetic-mission-alpha",
+      "thread_configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+      "native_subject_id": "synthetic-subject-alpha",
+      "native_configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "limitations": [
+        "Synthetic declared binding and not external proof of real-world identity or operation."
+      ],
+      "authority_effect": "NONE"
+    }
+  ],
+  "qualification_summary": {
+    "qualification_id": "qual-synthetic-001",
+    "principal_ref": "opaque-principal-alpha",
+    "role": "evaluator",
+    "scope": "synthetic-mission-assurance",
+    "subject_id": "synthetic-subject-alpha",
+    "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+    "competence_evidence_refs": [
+      "evidence-synthetic-001"
+    ],
+    "qualified_from": "2026-10-01T00:00:00Z",
+    "expires_at": "2027-10-01T00:00:00Z",
+    "outcome": "QUALIFIED",
+    "authority_effect": "NONE"
+  },
+  "decision_summary": {
+    "decision_id": "dec-synthetic-001",
+    "subject_id": "synthetic-subject-alpha",
+    "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+    "owner_ref": "opaque-owner-alpha",
+    "deadline": "2026-11-10T00:00:00Z",
+    "blocking": true,
+    "status": "OPEN",
+    "escalation_route_ref": "opaque-escalation-alpha",
+    "authority_effect": "NONE"
+  },
+  "concern_summary": {
+    "concern_disposition_id": "concern-disp-synthetic-001",
+    "subject_id": "synthetic-subject-alpha",
+    "configuration_digest": "sha256:abababababababababababababababababababababababababababababababab",
+    "assurance_effect": "QUESTIONED",
+    "status": "ACTIVE",
+    "revalidation_required": true,
+    "authority_effect": "NONE"
+  }
+}

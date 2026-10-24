@@ -1,0 +1,1 @@
+{"case_id":"AAI-SYNTH-FAIL","safety_claim":{"id":"SC-1"},"control":{"policy_model":"model-a"},"implementation":{"id":"I-1"},"test":{"policy_model":"model-b","prohibited_use_passed":false,"critical_false_negatives":1},"evidence":[],"human_review":{"approved":false},"bounded_decision":{"state":"CONTROLLED_TEST_READY"},"unresolved_critical_bypass":true}

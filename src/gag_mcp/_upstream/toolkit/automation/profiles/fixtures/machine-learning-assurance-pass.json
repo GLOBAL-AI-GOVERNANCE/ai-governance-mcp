@@ -1,0 +1,67 @@
+{
+  "subject_id": "synthetic-mission-alpha",
+  "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+  "reference_only": true,
+  "human_review_required": true,
+  "authority_effect": "NONE",
+  "evidence_stale": false,
+  "material_drift": false,
+  "automatic_requalification": false,
+  "automatic_promotion": false,
+  "blocking_unknowns": [],
+  "dataset_reference": {
+    "source": "ai-governance-os",
+    "artifact_type": "dataset-assurance-record",
+    "artifact_id": "synthetic-dataset-assurance-record",
+    "schema_version": "1.0.0",
+    "subject_id": "synthetic-mission-alpha",
+    "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+    "artifact_digest": "sha256:0101010101010101010101010101010101010101010101010101010101010101",
+    "authority_effect": "NONE",
+    "expires_at": "2027-01-01T00:00:00Z"
+  },
+  "model_reference": {
+    "source": "ai-governance-os",
+    "artifact_type": "model-assurance-record",
+    "artifact_id": "synthetic-model-assurance-record",
+    "schema_version": "1.0.0",
+    "subject_id": "synthetic-mission-alpha",
+    "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+    "artifact_digest": "sha256:0202020202020202020202020202020202020202020202020202020202020202",
+    "authority_effect": "NONE",
+    "expires_at": "2027-01-01T00:00:00Z"
+  },
+  "evaluation_reference": {
+    "source": "ai-governance-os",
+    "artifact_type": "evaluation-run",
+    "artifact_id": "synthetic-evaluation-run",
+    "schema_version": "1.0.0",
+    "subject_id": "synthetic-mission-alpha",
+    "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+    "artifact_digest": "sha256:0303030303030303030303030303030303030303030303030303030303030303",
+    "authority_effect": "NONE",
+    "expires_at": "2027-01-01T00:00:00Z"
+  },
+  "context_binding_reference": {
+    "source": "ai-governance-os",
+    "artifact_type": "assurance-context-binding",
+    "artifact_id": "synthetic-assurance-context-binding",
+    "schema_version": "1.0.0",
+    "subject_id": "synthetic-mission-alpha",
+    "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+    "artifact_digest": "sha256:0404040404040404040404040404040404040404040404040404040404040404",
+    "authority_effect": "NONE",
+    "expires_at": "2027-01-01T00:00:00Z"
+  },
+  "drift_reference": {
+    "source": "ai-governance-os",
+    "artifact_type": "drift-event",
+    "artifact_id": "synthetic-drift-event",
+    "schema_version": "1.0.0",
+    "subject_id": "synthetic-mission-alpha",
+    "configuration_digest": "sha256:899a2dff609159ea1099154f7850696a0bfbabd9d28a5874ab22fda8e256c2f1",
+    "artifact_digest": "sha256:0505050505050505050505050505050505050505050505050505050505050505",
+    "authority_effect": "NONE",
+    "expires_at": "2027-01-01T00:00:00Z"
+  }
+}

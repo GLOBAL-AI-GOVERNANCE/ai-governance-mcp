@@ -1,0 +1,32 @@
+{
+  "contract_version": "1.0.0",
+  "canonical_schema_version": "1.0.0",
+  "fields": {
+    "schema_version": {"human_label": "Schema Version", "aliases": ["schema version"]},
+    "system_id": {"human_label": "System ID", "aliases": ["system id"]},
+    "system_name": {"human_label": "System Name", "aliases": ["system name"]},
+    "owner": {"human_label": "Owner", "aliases": []},
+    "business_unit": {"human_label": "Business Unit", "aliases": ["business unit", "office"]},
+    "vendor_internal": {"human_label": "Vendor / Internal", "aliases": ["vendor/internal", "vendor / internal"]},
+    "use_case": {"human_label": "Use Case", "aliases": ["use case", "purpose", "description"]},
+    "data_sensitivity": {"human_label": "Data Sensitivity", "aliases": ["data sensitivity"]},
+    "impact_people": {"human_label": "Impacts People?", "aliases": ["impact people", "impacts people?"]},
+    "impact_money": {"human_label": "Impacts Money?", "aliases": ["impact money", "impacts money?"]},
+    "impact_security": {"human_label": "Impacts Security?", "aliases": ["impact security", "impacts security?"]},
+    "impact_rights": {"human_label": "Impacts Rights?", "aliases": ["impact rights", "impacts rights?"]},
+    "impact_safety": {"human_label": "Impacts Safety?", "aliases": ["impact safety", "impacts safety?"]},
+    "autonomy_level": {"human_label": "Autonomy Level", "aliases": ["autonomy level"]},
+    "public_facing": {"human_label": "Public Facing?", "aliases": ["public facing", "public facing?"]},
+    "monitoring_active": {"human_label": "Monitoring Active?", "aliases": ["monitoring active", "monitoring active?"]},
+    "shutdown_path_exists": {"human_label": "Shutdown Path Exists?", "aliases": ["shutdown path exists", "shutdown path exists?"]},
+    "evidence_complete": {"human_label": "Evidence Complete?", "aliases": ["evidence complete", "evidence complete?"]}
+  },
+  "boolean_aliases": {
+    "Yes": ["yes", "y", "true", "1"],
+    "No": ["no", "n", "false", "0"]
+  },
+  "legacy_ignored_columns": [
+    "Risk Tier", "Status", "Data Used", "Impact Area", "Human Owner", "Technical Owner",
+    "Executive Owner", "Last Review Date", "Next Review Date", "Notes"
+  ]
+}

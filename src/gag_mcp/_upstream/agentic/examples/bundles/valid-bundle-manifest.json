@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1.0-alpha.1",
+  "bundle_id": "sha256:3286713eefa76efd9898ffc749e855e0c554f8c48fbbf221c9c77bcc087963d7",
+  "files": [
+    {
+      "path": "examples/action-authority/readonly-graph.json",
+      "media_type": "application/agentic-ai-action-authority+json",
+      "size_bytes": 1085,
+      "hash": "sha256:afbc0a71a0632521c4585b91b3c3d70de7d3525bea7cf6fda790e98ff4707745",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "examples/assessments/approved-readonly.json",
+      "media_type": "application/agentic-ai-assessment+json",
+      "size_bytes": 668,
+      "hash": "sha256:ceb862f921443fd195156616be244ab2cec06cffc321529b7f5cfec2f5026b48",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "examples/data-authority/synthetic-evidence.json",
+      "media_type": "application/agentic-ai-data-authority+json",
+      "size_bytes": 758,
+      "hash": "sha256:4cd988a745d8e44bebd98cf7b81ada2d6595f3cbd254ed457bdae1ad346054e4",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "examples/inventories/agent.json",
+      "media_type": "application/agent-inventory+json",
+      "size_bytes": 456,
+      "hash": "sha256:31e14fabd2440b9bdba60ba9a42b717f3fc8686799a2d69d5440e474359a689e",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "examples/inventories/mcp.json",
+      "media_type": "application/mcp-inventory+json",
+      "size_bytes": 317,
+      "hash": "sha256:00e73682f17db56bd459800fefe4a8ef1217623be8c38bc38a6b444827f30676",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "examples/inventories/tools.json",
+      "media_type": "application/tool-inventory+json",
+      "size_bytes": 292,
+      "hash": "sha256:a642bcd7061a19d5718f78c6e818b98e9f8b7c23ba237e43efb8006dfccd88c5",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "profiles/mcp-governance-profile.json",
+      "media_type": "application/agentic-ai-control-profile-descriptor+json",
+      "size_bytes": 913,
+      "hash": "sha256:a06b2455a4a4133c13f3cba32aed1b442f43f17828dede5bf110a9d802ae1d6d",
+      "canonicalization": "JCS"
+    },
+    {
+      "path": "profiles/mcp-governance-profile.md",
+      "media_type": "application/agentic-ai-control-profile+markdown",
+      "size_bytes": 2711,
+      "hash": "sha256:4e1d0ad65cd8652bec2e33de7e8ed1172e26de4e11ae31bd58262f6b19b50652",
+      "canonicalization": "EXACT_BYTES"
+    }
+  ]
+}

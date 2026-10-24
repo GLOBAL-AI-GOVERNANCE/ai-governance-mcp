@@ -3,3 +3,5 @@ vendor/
 __pycache__/
 *.egg-info/
 *.mcpb
+build/
+dist/

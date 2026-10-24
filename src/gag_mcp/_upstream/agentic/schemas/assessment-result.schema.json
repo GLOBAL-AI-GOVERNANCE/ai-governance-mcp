@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/assessment-result.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Issued Agentic AI Assessment Result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "evaluated_at",
+    "result",
+    "data_authority_status",
+    "assurance",
+    "requested_action_level",
+    "maximum_action_level",
+    "control_results",
+    "conditions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-alpha.1"
+    },
+    "assessment_id": {
+      "$ref": "common.schema.json#/$defs/hash"
+    },
+    "evaluated_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "data_authority_status": {
+      "$ref": "common.schema.json#/$defs/dataAuthorityStatus"
+    },
+    "result": {
+      "$ref": "common.schema.json#/$defs/assessmentResult"
+    },
+    "assurance": {
+      "type": "object",
+      "required": [
+        "evidence_basis",
+        "validation_method",
+        "attestation_status"
+      ],
+      "properties": {
+        "evidence_basis": {
+          "const": "DECLARED"
+        },
+        "validation_method": {
+          "const": "STRUCTURAL"
+        },
+        "attestation_status": {
+          "$ref": "common.schema.json#/$defs/attestationStatus"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "requested_action_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "maximum_action_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "control_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "control_id",
+          "outcome",
+          "applicable",
+          "evidence_refs",
+          "findings"
+        ],
+        "properties": {
+          "control_id": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}-\\d{3}$"
+          },
+          "outcome": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_APPLICABLE",
+              "NOT_EVALUATED",
+              "ERROR"
+            ]
+          },
+          "applicable": {
+            "type": "boolean"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "condition_id",
+          "control_id",
+          "owner",
+          "deadline",
+          "required_evidence",
+          "temporary_restriction",
+          "closure_rule"
+        ],
+        "properties": {
+          "condition_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "control_id": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}-\\d{3}$"
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deadline": {
+            "$ref": "common.schema.json#/$defs/timestamp"
+          },
+          "required_evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "temporary_restriction": {
+            "type": "object",
+            "required": [
+              "maximum_action_level"
+            ],
+            "properties": {
+              "maximum_action_level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4
+              }
+            },
+            "unevaluatedProperties": false
+          },
+          "closure_rule": {
+            "type": "object",
+            "required": [
+              "all_required_evidence_valid"
+            ],
+            "properties": {
+              "all_required_evidence_valid": {
+                "const": true
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "unevaluatedProperties": false
+      }
+    }
+  },
+  "unevaluatedProperties": false
+}

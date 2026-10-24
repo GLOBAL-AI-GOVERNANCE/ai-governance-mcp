@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/schemas/control-profile-descriptor.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Alpha.1 Control Profile Descriptor",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "profile_version",
+    "assessment_policy",
+    "evaluator",
+    "control_profile",
+    "supported_control_ids",
+    "supported_data_authority_schemes",
+    "trusted_data_authority_issuers",
+    "production_use_permitted"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0-alpha.1"},
+    "profile_id": {"$ref": "common.schema.json#/$defs/id"},
+    "profile_version": {"$ref": "common.schema.json#/$defs/version"},
+    "assessment_policy": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "version": {"$ref": "common.schema.json#/$defs/version"}
+      },
+      "unevaluatedProperties": false
+    },
+    "evaluator": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "version": {"$ref": "common.schema.json#/$defs/version"}
+      },
+      "unevaluatedProperties": false
+    },
+    "control_profile": {
+      "type": "object",
+      "required": ["media_type", "hash"],
+      "properties": {
+        "media_type": {"const": "application/agentic-ai-control-profile+markdown"},
+        "hash": {"$ref": "common.schema.json#/$defs/hash"}
+      },
+      "unevaluatedProperties": false
+    },
+    "supported_control_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[A-Z]{3}-\\d{3}$"},
+      "uniqueItems": true
+    },
+    "supported_data_authority_schemes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scheme", "scheme_version", "requires_signature"],
+        "properties": {
+          "scheme": {"$ref": "common.schema.json#/$defs/id"},
+          "scheme_version": {"$ref": "common.schema.json#/$defs/version"},
+          "requires_signature": {"type": "boolean"}
+        },
+        "unevaluatedProperties": false
+      },
+      "uniqueItems": true
+    },
+    "trusted_data_authority_issuers": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/id"},
+      "uniqueItems": true
+    },
+    "production_use_permitted": {"type": "boolean"}
+  },
+  "unevaluatedProperties": false
+}
