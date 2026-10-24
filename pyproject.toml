@@ -10,6 +10,18 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = [
   "mcp==2.3.0",
   "jsonschema==4.26.0",
@@ -21,7 +33,9 @@ dependencies = [
 dev = ["pytest>=8", "httpx>=0.27"]
 
 [project.urls]
+Homepage = "https://global-ai-governance.github.io/global-ai-governance-toolkit/connect.html"
 Repository = "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp"
+Documentation = "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp#readme"
 
 [project.scripts]
 gaig-mcp = "gaig_mcp.server:main"

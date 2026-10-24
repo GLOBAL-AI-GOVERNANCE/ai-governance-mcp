@@ -6,8 +6,15 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing release tag to build and attach assets to"
+        description: "Existing tag to build; its release receives the assets unless publish_to is testpypi"
         required: true
+      publish_to:
+        description: "none: build, attest, and attach to the release. testpypi: build, attest, and upload to TestPyPI only (no release needed)."
+        type: choice
+        options:
+          - none
+          - testpypi
+        default: none
 
 permissions:
   contents: read
@@ -110,6 +117,7 @@ jobs:
 
   attach:
     needs: [build, attest]
+    if: inputs.publish_to != 'testpypi'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -134,3 +142,78 @@ jobs:
           (cd dist && sha256sum -c SHA256SUMS)
           gh release view "$TAG" > /dev/null
           gh release upload "$TAG" dist/*
+
+  # Publishing uses PyPI trusted publishing (OIDC); no API token is stored. Both jobs
+  # stay skipped until the repository variable that enables them is set to "true",
+  # which happens only after the matching GitHub environment and PyPI or TestPyPI
+  # trusted publisher exist. Only the wheel and sdist are uploaded.
+  publish:
+    needs: [build, attest]
+    if: >-
+      github.event_name == 'release'
+      && !github.event.release.prerelease
+      && vars.PYPI_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/project/gaig-mcp/
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download build output
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-assets
+          path: dist
+
+      - name: Keep only the wheel and sdist
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum -c SHA256SUMS)
+          mkdir upload
+          cp dist/*.whl dist/*.tar.gz upload/
+          ls -l upload
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+        with:
+          packages-dir: upload/
+
+  publish-testpypi:
+    needs: [build, attest]
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      && inputs.publish_to == 'testpypi'
+      && vars.TESTPYPI_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/gaig-mcp/
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download build output
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-assets
+          path: dist
+
+      - name: Keep only the wheel and sdist
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum -c SHA256SUMS)
+          mkdir upload
+          cp dist/*.whl dist/*.tar.gz upload/
+          ls -l upload
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: upload/
