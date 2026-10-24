@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$GROK_WORKSPACE_ROOT/.grok/hooks/tool_call_hook.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
