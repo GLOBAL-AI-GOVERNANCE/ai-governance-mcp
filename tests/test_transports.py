@@ -6,7 +6,7 @@ import sys
 import httpx
 from mcp import Client, StdioServerParameters
 
-from gag_mcp.server import build_http_app, mcp
+from gaig_mcp.server import build_http_app, mcp
 from conftest import EVAL_TIME, assert_non_authorizing
 
 TOOLS = {"check_inventory", "build_decision_pack", "validate_passport"}
@@ -39,7 +39,7 @@ def test_in_process():
 
 
 def test_stdio_subprocess():
-    params = StdioServerParameters(command=sys.executable, args=["-m", "gag_mcp.server"], env=dict(os.environ))
+    params = StdioServerParameters(command=sys.executable, args=["-m", "gaig_mcp.server"], env=dict(os.environ))
     async def run():
         async with Client(params) as c:
             await _exercise(c)
@@ -56,7 +56,7 @@ def test_streamable_http(http_server):
 
 
 def test_http_bearer_token_enforced(http_server):
-    base = http_server({"GAG_MCP_BEARER_TOKEN": "test-token-123"})
+    base = http_server({"GAIG_MCP_BEARER_TOKEN": "test-token-123"})
     r = httpx.post(base + "/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
                    headers={"accept": "application/json, text/event-stream"})
     assert r.status_code == 401

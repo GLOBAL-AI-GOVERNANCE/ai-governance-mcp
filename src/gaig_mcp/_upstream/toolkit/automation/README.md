@@ -2,7 +2,7 @@
 
 ## Optional profiles
 
-`gag profile PROFILE_ID INPUT --outdir DIRECTORY` runs a profile from [`profiles/registry.json`](profiles/registry.json) and writes deterministic `profile-result.json`. Optional `--decision-pack-manifest` verifies and records its digest without rewriting the Decision Pack. `--evaluation-time` enables reproducible expiry checks. Exit codes are `0` for PASS/CONDITIONAL, `1` for FAIL, and `2` for input or configuration error. Every result has `authority_effect: NONE`.
+`gaig profile PROFILE_ID INPUT --outdir DIRECTORY` runs a profile from [`profiles/registry.json`](profiles/registry.json) and writes deterministic `profile-result.json`. Optional `--decision-pack-manifest` verifies and records its digest without rewriting the Decision Pack. `--evaluation-time` enables reproducible expiry checks. Exit codes are `0` for PASS/CONDITIONAL, `1` for FAIL, and `2` for input or configuration error. Every result has `authority_effect: NONE`.
 
 [`profiles/registry.json`](profiles/registry.json) is the source of truth for registered profiles and for which profiles the common browser supports. Organizational maturity uses the local-first maturity route. v2.3.0 introduced Auditable AI, the synthetic Quantum-AI exercise, and CISO accountability. v2.4.0 added independent assurance, mission assurance, and machine-learning assurance. v2.5.0 added organizational AI maturity evidence.
 
@@ -15,7 +15,7 @@ The automation layer provides a repeatable path from an AI system inventory CSV 
 Installed command:
 
 ```bash
-gag check automation/sample-data/sample-ai-inventory.csv \
+gaig check automation/sample-data/sample-ai-inventory.csv \
   --outdir automation/reports \
   --fail-on none
 ```
@@ -70,7 +70,7 @@ decision-pack/
 governance-handoff.json
 ```
 
-Use `gag normalize` when only canonical normalization is needed and `gag verify` to revalidate machine contracts and pack integrity.
+Use `gaig normalize` when only canonical normalization is needed and `gaig verify` to revalidate machine contracts and pack integrity.
 
 Schema or policy configuration errors return exit code `2`. Governance findings that meet the selected threshold return exit code `1`.
 

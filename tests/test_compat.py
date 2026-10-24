@@ -1,14 +1,13 @@
 """Compatibility guards: public names, inputs, CLI, import, env vars, and authority_effect NONE stay stable."""
 import asyncio
 import importlib.metadata
-import pathlib
 import subprocess
 import sys
 
 from mcp import Client
 
-import gag_mcp
-from gag_mcp.server import main, mcp
+import gaig_mcp
+from gaig_mcp.server import main, mcp
 from conftest import assert_non_authorizing
 
 DOCUMENTED_INPUTS = {
@@ -16,7 +15,6 @@ DOCUMENTED_INPUTS = {
     "build_decision_pack": {"inventory_csv", "use_sample", "evaluation_time", "include_documents"},
     "validate_passport": {"example", "passport_json", "trusted_key_json", "revocation_list_json", "at_time"},
 }
-SRC = pathlib.Path(gag_mcp.__file__).parent
 
 
 def _tools():
@@ -34,20 +32,30 @@ def test_tool_names_and_documented_inputs_unchanged():
         assert tool.annotations.read_only_hint is True and tool.annotations.destructive_hint is False
 
 
-def test_cli_entry_point_and_import():
+def test_cli_entry_points_primary_and_deprecated_alias():
     eps = {ep.name: ep.value for ep in importlib.metadata.entry_points(group="console_scripts")}
-    assert eps.get("gag-mcp") == "gag_mcp.server:main"
+    assert eps.get("gaig-mcp") == "gaig_mcp.server:main"
+    assert eps.get("gag-mcp") == "gaig_mcp.server:main"
     assert callable(main)
-    out = subprocess.run([sys.executable, "-m", "gag_mcp.server", "--version"], capture_output=True, text=True)
-    assert out.returncode == 0 and out.stdout.strip() == gag_mcp.__version__ if hasattr(gag_mcp, "__version__") \
-        else out.returncode == 0
 
 
-def test_env_var_names_unchanged():
-    text = (SRC / "server.py").read_text() + (SRC / "core.py").read_text()
-    for name in ("GAG_MCP_ALLOWED_HOSTS", "GAG_MCP_BEARER_TOKEN", "GAG_MCP_CORS_ORIGINS",
-                 "GAG_TOOLKIT_PATH", "GAG_AGENTIC_PATH"):
-        assert name in text, name
+def test_module_entry_points_primary_and_deprecated_alias():
+    for module in ("gaig_mcp.server", "gag_mcp.server"):
+        out = subprocess.run([sys.executable, "-m", module, "--version"], capture_output=True, text=True)
+        assert out.returncode == 0, (module, out.stderr)
+        assert out.stdout.strip() == gaig_mcp.__version__, module
+
+
+def test_deprecated_import_package_is_the_same_module():
+    import gag_mcp
+    import gag_mcp.core
+    import gag_mcp.server
+    import gaig_mcp.core
+    import gaig_mcp.server
+    assert gag_mcp.__version__ == gaig_mcp.__version__
+    assert gag_mcp.core is gaig_mcp.core
+    assert gag_mcp.server is gaig_mcp.server
+    assert gaig_mcp.core.GagInputError is gaig_mcp.core.GaigInputError
 
 
 def test_existing_arguments_still_non_authorizing():

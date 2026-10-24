@@ -61,6 +61,7 @@ REQUIRED_FILES = (
     "automation/scripts/inventory_normalizer.py",
     "automation/scripts/contract_verifier.py",
     "automation/scripts/machine_contracts.py",
+    "gaig_toolkit/cli.py",
     "gag_toolkit/cli.py",
     "web/index.html",
     "web/governance-engine.mjs",

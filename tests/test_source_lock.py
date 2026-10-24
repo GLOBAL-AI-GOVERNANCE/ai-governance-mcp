@@ -2,7 +2,7 @@ import pathlib
 import unittest
 
 SCRIPT = (pathlib.Path(__file__).parents[1] / "scripts" / "fetch_upstreams.sh").read_text()
-EXPECTED_TOOLKIT = "afcd06d027f2bfd168233c993405060e4f18dfa1"
+EXPECTED_TOOLKIT = "f454bf921b774f17982e70f28ce01a224d3c6410"
 EXPECTED_AGENTIC = "58bdfb291df0de7c9437b4476e370a609c4b1d5f"
 
 class SourceLockTests(unittest.TestCase):

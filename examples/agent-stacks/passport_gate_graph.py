@@ -3,7 +3,7 @@
 
 Each agent node in a multi-agent graph runs only after its Agent Trust Passport verifies.
 A verified passport is a precondition, not an authorization: the node still hands its output
-to an accountable human, and every gag-mcp result keeps authority_effect NONE.
+to an accountable human, and every gaig-mcp result keeps authority_effect NONE.
 
 Status: TESTED (tests/test_examples.py runs this file). The LangGraph mapping at the bottom is untested.
 Run:    python examples/agent-stacks/passport_gate_graph.py
@@ -14,7 +14,7 @@ import sys
 from dataclasses import dataclass, field
 from typing import Callable
 
-from gag_mcp.core import validate_passport
+from gaig_mcp.core import validate_passport
 
 
 @dataclass
