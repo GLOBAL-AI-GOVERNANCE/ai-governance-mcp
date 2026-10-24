@@ -49,7 +49,7 @@ No clone needed. The pinned toolkit and agentic files are bundled in the package
 uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0 gaig-mcp      # stdio
 ```
 
-TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, and Codex are in [`examples/client-configs/`](examples/client-configs/); agent-framework patterns are in [`examples/agent-stacks/`](examples/agent-stacks/).
+TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, Codex, Claude Code, and the Grok CLI are in [`examples/client-configs/`](examples/client-configs/); agent-framework patterns and the Action Level guard are in [`examples/agent-stacks/`](examples/agent-stacks/).
 
 From source:
 
@@ -138,7 +138,7 @@ Only these `GAIG_*` names are read. A setting name from before v0.3.0 makes the 
 
 ## Client configuration (copy-paste)
 
-Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, and Codex: [`examples/client-configs/`](examples/client-configs/). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAIG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
+Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio configs for Cursor, VS Code, Codex, Claude Code, and the Grok CLI: [`examples/client-configs/`](examples/client-configs/). Remote platforms (ChatGPT, the Claude API and claude.ai, the OpenAI, Anthropic, and xAI APIs, grok.com) **cannot reach stdio or localhost**. They need an HTTPS URL that you host yourself (see "Self-hosting") and must send `Authorization: Bearer TOKEN`, where `TOKEN` is your `GAIG_MCP_BEARER_TOKEN`. None of the remote recipes below has been tested against a live provider.
 
 ### Claude Desktop (local, stdio)
 `claude_desktop_config.json` (Settings → Developer → Edit Config):
@@ -155,6 +155,18 @@ Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio config
 Launch command TESTED with the MCP Python SDK stdio client; this config is not tested inside Claude Desktop.
 
 One-click desktop extension: `manifest.json` (MCPB `manifest_version` 0.4) passes `mcpb validate`. Packing a `.mcpb` still needs platform-specific dependency bundling (`cryptography` has native wheels). **Not yet tested in Claude Desktop.**
+
+### Claude Code (local, stdio)
+```bash
+claude mcp add gaig --scope project -- uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0 gaig-mcp
+```
+This writes a project `.mcp.json` like [`examples/client-configs/claude-code.mcp.json`](examples/client-configs/claude-code.mcp.json). Tools appear as `mcp__gaig__check_inventory` and so on. Launch command TESTED with the MCP Python SDK stdio client; not tested inside Claude Code (untested).
+
+### Grok CLI (local, stdio)
+```bash
+grok mcp add gaig -- uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0 gaig-mcp
+```
+Or add [`examples/client-configs/grok-cli.config.toml`](examples/client-configs/grok-cli.config.toml) to `~/.grok/config.toml`. The Grok CLI also reads a project `.mcp.json`, so the Claude Code file works there too; check with `grok mcp doctor`. Tools appear as `gaig__check_inventory` and so on. Launch command TESTED with the MCP Python SDK stdio client; not tested inside the Grok CLI (untested).
 
 ### Claude.ai / Claude Desktop / mobile (remote custom connector)
 Add custom connector → URL `https://YOUR-HOST/mcp`, sign-in "None", then under **Request headers** add `authorization` with the value `Bearer TOKEN`. Anthropic documents request headers as a beta available to a limited set of organizations. If your organization does not see that section, Claude.ai cannot connect to this server: it does not implement OAuth and does not accept anonymous network requests. Which plans can add custom connectors: **unverified**; check the Claude Help Center.
@@ -214,6 +226,33 @@ xAI supports only Streamable HTTP or SSE; `require_approval` is not supported. I
 
 ### Grok (grok.com consumer connectors)
 grok.com/connectors → New Connector → Custom → enter `https://YOUR-HOST/mcp`. The server must be reachable on the public internet. Whether this connector can send a static `Authorization: Bearer` header is **unverified**. If it cannot, grok.com cannot connect to this server; use the xAI API above instead.
+
+## Guard agent tool calls by Action Level
+
+gaig-mcp tools are read-only, but the agents that call them usually have other tools too. [`examples/agent-stacks/action_level_guard.py`](examples/agent-stacks/action_level_guard.py) (standard library only) checks every tool call before it runs, using the Action Levels in the [action-authority spec](https://github.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/blob/main/spec/08-action-authority.md):
+
+| Level | Meaning | Guard decision |
+|---|---|---|
+| 0-3 | Advisory, read-only, drafts, or bounded reversible internal actions | allow |
+| 4 | Privileged or externally consequential | ask: an accountable person approves or rejects the call |
+| 5 | Destructive, financial, legal, employment, human-safety, critical-infrastructure, or irreversible high-impact | deny |
+| not in your policy | New or renamed tool | treated as Level 4 |
+
+You list your tools and their levels (`ActionLevelGuard({"send_external_email": 4, "delete_records": 5})`); the three gaig-mcp tools are Level 1. The guard never approves a Level 4 call itself. One policy covers `send_external_email`, `mcp__crm__send_external_email` (Claude), and `crm__send_external_email` (Grok CLI).
+
+| Stack | File | How Level 4 and Level 5 are enforced | Status |
+|---|---|---|---|
+| OpenAI Agents SDK (Python) | [`openai_agents_guard.py`](examples/agent-stacks/openai_agents_guard.py) | `require_approval` callable pauses Level 4 for `state.approve` / `state.reject`; a tool input guardrail rejects Level 5 | TESTED offline: openai-agents 0.24.0 runner, real gaig-mcp stdio server, scripted stand-in model |
+| Claude Agent SDK (Python) | [`claude_agent_sdk_guard.py`](examples/agent-stacks/claude_agent_sdk_guard.py) | `PreToolUse` hook returns `ask` or `deny` | TESTED offline: claude-agent-sdk 0.2.174 hook called directly; not run against Claude |
+| Claude Code | [`tool_call_hook.py`](examples/agent-stacks/tool_call_hook.py) + [`claude-code.settings.json`](examples/client-configs/claude-code.settings.json) | `PreToolUse` command hook returns `ask` or `deny` | Hook contract TESTED with recorded-format input; not run inside Claude Code (untested) |
+| Grok CLI | same hook + [`grok-cli.hooks.json`](examples/client-configs/grok-cli.hooks.json) | Grok hooks can only deny, so Level 4 and Level 5 are denied with the reason | Hook contract TESTED with recorded-format input; not run inside the Grok CLI (untested) |
+| OpenAI Responses API (hosted MCP) | [`remote_mcp_guard.py`](examples/agent-stacks/remote_mcp_guard.py) | `require_approval` for Level 4; `mcp_approval_response` never approves Level 5; Level 5 tools are not exposed | Request shapes and approval answers TESTED offline; no live request (untested) |
+| Anthropic Messages API (MCP connector) | same file | Only Level 0-3 tools are enabled in `mcp_toolset` | Request shape TESTED offline; no live request (untested) |
+| xAI API (remote MCP) | same file | Only Level 0-3 tools in `allowed_tools`; xAI has no `require_approval` | Request shape TESTED offline; no live request (untested) |
+
+Setup for Claude Code: copy `tool_call_hook.py` and `action_level_guard.py` into `.claude/hooks/`, and merge `claude-code.settings.json` into `.claude/settings.json`. For the Grok CLI: copy both files into `.grok/hooks/`, copy `grok-cli.hooks.json` there too, and trust the project hooks with `/hooks-trust`. Pass your own levels with `--policy action-levels.json`. The hook denies on any error, because the Grok CLI lets a call through when a hook fails; in Claude Code v2.1.295 or later you can also add `"onFailure": "block"` to the hook entry.
+
+Hosted MCP connectors (OpenAI, Anthropic, xAI) call your server from the provider, so your code cannot check each call there; expose only the tools the guard allows, and run Level 4 actions from your own client loop. The guard limits what an agent can do unattended; it does not make any action authorized. Tests: `tests/test_guards.py`.
 
 ## Auth
 - **Local stdio:** no auth. The MCP spec says stdio servers take credentials from the environment.
