@@ -13,6 +13,7 @@ import os
 import subprocess
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -349,9 +350,53 @@ def _write_json(dirpath: Path, name: str, value: Any) -> Path:
     return p
 
 
+def server_clock() -> str:
+    """Current UTC time from this server's clock, to the second (YYYY-MM-DDTHH:MM:SSZ).
+
+    Runtime guard decisions use only this clock. A caller-supplied time is accepted only for historical
+    validation (validate_passport at_time), never for a decision about a call that is about to run.
+    """
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+TIME_BASIS_CALLER = "caller_at_time: historical validation at the supplied time; not a runtime decision"
+TIME_BASIS_EXAMPLE = "example_fixed_time: synthetic example evaluated at its fixed time; not a runtime decision"
+TIME_BASIS_SERVER = "server_clock"
+
+
 def validate_passport(example: str | None = None, passport: dict | str | None = None,
                       trusted_key: dict | str | None = None, revocation_list: dict | str | None = None,
                       at_time: str | None = None) -> dict[str, Any]:
+    if example:
+        time_basis = TIME_BASIS_CALLER if at_time else TIME_BASIS_EXAMPLE
+    else:
+        time_basis = TIME_BASIS_CALLER if at_time else TIME_BASIS_SERVER
+    raw, code, mode = _run_passport_validator(example, passport, trusted_key, revocation_list, at_time)
+    body = {
+        "mode": mode,
+        "time_basis": time_basis,
+        "validator_exit_code": code,
+        "verification": _relabel(raw),
+        "interpretation": (
+            "verification_primary_status describes whether the passport verified at the evaluation time. "
+            "reference_policy_disposition is what the agentic-ai-governance reference policy computes for these "
+            "artifacts. Neither is an authorization issued by gaig-mcp; the receiving platform's accountable human "
+            "and its own policy decide whether any action may proceed."
+        ),
+    }
+    return envelope("validate_passport", body, source=_agentic_source())
+
+
+def _agentic_source() -> dict[str, Any]:
+    root = agentic_root()
+    return {"repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance", "commit": _source_commit("agentic", "AGENTIC_PATH", root),
+            "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"}
+
+
+def _run_passport_validator(example: str | None, passport: dict | str | None, trusted_key: dict | str | None,
+                            revocation_list: dict | str | None, at_time: str | None,
+                            bundle_manifest: str | Path | None = None,
+                            bundle_root: str | Path | None = None) -> tuple[dict[str, Any], int, str]:
     root = agentic_root()
     tmp = tempfile.TemporaryDirectory(prefix="gaig-mcp-pp-")
     try:
@@ -371,10 +416,17 @@ def validate_passport(example: str | None = None, passport: dict | str | None = 
             args = ["--trusted-key", str(_write_json(d, "trusted_key", trusted_key))]
             if revocation_list is not None:
                 args += ["--revocation-list", str(_write_json(d, "revocation_list", revocation_list))]
+            if bundle_manifest is not None or bundle_root is not None:
+                if bundle_manifest is None or bundle_root is None:
+                    raise GaigInputError("Provide both bundle_manifest and bundle_root, or neither.")
+                args += ["--bundle-manifest", str(Path(bundle_manifest).resolve()),
+                         "--bundle-root", str(Path(bundle_root).resolve())]
+                mode = "caller-supplied passport with a local evidence bundle"
+            else:
+                mode = "caller-supplied passport (no evidence bundle supplied; full binding checks cannot complete)"
             if at_time:
                 args += ["--at-time", at_time]
             args.append(str(_write_json(d, "passport", passport)))
-            mode = "caller-supplied passport (no evidence bundle supplied; full binding checks cannot complete)"
         proc = subprocess.run([sys.executable, "tools/validate_artifact.py", "--kind", "passport", *args],
                               cwd=root, capture_output=True, text=True, timeout=60)
     except json.JSONDecodeError as exc:
@@ -386,17 +438,124 @@ def validate_passport(example: str | None = None, passport: dict | str | None = 
     except json.JSONDecodeError as exc:
         raise GaigInputError(f"Validator produced no result (exit {proc.returncode}).") from exc
     raw.pop("artifact", None)  # drop local temp paths
+    return raw, proc.returncode, mode
+
+
+# --------------------------------------------------------------------------- passport + action guard
+UNKNOWN_TOOL_LEVEL = 4
+MAX_UNATTENDED_LEVEL = 3
+CALL_ALLOW, CALL_ASK, CALL_DENY = "allow", "ask", "deny"
+
+
+def passport_action_ceiling(passport: dict[str, Any]) -> int | None:
+    """Highest Action Level the passport allows: issued_assessment.maximum_action_level, lowered by any
+    condition's temporary_restriction.maximum_action_level. None if the passport states no valid level."""
+    try:
+        ceiling = passport["issued_assessment"]["maximum_action_level"]
+    except (KeyError, TypeError):
+        return None
+    if not isinstance(ceiling, int) or isinstance(ceiling, bool) or not 0 <= ceiling <= 5:
+        return None
+    for condition in passport.get("conditions") or []:
+        restriction = condition.get("temporary_restriction") if isinstance(condition, dict) else None
+        if isinstance(restriction, dict):
+            level = restriction.get("maximum_action_level")
+            if not isinstance(level, int) or isinstance(level, bool) or not 0 <= level <= 5:
+                return None
+            ceiling = min(ceiling, level)
+    return ceiling
+
+
+def check_tool_call(tool_name: str, passport: dict | str | None = None, trusted_key: dict | str | None = None,
+                    revocation_list: dict | str | None = None, tool_level: int | None = None,
+                    bundle_manifest: str | Path | None = None, bundle_root: str | Path | None = None,
+                    example: str | None = None) -> dict[str, Any]:
+    """Decide, before a tool call runs, whether the calling agent's passport lets it run unattended.
+
+    One combined check at this server's clock (``server_clock()``); there is no caller time input:
+      1. the passport verifies VALID (schema, signature, key trust, bindings, validity window);
+      2. a signed revocation list was supplied and the revocation check passed;
+      3. the tool's Action Level is within the passport's reachable ceiling.
+    Then Levels 0-3 give "allow", Level 4 "ask" (an accountable person decides), Level 5 "deny". Every other
+    outcome is "deny". A tool without a stated level is treated as Level 4. The result is non-authorizing
+    (authority_effect NONE): "allow" means no check stopped the call, not that anyone approved it.
+    """
+    if not isinstance(tool_name, str) or not tool_name.strip():
+        raise GaigInputError("tool_name is required.")
+    if tool_level is None:
+        level, level_source = UNKNOWN_TOOL_LEVEL, "unknown-tool default"
+    elif isinstance(tool_level, int) and not isinstance(tool_level, bool) and 0 <= tool_level <= 5:
+        level, level_source = tool_level, "caller policy"
+    else:
+        raise GaigInputError("tool_level must be an integer from 0 to 5.")
+    evaluated_at = server_clock()
+    reasons: list[str] = []
+    ceiling: int | None = None
+    verification: dict[str, Any] = {}
+    if example:
+        if passport is not None:
+            raise GaigInputError("Provide example or passport, not both.")
+        if example not in PASSPORT_EXAMPLES:
+            raise GaigInputError(f"Unknown example. Use one of {sorted(PASSPORT_EXAMPLES)}.")
+        parsed = json.loads((agentic_root() / PASSPORT_EXAMPLES[example]).read_text(encoding="utf-8"))
+        raw, _, _ = _run_passport_validator(example, None, None, None, evaluated_at)
+    else:
+        if passport is None or trusted_key is None:
+            raise GaigInputError("Provide example, or both passport and trusted_key.")
+        try:
+            parsed = json.loads(passport) if isinstance(passport, str) else passport
+        except json.JSONDecodeError as exc:
+            raise GaigInputError(f"Invalid JSON input (line {exc.lineno}, column {exc.colno}).") from exc
+        if revocation_list is None:
+            reasons.append("No signed revocation list was supplied, so revocation cannot be checked.")
+            raw = {}
+        else:
+            raw, _, _ = _run_passport_validator(None, parsed, trusted_key, revocation_list, evaluated_at,
+                                                bundle_manifest, bundle_root)
+    if raw:
+        checks = raw.get("checks") or {}
+        verification = {
+            "verification_primary_status": raw.get("verification_primary_status"),
+            "evaluated_at": raw.get("evaluated_at"),
+            "validity": checks.get("validity"),
+            "revocation": checks.get("revocation"),
+            "errors": [e.get("code") for e in raw.get("errors", []) if isinstance(e, dict)],
+        }
+        if raw.get("evaluated_at") != evaluated_at:
+            reasons.append("The validator did not evaluate at the server clock time.")
+        if raw.get("verification_primary_status") != "VALID":
+            reasons.append(f"Passport did not verify at the server clock time "
+                           f"(status {raw.get('verification_primary_status')}).")
+        if checks.get("revocation") != "PASS":
+            reasons.append(f"Revocation check did not pass (revocation {checks.get('revocation')}).")
+    if isinstance(parsed, dict):
+        ceiling = passport_action_ceiling(parsed)
+    if ceiling is None:
+        reasons.append("Passport states no valid maximum Action Level.")
+    elif level > ceiling:
+        reasons.append(f"Level {level} is above the passport's reachable Action Level {ceiling}.")
+    if reasons:
+        outcome = CALL_DENY
+    elif level >= 5:
+        outcome, reasons = CALL_DENY, [f"Level {level}: blocked; agents may not take this action."]
+    elif level == 4:
+        outcome, reasons = CALL_ASK, ["Level 4: needs approval from an accountable person."]
+    else:
+        outcome, reasons = CALL_ALLOW, [f"Level {level}: within the passport ceiling and the unattended limit "
+                                        f"(Level {MAX_UNATTENDED_LEVEL})."]
     body = {
-        "mode": mode,
-        "validator_exit_code": proc.returncode,
-        "verification": _relabel(raw),
+        "tool_name": tool_name,
+        "tool_level": level,
+        "tool_level_source": level_source,
+        "passport_action_ceiling": ceiling,
+        "call_disposition": outcome,
+        "reasons": reasons,
+        "evaluated_at": evaluated_at,
+        "time_basis": TIME_BASIS_SERVER,
+        "passport_check": verification,
         "interpretation": (
-            "verification_primary_status describes whether the passport verified at the evaluation time. "
-            "reference_policy_disposition is what the agentic-ai-governance reference policy computes for these "
-            "artifacts. Neither is an authorization issued by gaig-mcp; the receiving platform's accountable human "
-            "and its own policy decide whether any action may proceed."
+            "call_disposition is the guard's pre-call outcome: allow means no check stopped the call, ask means an "
+            "accountable person decides, deny means the call should not run. It is not an authorization."
         ),
     }
-    source = {"repository": "GLOBAL-AI-GOVERNANCE/agentic-ai-governance", "commit": _source_commit("agentic", "AGENTIC_PATH", root),
-              "maturity": "experimental public alpha (v0.1.0-alpha.2 line; main may be ahead)"}
-    return envelope("validate_passport", body, source=source)
+    return envelope("check_tool_call", body, source=_agentic_source())
