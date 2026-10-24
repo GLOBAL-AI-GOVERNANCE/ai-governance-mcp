@@ -105,7 +105,35 @@ def _toolkit_rejection(exc: Exception) -> str:
     safe = {k: detail[k] for k in _SAFE_TOOLKIT_ERROR_FIELDS if k in detail}
     if safe.get("code") == "UNKNOWN_COLUMN":
         safe.pop("source_column", None)  # the unknown header is caller-supplied text
-    return f"Inventory rejected by toolkit validation: {json.dumps({'error': safe}, sort_keys=True)}"
+    message = f"Inventory rejected by toolkit validation: {json.dumps({'error': safe}, sort_keys=True)}"
+    if safe.get("code") == "MISSING_REQUIRED_COLUMN":
+        message += _missing_column_hint()
+    return message
+
+
+MINIMAL_INVENTORY_EXAMPLE = "docs/examples/minimal-inventory.csv"
+MINIMAL_INVENTORY_EXAMPLE_URL = (
+    "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/main/" + MINIMAL_INVENTORY_EXAMPLE
+)
+
+
+def _required_inventory_columns() -> list[str]:
+    """Required header row, read from the bundled toolkit schema (empty if unavailable)."""
+    try:
+        schema = json.loads((toolkit_root() / "automation" / "schemas" / "ai-system-inventory.schema.json")
+                            .read_text(encoding="utf-8"))
+        # schema_version is optional in the CSV header (the normalizer supplies it), as upstream treats it.
+        return [str(item) for item in schema.get("required", []) if item != "schema_version"]
+    except Exception:  # pragma: no cover - a hint must never mask the original rejection
+        return []
+
+
+def _missing_column_hint() -> str:
+    """Plain-language next step appended to MISSING_REQUIRED_COLUMN; code and fields are unchanged."""
+    columns = _required_inventory_columns()
+    listed = f" Required header row: {','.join(columns)}." if columns else ""
+    return (f"{listed} A minimal valid one-row example is {MINIMAL_INVENTORY_EXAMPLE} "
+            f"({MINIMAL_INVENTORY_EXAMPLE_URL}), or call check_inventory with use_sample=true.")
 
 
 # --------------------------------------------------------------------------- paths
