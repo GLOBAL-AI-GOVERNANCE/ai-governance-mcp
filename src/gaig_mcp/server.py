@@ -98,7 +98,7 @@ def validate_passport(example: Annotated[Literal["signed-unrevoked", "signed-rev
                       passport_json: Annotated[str | None, Field(description="Agent Trust Passport as a JSON string.")] = None,
                       trusted_key_json: Annotated[str | None, Field(description="Trusted Ed25519 verification key as a JSON string (required with passport_json).")] = None,
                       revocation_list_json: Annotated[str | None, Field(description="Signed revocation list as a JSON string (optional).")] = None,
-                      at_time: Annotated[str | None, Field(description="Evaluation time, UTC ISO 8601. Defaults to the example's fixed time or now.")] = None) -> dict[str, Any]:
+                      at_time: Annotated[str | None, Field(description="Historical validation time, UTC ISO 8601. Defaults to the example's fixed time or the server clock. Pre-call guard decisions never use a caller time.")] = None) -> dict[str, Any]:
     return _guard(core.validate_passport, example, passport_json, trusted_key_json, revocation_list_json, at_time)
 
 
