@@ -3,22 +3,22 @@
 Governance checks your AI agents can call. Start the server with one command, and your agent can check an AI system inventory, prepare a Decision Pack, or verify an Agent Trust Passport. Every result is read-only and leaves the decision with a person.
 
 ```bash
-uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.1 gaig-mcp
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0 gaig-mcp
 ```
 
 **Model Context Protocol (MCP)** is an open standard that lets AI assistants discover and call external tools through a common interface. This repository is a non-authorizing MCP server for Global AI Governance reference tooling.
 
-**Status:** v0.2.1 preview. Source is public in this repository (formerly `gag-mcp`; the old URL redirects). **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
+**Status:** v0.3.0 preview. Source is public in this repository. **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
 
-**Names:** the console command is `gaig-mcp`, the import package is `gaig_mcp`, the MCP server name reported to clients is `gaig-mcp`, and environment variables use the `GAIG_MCP_` / `GAIG_` prefixes. The Python distribution name and the desktop-extension manifest `name` stay `gag-mcp` so existing installs upgrade in place.
+**Names:** the console command is `gaig-mcp`, the import package is `gaig_mcp`, the MCP server name reported to clients is `gaig-mcp`, and environment variables use the `GAIG_MCP_` / `GAIG_` prefixes. The Python distribution and the desktop-extension manifest `name` are also `gaig-mcp` (wheel `gaig_mcp`).
 
-**Deprecated aliases (kept so existing configurations keep working):** the `gag-mcp` command and `python -m gag_mcp.server` start the same server; `import gag_mcp` resolves to `gaig_mcp`; and each `GAG_*` environment variable is still read when its `GAIG_*` name is unset, with a deprecation warning on stderr. If both names are set to different values, the server refuses to start.
+**v0.3.0 removed the older names.** Only the names above work. If an environment variable from before v0.3.0 is still set, the server refuses to start and names the `GAIG_*` variable to use instead, so a security setting is never silently dropped.
 
 AI Governance MCP exposes the real Global AI Governance reference tooling to MCP clients:
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
-| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `f454bf921b774f17982e70f28ce01a224d3c6410`, release v2.6.0) |
+| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `0f4535b4a0358643bfd5b15f87dd71b5b67f1477`, release v2.7.0) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
 | `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `58bdfb291df0de7c9437b4476e370a609c4b1d5f`) |
 
@@ -40,7 +40,7 @@ Compatible with MCP-based agents. Not affiliated with or endorsed by xAI, OpenAI
 No clone needed. The pinned toolkit and agentic files are bundled in the package (`src/gaig_mcp/_upstream/`, source lock in `UPSTREAM_LOCK.json`), so this runs with no other checkout:
 
 ```bash
-uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.1 gaig-mcp      # stdio
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0 gaig-mcp      # stdio
 ```
 
 TESTED in a clean environment. Copy-paste client configs for Cursor, VS Code, and Codex are in [`examples/client-configs/`](examples/client-configs/); agent-framework patterns are in [`examples/agent-stacks/`](examples/agent-stacks/).
@@ -54,7 +54,7 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 gaig-mcp                              # stdio
 gaig-mcp --http --port 8000           # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 94 tests
+pytest                                # 100 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -114,7 +114,7 @@ print(out["result"]["validation_state"], out["result"]["finding_count"])'
 
 Expected last line: `VALID 0` (the toolkit also prints its progress lines). [`docs/examples/minimal-inventory.csv`](docs/examples/minimal-inventory.csv) holds the required header row and one synthetic system; replace the row with your own systems. The same file is installed with the package, so a pip or uvx install without a clone can use `from gaig_mcp.core import minimal_inventory_csv` and pass `minimal_inventory_csv()` as `inventory_csv`. If a column is missing, `check_inventory` fails closed with `MISSING_REQUIRED_COLUMN`, lists the required columns, and points to this file.
 
-Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.1"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
+Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gaig-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
 Protocol: the official Python SDK `mcp==2.3.0`, which speaks MCP **2026-07-28** (the current spec revision). The smoke test also confirms that handshake-era clients (`initialize` with `2025-06-18` / `2025-11-25`) work over HTTP. HTTP mode is stateless with JSON responses, which suits serverless hosts.
 
@@ -128,7 +128,7 @@ Environment variables (HTTP mode):
 | `GAIG_TOOLKIT_PATH`, `GAIG_AGENTIC_PATH` | Use other checkouts instead of the bundled pinned files |
 | `HOST`, `PORT` | Bind address (defaults `127.0.0.1:8000`) |
 
-The deprecated `GAG_MCP_ALLOWED_HOSTS`, `GAG_MCP_CORS_ORIGINS`, `GAG_MCP_BEARER_TOKEN`, `GAG_TOOLKIT_PATH`, and `GAG_AGENTIC_PATH` names are still honored as fallbacks with the same fail-closed rules, including the loopback-plus-tunnel case.
+Only these `GAIG_*` names are read. A setting name from before v0.3.0 makes the server refuse to start, with a message naming its `GAIG_*` replacement. This keeps the loopback-plus-tunnel case fail-closed.
 
 ## Client configuration (copy-paste)
 
@@ -141,7 +141,7 @@ Replace `https://YOUR-HOST` and `TOKEN` with your own values. Local stdio config
   "mcpServers": {
     "gaig": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.1", "gaig-mcp"]
+      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0", "gaig-mcp"]
     }
   }
 }
@@ -232,8 +232,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAIG_MCP_ALLOWED_HOSTS=<the h
 - `src/gaig_mcp/core.py`: transport-independent logic plus the authority envelope
 - `src/gaig_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
 - `src/gaig_mcp/_upstream/`: pinned toolkit and agentic files bundled into the package, with `UPSTREAM_LOCK.json` (commit, file count, tree digest per upstream)
-- `src/gag_mcp/`: deprecated import alias of `gaig_mcp`
-- `tests/`: 94 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
+- `tests/`: 100 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus interface guards, refusal of removed setting names, bundle-lock checks, and example and client-config checks)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones; `scripts/bundle_upstreams.py`: copies them into the package and checks the bundle (`--check`, run in CI)
 - `examples/client-configs/`, `examples/agent-stacks/`: copy-paste client configs and agent-framework patterns, each labelled TESTED or untested
