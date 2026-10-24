@@ -51,7 +51,6 @@ jobs:
           python -m venv "$RUNNER_TEMP/verify"
           "$RUNNER_TEMP/verify/bin/python" -m pip install --disable-pip-version-check "$RUNNER_TEMP"/dist/*.whl
           test "$("$RUNNER_TEMP/verify/bin/gaig-mcp" --version)" = "${TAG#v}"
-          test "$("$RUNNER_TEMP/verify/bin/gag-mcp" --version)" = "${TAG#v}"
           cp examples/agent-stacks/*.py "$RUNNER_TEMP/"
           cd "$RUNNER_TEMP"
           "$RUNNER_TEMP/verify/bin/python" mcp_client_loop.py

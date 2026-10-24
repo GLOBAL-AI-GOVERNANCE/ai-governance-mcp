@@ -62,7 +62,6 @@ REQUIRED_FILES = (
     "automation/scripts/contract_verifier.py",
     "automation/scripts/machine_contracts.py",
     "gaig_toolkit/cli.py",
-    "gag_toolkit/cli.py",
     "web/index.html",
     "web/governance-engine.mjs",
     "web/finding-guidance.mjs",

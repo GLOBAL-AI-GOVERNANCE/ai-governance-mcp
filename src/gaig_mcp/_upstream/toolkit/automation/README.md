@@ -12,11 +12,13 @@ The automation layer provides a repeatable path from an AI system inventory CSV 
 
 ## Quick Start
 
+Run from the repository root. Each command writes its reports to a new temporary directory, so no tracked file is overwritten; the report paths are printed when the run completes. The full first-run path is the [README Quick Start](../README.md#quick-start).
+
 Installed command:
 
 ```bash
 gaig check automation/sample-data/sample-ai-inventory.csv \
-  --outdir automation/reports \
+  --outdir "$(mktemp -d)" \
   --fail-on none
 ```
 
@@ -25,7 +27,7 @@ The historical script path remains a supported compatibility entry point:
 ```bash
 python automation/scripts/run_governance_checks.py \
   automation/sample-data/sample-ai-inventory.csv \
-  --outdir automation/reports \
+  --outdir "$(mktemp -d)" \
   --fail-on none
 ```
 
