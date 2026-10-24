@@ -57,6 +57,18 @@ jobs:
           "$RUNNER_TEMP/verify/bin/python" mcp_client_loop.py
           "$RUNNER_TEMP/verify/bin/python" passport_gate_graph.py
 
+      - name: Generate CycloneDX SBOM from the clean install
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/sbom-tool"
+          "$RUNNER_TEMP/sbom-tool/bin/python" -m pip install --disable-pip-version-check cyclonedx-bom==7.5.0
+          name=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])")
+          "$RUNNER_TEMP/sbom-tool/bin/cyclonedx-py" environment \
+            --pyproject pyproject.toml --sv 1.6 --of JSON \
+            -o "$RUNNER_TEMP/dist/${name}-${TAG#v}.cdx.json" \
+            "$RUNNER_TEMP/verify/bin/python"
+
       - name: Write SHA256SUMS
         shell: bash
         working-directory: ${{ runner.temp }}/dist
@@ -71,8 +83,34 @@ jobs:
           path: ${{ runner.temp }}/dist/
           if-no-files-found: error
 
-  attach:
+  attest:
     needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Download build output
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-assets
+          path: dist
+
+      - name: Check build output against SHA256SUMS
+        shell: bash
+        working-directory: dist
+        run: sha256sum -c SHA256SUMS
+
+      - name: Attest build provenance for every release asset
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-checksums: dist/SHA256SUMS
+
+  attach:
+    needs: [build, attest]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

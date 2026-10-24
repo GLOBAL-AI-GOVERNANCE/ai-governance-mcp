@@ -237,7 +237,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAIG_MCP_ALLOWED_HOSTS=<the h
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones; `scripts/bundle_upstreams.py`: copies them into the package and checks the bundle (`--check`, run in CI)
 - `examples/client-configs/`, `examples/agent-stacks/`: copy-paste client configs and agent-framework patterns, each labelled TESTED or untested
-- `.github/workflows/release-assets.yml`: builds the wheel and sdist from a release tag, installs them in a clean environment, and attaches them with `SHA256SUMS` to the release. No build-provenance attestation is published
+- `.github/workflows/release-assets.yml`: builds the wheel and sdist from a release tag, installs them in a clean environment, and attaches them with `SHA256SUMS` to the release. For releases published after v0.2.0, it also attaches a CycloneDX SBOM of the clean install (`*.cdx.json`) and records a GitHub build-provenance attestation for every asset in `SHA256SUMS` (check with `gh attestation verify <file> --repo GLOBAL-AI-GOVERNANCE/ai-governance-mcp`). Releases up to and including v0.2.0 have no SBOM or attestation
 - `manifest.json`: MCPB desktop-extension manifest (validated, not packed)
 - `deploy/Dockerfile`: container for a remote host (build locally; no image is published)
 - No managed endpoint is operated; no hosted-service privacy policy or terms are published.
