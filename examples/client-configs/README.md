@@ -1,6 +1,6 @@
 # Client configurations (local stdio)
 
-Each file starts the same command: `uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0 gaig-mcp`. The pinned toolkit and agentic files are bundled in the package, so no other checkout or environment variable is needed. Requires [uv](https://docs.astral.sh/uv/).
+Each file starts the same command: `uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.1 gaig-mcp`. The pinned toolkit and agentic files are bundled in the package, so no other checkout or environment variable is needed. Requires [uv](https://docs.astral.sh/uv/).
 
 | Client | Copy to | File | Status |
 |---|---|---|---|
@@ -8,4 +8,4 @@ Each file starts the same command: `uvx --from git+https://github.com/GLOBAL-AI-
 | VS Code | `.vscode/mcp.json` | [`vscode.mcp.json`](vscode.mcp.json) | Launch command TESTED with the MCP Python SDK stdio client; not tested inside VS Code (untested) |
 | Codex | `~/.codex/config.toml` | [`codex.config.toml`](codex.config.toml) | Launch command TESTED with the MCP Python SDK stdio client; not tested inside Codex with this file (untested) |
 
-`tests/test_examples.py` parses every file and checks that it launches the pinned `v0.2.0` command. Existing configurations that use the server key `gag` or the deprecated `gag-mcp` command keep working. Results from every tool carry `authority_effect: "NONE"`; they support human review and do not authorize anything.
+`tests/test_examples.py` parses every file and checks that it launches the pinned `v0.2.1` command. Existing configurations that use the server key `gag` or the deprecated `gag-mcp` command keep working. Results from every tool carry `authority_effect: "NONE"`; they support human review and do not authorize anything.
