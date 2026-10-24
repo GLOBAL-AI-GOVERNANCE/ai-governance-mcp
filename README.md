@@ -46,7 +46,7 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 gag-mcp                               # stdio
 gag-mcp --http --port 8000            # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
-pytest                                # 64 tests
+pytest                                # 66 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
@@ -94,6 +94,17 @@ except GagInputError as exc:
 ```
 
 Expected: `inventory_csv is empty. Supply CSV text or set use_sample=true.`
+
+Your own inventory — start from the minimal valid example:
+
+```bash
+python -c 'from pathlib import Path
+from gag_mcp.core import check_inventory
+out = check_inventory(inventory_csv=Path("docs/examples/minimal-inventory.csv").read_text(), evaluation_time="2026-10-16T00:00:00Z")
+print(out["result"]["validation_state"], out["result"]["finding_count"])'
+```
+
+Expected last line: `VALID 0` (the toolkit also prints its progress lines). [`docs/examples/minimal-inventory.csv`](docs/examples/minimal-inventory.csv) holds the required header row and one synthetic system; replace the row with your own systems. If a column is missing, `check_inventory` fails closed with `MISSING_REQUIRED_COLUMN`, lists the missing columns, and points to this file.
 
 Package-only install (no clone): `pip install "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.1.0"`. The pinned upstream files are included. Running `scripts/smoke_test.py` against a package install also needs the dev extra: `pip install "gag-mcp[dev] @ git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git"`.
 
@@ -211,7 +222,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAG_MCP_ALLOWED_HOSTS=<the ho
 - `src/gag_mcp/core.py`: transport-independent logic plus the authority envelope
 - `src/gag_mcp/server.py`: MCP server (stdio and Streamable HTTP, `/health`, CORS, bearer token required for network use)
 - `src/gag_mcp/_upstream/`: pinned toolkit and agentic files bundled into the package, with `UPSTREAM_LOCK.json` (commit, file count, tree digest per upstream)
-- `tests/`: 64 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
+- `tests/`: 66 tests (core behavior, determinism, fail-closed input, non-authorizing invariants, in-process, stdio, and HTTP transports, bearer enforcement, and security regressions for host allow-listing, uniform 401s, sanitized errors, unknown-argument rejection, and the required bearer token for network exposure, plus compatibility guards, bundle-lock checks, and example and client-config checks)
 - `scripts/smoke_test.py`, `docs/verification-transcript.md`: real-client verification
 - `scripts/fetch_upstreams.sh`: pinned upstream clones; `scripts/bundle_upstreams.py`: copies them into the package and checks the bundle (`--check`, run in CI)
 - `examples/client-configs/`, `examples/agent-stacks/`: copy-paste client configs and agent-framework patterns, each labelled TESTED or untested

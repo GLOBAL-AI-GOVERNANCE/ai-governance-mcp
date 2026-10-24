@@ -1,0 +1,2 @@
+system_id,system_name,owner,business_unit,vendor_internal,use_case,data_sensitivity,impact_people,impact_money,impact_security,impact_rights,impact_safety,autonomy_level,public_facing,monitoring_active,shutdown_path_exists,evidence_complete
+TEST-VALID-001,Read-Only Knowledge Assistant,Jordan Owner,Operations,Internal,Approved document retrieval,Internal,No,No,No,No,No,None,No,Yes,Yes,Yes

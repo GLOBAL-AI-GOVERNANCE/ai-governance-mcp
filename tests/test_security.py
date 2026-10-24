@@ -1,8 +1,10 @@
 """Security regressions: fail-closed HTTP binding, uniform 401, sanitized errors, unknown-argument rejection."""
 import asyncio
+import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import httpx
 import pytest
@@ -252,3 +254,23 @@ def test_caller_supplied_passport_object_is_still_rejected():
     result = _call("validate_passport", {"passport_json": {"schema": "x"}, "trusted_key_json": "{}"})
     assert result.is_error
     assert "valid string" in _text(result)
+
+
+def test_missing_required_column_points_to_example_without_echo():
+    with pytest.raises(core.GagInputError) as exc:
+        core.check_inventory(f"system_id,system_name\nA-1,{SECRET}\n")
+    msg = str(exc.value)
+    assert SECRET not in msg
+    prefix, _, hint = msg.partition("}} ")
+    error = json.loads(prefix.removeprefix("Inventory rejected by toolkit validation: ") + "}}")["error"]
+    assert error["code"] == "MISSING_REQUIRED_COLUMN" and "owner" in error["expected"]
+    assert core.MINIMAL_INVENTORY_EXAMPLE in hint and "use_sample=true" in hint
+    assert "Required header row: system_id,system_name,owner," in hint and "schema_version" not in hint
+
+
+def test_minimal_inventory_example_is_valid():
+    example = Path(__file__).resolve().parents[1] / core.MINIMAL_INVENTORY_EXAMPLE
+    out = core.check_inventory(example.read_text(encoding="utf-8"), evaluation_time="2026-10-16T00:00:00Z")
+    assert out["authority_effect"] == "NONE"
+    assert out["result"]["validation_state"] == "VALID"
+    assert example.read_text(encoding="utf-8").splitlines()[0].split(",") == core._required_inventory_columns()
