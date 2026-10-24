@@ -1,4 +1,4 @@
-"""Validate Wave A JSON contracts and Decision Pack integrity without network access."""
+"""Validate JSON output contracts and Decision Pack integrity without network access."""
 
 from __future__ import annotations
 
@@ -122,4 +122,4 @@ def verify_output_directory(outdir: Path) -> None:
         raise ContractError("Handoff artifact digest does not match Decision Pack manifest")
     if handoff["authority_effect"] != "NONE":
         raise ContractError("Handoff authority_effect must remain NONE")
-    print("Wave A contracts and Decision Pack integrity verified.")
+    print("Output contracts and Decision Pack integrity verified.")

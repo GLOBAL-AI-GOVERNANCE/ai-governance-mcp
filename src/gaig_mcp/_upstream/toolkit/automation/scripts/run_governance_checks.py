@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the backwards-compatible Wave A governance contract pipeline."""
+"""Run the backwards-compatible governance contract pipeline."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ if str(REPO_ROOT) not in sys.path:
 from automation.scripts.contract_verifier import verify_output_directory
 from automation.scripts.generate_decision_pack import prepare_pack, write_pack
 from automation.scripts.generate_governance_report import generate_report
-from automation.scripts.governance_validator import load_policy, read_rows, evaluate_row, should_fail, write_report
+from automation.scripts.governance_validator import FAIL_THRESHOLDS, SEVERITY_LEVELS, load_policy, read_rows, evaluate_row, should_fail, write_report
 from automation.scripts.inventory_normalizer import NormalizationError, normalize_file
 from automation.scripts.machine_contracts import build_findings, build_handoff, build_result, write_json
 from automation.scripts.risk_tier_calculator import process_csv
@@ -24,6 +24,24 @@ from automation.scripts.schema_validator import validate_csv
 AUTOMATION = Path(__file__).resolve().parents[1]
 DEFAULT_SCHEMA = AUTOMATION / "schemas" / "ai-system-inventory.schema.json"
 DEFAULT_POLICY = AUTOMATION / "policy-as-code" / "governance-rules.yaml"
+
+
+TOP_FINDINGS_SHOWN = 3
+
+
+def blocked_guidance(findings, fail_on: str, outdir: Path, report: Path, findings_path: Path) -> str:
+    """Plain next steps printed after a blocked run. Exit code and files are unchanged."""
+    threshold = FAIL_THRESHOLDS[fail_on]
+    blocking = sorted(
+        (f for f in findings if SEVERITY_LEVELS[f.severity] >= threshold),
+        key=lambda f: (-SEVERITY_LEVELS[f.severity], f.system_id, f.rule_id),
+    )
+    lines = [f"Reports written to: {outdir}", f"- Findings report: {report}", f"- Findings JSON: {findings_path}", ""]
+    lines.append(f"Top findings to fix ({min(len(blocking), TOP_FINDINGS_SHOWN)} of {len(blocking)} blocking):")
+    for f in blocking[:TOP_FINDINGS_SHOWN]:
+        lines.append(f"- {f.severity.upper()} {f.rule_id} {f.system_id} ({f.system_name}): {f.message}")
+    lines += ["", "Fix these and run again, or add `--fail-on none` to generate the Decision Pack for review without failing."]
+    return "\n".join(lines)
 
 
 def run_pipeline(
@@ -84,6 +102,7 @@ def run_pipeline(
 
     if should_fail(findings, fail_on):
         print(f"Governance validation blocked by {fail_on.upper()} findings.")
+        print(blocked_guidance(findings, fail_on, outdir, governance_report, findings_path))
         raise SystemExit(1)
 
     generate_report(tiered_csv, executive_report)

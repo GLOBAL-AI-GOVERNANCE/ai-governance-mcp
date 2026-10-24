@@ -11,7 +11,7 @@ import pytest
 ROOT = pathlib.Path(__file__).parents[1]
 STACKS = ROOT / "examples" / "agent-stacks"
 CONFIGS = ROOT / "examples" / "client-configs"
-PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.0", "gaig-mcp"]
+PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1", "gaig-mcp"]
 sys.path.insert(0, str(STACKS))
 
 from action_level_guard import ActionLevelGuard  # noqa: E402
