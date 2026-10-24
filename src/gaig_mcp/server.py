@@ -41,7 +41,7 @@ mcp = MCPServer(
     title="Global AI Governance (non-authorizing)",
     description="Local-first AI governance checks, Decision Packs, and Agent Trust Passport verification.",
     instructions=INSTRUCTIONS,
-    website_url="https://global-ai-governance.github.io/global-ai-governance-toolkit/",
+    website_url="https://ai-governance.solutions/",
     version=__version__,
 )
 
