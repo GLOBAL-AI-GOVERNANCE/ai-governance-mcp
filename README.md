@@ -1,9 +1,9 @@
 # AI Governance Model Context Protocol Server (AI Governance MCP)
 
 <!-- gaig:nav -->
-[![Global AI Governance](https://img.shields.io/badge/Global_AI_Governance-portfolio-0b100d)](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE) ![Status](https://img.shields.io/badge/status-v0.3.2_preview-orange) ![authority_effect](https://img.shields.io/badge/authority__effect-NONE-lightgrey)
+**[Global AI Governance](https://ai-governance.solutions/)** · `v0.3.2 · preview` · `authority_effect: NONE`
 
-**[Connect your agent](https://ai-governance.solutions/connect.html#agents)** · **[Read the spec](https://ai-governance.solutions/connect.html#spec)** · [All products](https://github.com/GLOBAL-AI-GOVERNANCE/GLOBAL-AI-GOVERNANCE#product-map)
+[Connect your agent](https://ai-governance.solutions/connect.html#agents) · [Specifications](https://ai-governance.solutions/connect.html#spec) · [All products](https://ai-governance.solutions/#products)
 <!-- /gaig:nav -->
 
 Governance checks your AI agents can call. Start the server with one command, and your agent can check an AI system inventory, prepare a Decision Pack, or verify an Agent Trust Passport. Every result is read-only and leaves the decision with a person.
@@ -24,7 +24,7 @@ AI Governance MCP exposes the real Global AI Governance reference tooling to MCP
 
 | Tool | What it does | Upstream code it runs |
 |---|---|---|
-| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cc5f5997a9d44958099b292a2081c86b52ee515c`, release v2.7.1) |
+| `check_inventory` | Policy-as-code governance checks on an AI system inventory CSV. Returns findings by severity | `global-ai-governance-toolkit` `run_pipeline` (pinned `cc5f5997a9d44958099b292a2081c86b52ee515c`, release v2.7.2) |
 | `build_decision_pack` | Prepares the digest-listed Decision Pack, verifies its integrity, and returns the manifest, the reference-only handoff, and optional Markdown documents | toolkit `run_pipeline` + `verify_output_directory` |
 | `validate_passport` | Verifies an Agent Trust Passport: schema, semantics, Ed25519 signature, key trust, validity window, and signed revocation (all checks run for the built-in examples; caller-supplied JSON has limits, see "Known limits") | `agentic-ai-governance` `tools/validate_artifact.py` (pinned `58bdfb291df0de7c9437b4476e370a609c4b1d5f`) |
 
@@ -297,3 +297,15 @@ This repository does not operate an external security-report intake. Do not plac
 
 ## License
 Apache-2.0. See [LICENSE](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/v0.3.2/LICENSE). The bundled pinned upstream files keep their own licenses, included alongside them in `src/gaig_mcp/_upstream/` (toolkit: MIT; agentic: Apache-2.0).
+
+<!-- gaig:footer -->
+## Part of Global AI Governance
+
+AI Governance MCP is the agent interface: the Toolkit and Agentic AI Governance checks, callable by any MCP-capable agent.
+
+**[ai-governance.solutions](https://ai-governance.solutions/)** · [Connect your agent](https://ai-governance.solutions/connect.html#agents) · [Specifications](https://ai-governance.solutions/connect.html#spec) · [All products](https://ai-governance.solutions/#products)
+
+For agents: [llms.txt](https://ai-governance.solutions/llms.txt) · [machine-interface.json](https://ai-governance.solutions/machine-interface.json) · [AI Governance MCP](https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp) (`gaig-mcp`). Compatible with Model Context Protocol (MCP) based agents.
+
+Framework-neutral and jurisdiction-neutral. Outputs are non-authorizing (`authority_effect: NONE`). Not affiliated with or endorsed by any AI lab or platform.
+<!-- /gaig:footer -->
