@@ -1,7 +1,7 @@
 # AI Governance Model Context Protocol Server (AI Governance MCP)
 
 <!-- gaig:nav -->
-**[Global AI Governance](https://ai-governance.solutions/)** · `v0.3.2 · preview` · `authority_effect: NONE`
+**[Global AI Governance](https://ai-governance.solutions/)** · `v0.3.2 · released` · `authority_effect: NONE`
 
 [Connect your agent](https://ai-governance.solutions/connect.html#agents) · [Specifications](https://ai-governance.solutions/connect.html#spec) · [All products](https://ai-governance.solutions/#products)
 <!-- /gaig:nav -->
@@ -14,7 +14,7 @@ uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2 
 
 **Model Context Protocol (MCP)** is an open standard that lets AI assistants discover and call external tools through a common interface. This repository is a non-authorizing MCP server for Global AI Governance reference tooling.
 
-**Status:** v0.3.2 preview. Source is public in this repository. **No hosted endpoint is operated**, and it has not been submitted to any platform directory.
+**Status:** Released · `v0.3.2`. Run it locally with the command above or self-host it. **No hosted endpoint is operated**, and it is not listed in any platform directory.
 
 **Names:** the console command is `gaig-mcp`, the import package is `gaig_mcp`, the MCP server name reported to clients is `gaig-mcp`, and environment variables use the `GAIG_MCP_` / `GAIG_` prefixes. The Python distribution and the desktop-extension manifest `name` are also `gaig-mcp` (wheel `gaig_mcp`).
 
@@ -290,7 +290,7 @@ Every remote deployment needs, at minimum: HTTPS, `GAIG_MCP_ALLOWED_HOSTS=<the h
 - Input checks are strict: unsupported arguments are rejected (`additionalProperties: false`). Error messages give a category, the field name, and allowed values, never the value you sent; a rejected CSV reports the toolkit's error code, column, and remediation without the cell or header text. One exception comes from the MCP SDK itself: a call to a tool name that does not exist is answered with `Unknown tool: <name>`.
 - Tool calls are synchronous and use process-global stdout redirection, so they are fine for low traffic. Add a worker pool before heavy use.
 - `validate_passport` with caller-supplied JSON: pass `passport_json`, `trusted_key_json`, and optionally `revocation_list_json` as JSON text strings, and they reach the reference validator. No evidence bundle is accepted over MCP yet, so evidence-bundle binding cannot run, and the validator stops before its validity-window and revocation checks (each reported as `NOT_RUN`). For a passport that passes the structure and signature checks, expect `verification_primary_status: BOUND_INPUTS_UNAVAILABLE`, `artifact_validation_status: INCOMPLETE`, `fully_validated: false`, and `reference_policy_disposition: NOT_PERMITTED`. Supplying `revocation_list_json` or `at_time` does not currently produce a revocation or validity verdict in this mode, and the `REVOKED` result shown by `example: "signed-revoked"` (which runs with a bundled evidence set) does not carry over to caller-supplied passports. The output's `mode` field states this.
-- The agentic validator is an experimental alpha. Pin an appropriate published [Global AI Governance Toolkit](https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/releases/latest) tag for reproducible integrations.
+- Passport checks use the Agentic AI Governance `v0.1.0-alpha.2` validator, whose schemas stay open to change until an independent verifier confirms them. Pin an appropriate published [Global AI Governance Toolkit](https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/releases/latest) tag for reproducible integrations.
 
 ## Security
 This repository does not operate an external security-report intake. Do not place secrets, credentials, personal data, sensitive operational information, or vulnerability material in public GitHub surfaces.
