@@ -8,7 +8,7 @@ import asyncio
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
 
-PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1"
+PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2"
 
 
 async def main() -> None:

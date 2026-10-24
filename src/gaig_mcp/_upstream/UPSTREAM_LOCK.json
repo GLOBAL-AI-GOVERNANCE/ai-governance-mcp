@@ -8,10 +8,10 @@
       "tree_digest": "sha256:28ec97075c29e17eedb576ae1e890ba8afec370f01e308b08917b8c9ebb01292"
     },
     "toolkit": {
-      "commit": "4deb5b70b07d8f91cf157ef07d7ddd7dfe68731c",
-      "file_count": 112,
+      "commit": "cc5f5997a9d44958099b292a2081c86b52ee515c",
+      "file_count": 113,
       "repository": "GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit",
-      "tree_digest": "sha256:14bd8366277d49c32245189834c4d6157c6b66681b2099a57c7979ede55edb0b"
+      "tree_digest": "sha256:532d1e259f65dd731fdb043d54771d1b6cdd73e0aa76184a4108de46a6754231"
     }
   }
 }

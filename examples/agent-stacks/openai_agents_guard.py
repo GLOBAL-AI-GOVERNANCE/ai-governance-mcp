@@ -21,7 +21,7 @@ from agents.mcp import MCPServerStdio
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from action_level_guard import ASK, DENY, ActionLevelGuard  # noqa: E402
 
-PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.1"
+PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.3.2"
 GUARD = ActionLevelGuard()  # add your own tools: ActionLevelGuard({"send_external_email": 4, ...})
 
 

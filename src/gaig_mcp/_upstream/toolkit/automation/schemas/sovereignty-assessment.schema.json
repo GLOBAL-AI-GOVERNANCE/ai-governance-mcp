@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/automation/schemas/sovereignty-assessment.schema.json",
+  "$id": "https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/v2.7.2/automation/schemas/sovereignty-assessment.schema.json",
   "title": "AI Sovereignty Assessment Record",
   "description": "One record per AI system. Used by automation/scripts/sovereignty_check.py to evaluate the system against the Sovereignty Law hard gates and advisory controls.",
   "type": "object",
