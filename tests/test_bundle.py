@@ -25,7 +25,7 @@ class BundleTests(unittest.TestCase):
 
     def test_bundled_upstreams_resolve_without_env(self):
         import os
-        if any(os.environ.get(p + s) for p in ("GAIG_", "GAG_") for s in ("TOOLKIT_PATH", "AGENTIC_PATH")):
+        if any(os.environ.get(p + s) for p in ("GAIG_",) for s in ("TOOLKIT_PATH", "AGENTIC_PATH")):
             self.skipTest("explicit upstream override set")
         self.assertTrue((core.toolkit_root() / "LICENSE").is_file())
         self.assertTrue((core.agentic_root() / "LICENSE").is_file())
