@@ -13,7 +13,7 @@ import sys
 
 from mcp import Client, StdioServerParameters
 
-PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.0"
+PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.2.1"
 EVAL = "2026-10-16T00:00:00Z"
 CALLS = [
     ("check_inventory", {"use_sample": True, "evaluation_time": EVAL}),
