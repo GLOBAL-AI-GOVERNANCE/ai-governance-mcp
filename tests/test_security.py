@@ -274,3 +274,24 @@ def test_minimal_inventory_example_is_valid():
     assert out["authority_effect"] == "NONE"
     assert out["result"]["validation_state"] == "VALID"
     assert example.read_text(encoding="utf-8").splitlines()[0].split(",") == core._required_inventory_columns()
+
+
+def test_packaged_minimal_inventory_matches_docs_copy():
+    docs_copy = Path(__file__).resolve().parents[1] / core.MINIMAL_INVENTORY_EXAMPLE
+    assert core.PACKAGED_MINIMAL_INVENTORY.is_file()
+    assert core.minimal_inventory_csv() == docs_copy.read_text(encoding="utf-8")
+
+
+def test_packaged_minimal_inventory_is_valid_and_named_in_hint():
+    out = core.check_inventory(core.minimal_inventory_csv(), evaluation_time="2026-10-16T00:00:00Z")
+    assert out["authority_effect"] == "NONE"
+    assert out["result"]["validation_state"] == "VALID"
+    with pytest.raises(core.GaigInputError) as exc:
+        core.check_inventory("system_id,system_name\nA-1,Example\n")
+    assert "gaig_mcp.core.minimal_inventory_csv()" in str(exc.value)
+
+
+def test_packaged_minimal_inventory_is_declared_package_data():
+    pyproject = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+    assert '"examples/*.csv"' in pyproject
+

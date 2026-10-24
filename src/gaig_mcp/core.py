@@ -115,6 +115,13 @@ MINIMAL_INVENTORY_EXAMPLE = "docs/examples/minimal-inventory.csv"
 MINIMAL_INVENTORY_EXAMPLE_URL = (
     "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp/blob/main/" + MINIMAL_INVENTORY_EXAMPLE
 )
+# The same file ships inside the package, so installs without a clone (pip, uvx) can read it.
+PACKAGED_MINIMAL_INVENTORY = Path(__file__).resolve().parent / "examples" / "minimal-inventory.csv"
+
+
+def minimal_inventory_csv() -> str:
+    """Return the packaged minimal valid inventory CSV: the required header row and one synthetic system."""
+    return PACKAGED_MINIMAL_INVENTORY.read_text(encoding="utf-8")
 
 
 def _required_inventory_columns() -> list[str]:
@@ -133,7 +140,8 @@ def _missing_column_hint() -> str:
     columns = _required_inventory_columns()
     listed = f" Required header row: {','.join(columns)}." if columns else ""
     return (f"{listed} A minimal valid one-row example is {MINIMAL_INVENTORY_EXAMPLE} "
-            f"({MINIMAL_INVENTORY_EXAMPLE_URL}), or call check_inventory with use_sample=true.")
+            f"({MINIMAL_INVENTORY_EXAMPLE_URL}; also installed with the package, read it with "
+            f"gaig_mcp.core.minimal_inventory_csv()), or call check_inventory with use_sample=true.")
 
 
 # --------------------------------------------------------------------------- paths

@@ -51,3 +51,4 @@ jobs:
           cd "$RUNNER_TEMP"
           "$RUNNER_TEMP/clean/bin/python" mcp_client_loop.py
           "$RUNNER_TEMP/clean/bin/python" passport_gate_graph.py
+          "$RUNNER_TEMP/clean/bin/python" -c 'from gaig_mcp.core import check_inventory, minimal_inventory_csv; out = check_inventory(minimal_inventory_csv(), evaluation_time="2026-10-16T00:00:00Z"); assert out["result"]["validation_state"] == "VALID", out; print("packaged minimal inventory:", out["result"]["validation_state"], out["result"]["finding_count"])'
