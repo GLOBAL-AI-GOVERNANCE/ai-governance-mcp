@@ -31,6 +31,8 @@ OTHER_PREFIXES = (
     ("https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit/v2.7.2/", "src/gaig_mcp/_upstream/toolkit/"),
     ("https://raw.githubusercontent.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance/v0.1.0-alpha.1/", "src/gaig_mcp/_upstream/agentic/"),
 )
+# Unmodified third-party schemas vendored for offline tests keep their publisher's $id.
+VENDORED_THIRD_PARTY = ("tests/fixtures/mcp-registry/",)
 RELEASE_HEADING = re.compile(r"^##\s+\[?v?(\d+\.\d+(?:\.\d+)?(?:-[0-9A-Za-z.]+)?)\]?(?:\s|$)", re.M)
 
 
@@ -43,6 +45,8 @@ def schema_ids() -> list[tuple[Path, str]]:
     listed = subprocess.run(["git", "ls-files", "*.json"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.split()
     found = []
     for name in listed:
+        if name.startswith(VENDORED_THIRD_PARTY):
+            continue
         try:
             document = json.loads((ROOT / name).read_text(encoding="utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError):
