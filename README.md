@@ -3,7 +3,9 @@
 <!-- gaig:nav -->
 **[Global AI Governance](https://ai-governance.solutions/)** · `v0.4.0 · released` · `authority_effect: NONE`
 
-[Connect your agent](https://ai-governance.solutions/connect.html#agents) · [Specifications](https://ai-governance.solutions/connect.html#spec) · [All products](https://ai-governance.solutions/#products)
+[Start where you are](https://ai-governance.solutions/start.html) · [Connect your agent](https://ai-governance.solutions/connect.html#agents) · [Specifications](https://ai-governance.solutions/connect.html#spec) · [All products](https://ai-governance.solutions/#products)
+
+Suite path, step 3 of 9: connect your agents · ← [Toolkit](https://github.com/GLOBAL-AI-GOVERNANCE/global-ai-governance-toolkit) · [Agentic AI Governance](https://github.com/GLOBAL-AI-GOVERNANCE/agentic-ai-governance) → · [start anywhere](https://ai-governance.solutions/start.html)
 <!-- /gaig:nav -->
 
 Governance checks your AI agents can call. Start the server with one command, and your agent can check an AI system inventory, prepare a Decision Pack, or verify an Agent Trust Passport. Every result is read-only and leaves the decision with a person.
