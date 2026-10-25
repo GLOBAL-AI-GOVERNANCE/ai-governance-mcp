@@ -2,7 +2,7 @@
   "manifest_version": "0.4",
   "name": "gaig-mcp",
   "display_name": "AI Governance MCP (Model Context Protocol server, non-authorizing)",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Local AI governance checks, Decision Packs, and Agent Trust Passport verification. authority_effect NONE.",
   "long_description": "Wraps the Global AI Governance toolkit and agentic-ai-governance reference validator. Runs locally over stdio. Nothing it returns approves deployment, certifies compliance, grants authorization, or accepts risk.",
   "author": { "name": "Global AI Governance", "url": "https://github.com/GLOBAL-AI-GOVERNANCE" },

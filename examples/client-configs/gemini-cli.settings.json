@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "gaig": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.0", "gaig-mcp"],
+      "trust": false
+    }
+  },
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": "mcp_.*",
+        "hooks": [
+          {
+            "type": "command",
+            "name": "gaig-action-level-guard",
+            "command": "python3 \"$GEMINI_PROJECT_DIR/.gemini/hooks/tool_call_hook.py\"",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}

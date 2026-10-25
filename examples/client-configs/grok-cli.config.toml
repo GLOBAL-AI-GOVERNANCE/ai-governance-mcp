@@ -1,3 +1,3 @@
 [mcp_servers.gaig]
 command = "uvx"
-args = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.4.0", "gaig-mcp"]
+args = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.0", "gaig-mcp"]
