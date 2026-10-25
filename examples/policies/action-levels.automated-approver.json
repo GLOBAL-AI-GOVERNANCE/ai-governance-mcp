@@ -1,0 +1,13 @@
+{
+  "levels": {
+    "draft_reply": 2,
+    "open_pull_request": 4,
+    "send_external_email": 4,
+    "delete_records": 5
+  },
+  "level_4_approver": {
+    "type": "automated",
+    "approver_id": "operator.ci-approver",
+    "approve": ["open_pull_request"]
+  }
+}

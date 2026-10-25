@@ -20,7 +20,7 @@ from claude_agent_sdk import ClaudeAgentOptions, HookMatcher
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from action_level_guard import ALLOW, ActionLevelGuard  # noqa: E402
 
-PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.4.0"
+PINNED = "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.0"
 GUARD = ActionLevelGuard()  # add your own tools: ActionLevelGuard({"mcp__crm__send_email": 4, ...})
 
 

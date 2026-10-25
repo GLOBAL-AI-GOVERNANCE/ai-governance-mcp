@@ -56,7 +56,11 @@ def check(tool: str, opts: dict[str, str]) -> tuple[str, str]:
                           tool_level=level.level if level.level_source == "policy" else None,
                           bundle_manifest=opts.get("--bundle-manifest"), bundle_root=opts.get("--bundle-root"))
     result = out["result"]
-    return result["call_disposition"], " ".join(result["reasons"])
+    disposition, reason = result["call_disposition"], " ".join(result["reasons"])
+    if disposition == ASK and level.approved_by:
+        # The passport check passed and only Level 4 approval remained: the operator's automated approver answers it.
+        return ALLOW, f"Passport VALID and revocation passed. {level.reason}"
+    return disposition, reason
 
 
 def decide(event: dict, opts: dict[str, str]) -> tuple[dict, int]:
