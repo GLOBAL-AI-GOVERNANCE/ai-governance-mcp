@@ -7,7 +7,7 @@ import tomllib
 ROOT = pathlib.Path(__file__).parents[1]
 CONFIGS = ROOT / "examples" / "client-configs"
 STACKS = ROOT / "examples" / "agent-stacks"
-PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.0", "gaig-mcp"]
+PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.1", "gaig-mcp"]
 
 
 def test_cursor_config_launches_pinned_command():

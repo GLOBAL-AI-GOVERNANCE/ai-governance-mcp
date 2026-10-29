@@ -8,7 +8,7 @@ description: Run read-only AI governance checks through the gaig-mcp server - ch
 Start the server (stdio, no account, no key):
 
 ```bash
-uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.0 gaig-mcp
+uvx --from git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.1 gaig-mcp
 ```
 
 MCP tools: `check_inventory`, `build_decision_pack`, `validate_passport`. Every result includes `authority_effect: "NONE"`. In Python, `gaig_mcp.core.check_tool_call` combines passport verification with an Action Level (used by `examples/agent-stacks/passport_tool_call_hook.py`).

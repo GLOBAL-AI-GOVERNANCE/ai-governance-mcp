@@ -5,3 +5,4 @@ __pycache__/
 *.mcpb
 build/
 dist/
+.venv/

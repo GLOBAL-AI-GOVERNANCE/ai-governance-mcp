@@ -5,12 +5,85 @@ Non-authorizing. Assembles reference evidence only.
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .common import finding
 
 PROFILE_ID = "independent-assurance-v0.1"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
+
+# Upper bound on the age of a shutdown test for an autonomous agent. A case may
+# set a shorter max_shutdown_test_age_days; it can never extend this bound.
+MAX_SHUTDOWN_TEST_AGE_DAYS = 90
+SHUTDOWN_EVIDENCE_HINT = (
+    "Supply shutdown_evidence with shutdown_tested_at, result PASSED, and evidence_refs. "
+    "This profile checks the submitted record; it does not establish that the test occurred."
+)
+
+
+def _parse_utc(value: object) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def _shutdown_evidence_findings(data: dict, evaluation_time: str | None) -> tuple[list, dict]:
+    """Check structured shutdown-test evidence. Returns findings and details."""
+
+    out: list = []
+    evidence = data.get("shutdown_evidence")
+    requested = data.get("max_shutdown_test_age_days")
+    max_age = MAX_SHUTDOWN_TEST_AGE_DAYS
+    if isinstance(requested, int) and not isinstance(requested, bool) and 0 < requested < max_age:
+        max_age = requested
+    detail: dict = {"max_age_days": max_age, "tested_at": None, "age_days": None, "state": "MISSING"}
+    if not isinstance(evidence, dict):
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_MISSING", "CRITICAL",
+                           "Autonomous agent has no shutdown test evidence.", SHUTDOWN_EVIDENCE_HINT))
+        return out, detail
+    tested_at = _parse_utc(evidence.get("shutdown_tested_at"))
+    refs = evidence.get("evidence_refs")
+    detail["tested_at"] = evidence.get("shutdown_tested_at")
+    if tested_at is None:
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_MISSING", "CRITICAL",
+                           "shutdown_tested_at is missing or not YYYY-MM-DDTHH:MM:SSZ.", SHUTDOWN_EVIDENCE_HINT))
+        return out, detail
+    if not (isinstance(refs, list) and refs and all(isinstance(r, str) and r.strip() for r in refs)):
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_EVIDENCE_REFS", "CRITICAL",
+                           "Shutdown test evidence references are required.", SHUTDOWN_EVIDENCE_HINT))
+        detail["state"] = "INCOMPLETE"
+    if evidence.get("result") != "PASSED":
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_NOT_PASSED", "CRITICAL",
+                           "The recorded shutdown test did not pass.",
+                           "Repair the shutdown path and record a passing test before autonomous operation."))
+        detail["state"] = "NOT_PASSED"
+    now = _parse_utc(evaluation_time)
+    if now is None:
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_AGE_UNKNOWN", "CRITICAL",
+                           "Shutdown test age cannot be checked without an evaluation time.",
+                           "Run with --evaluation-time YYYY-MM-DDTHH:MM:SSZ."))
+        if detail["state"] == "MISSING":
+            detail["state"] = "AGE_UNKNOWN"
+        return out, detail
+    age = now - tested_at
+    detail["age_days"] = age.days if age >= timedelta(0) else None
+    if age < timedelta(0):
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_IN_FUTURE", "CRITICAL",
+                           "shutdown_tested_at is later than the evaluation time.",
+                           "Correct the shutdown test timestamp."))
+        detail["state"] = "IN_FUTURE"
+    elif age > timedelta(days=max_age):
+        out.append(finding(PROFILE_ID, "SHUTDOWN_TEST_STALE", "CRITICAL",
+                           f"Shutdown test is older than {max_age} days.",
+                           "Re-run and record the shutdown test. " + SHUTDOWN_EVIDENCE_HINT))
+        detail["state"] = "STALE"
+    elif detail["state"] == "MISSING":
+        detail["state"] = "CURRENT"
+    return out, detail
 
 
 def evaluate(data: dict, root: Path, evaluation_time: str | None = None) -> tuple[list, list, dict]:
@@ -121,10 +194,34 @@ def evaluate(data: dict, root: Path, evaluation_time: str | None = None) -> tupl
         revalidation_required = True
         trigger = "EVALUATOR_CONFLICT"
 
-    if data.get("high_consequence") and not data.get("shutdown_evidence_present"):
+    autonomous = data.get("autonomous_agent") is True
+    shutdown_findings, shutdown_detail = ([], None)
+    if autonomous or isinstance(data.get("shutdown_evidence"), dict):
+        shutdown_findings, shutdown_detail = _shutdown_evidence_findings(data, evaluation_time)
+
+    if autonomous:
+        passport = data.get("agent_passport_ref")
+        if not (isinstance(passport, dict) and passport.get("passport_id") and passport.get("passport_digest")):
+            findings.append(finding(PROFILE_ID, "AGENT_PASSPORT_MISSING", "CRITICAL",
+                                    "Autonomous agent has no agent passport reference.",
+                                    "Supply agent_passport_ref with passport_id and passport_digest. "
+                                    "This profile checks the reference; validate the passport itself with the Agentic validator."))
+            validity_state = "STALE"
+            revalidation_required = True
+            if trigger is None:
+                trigger = "AGENT_PASSPORT"
+        if shutdown_findings:
+            findings.extend(shutdown_findings)
+            validity_state = "STALE"
+            revalidation_required = True
+            if trigger is None:
+                trigger = "SHUTDOWN_EVIDENCE"
+
+    structured_shutdown_current = shutdown_detail is not None and not shutdown_findings
+    if data.get("high_consequence") and not (data.get("shutdown_evidence_present") or structured_shutdown_current):
         findings.append(finding(PROFILE_ID, "SHUTDOWN_EVIDENCE", "CRITICAL",
                                 "High-consequence subject lacks shutdown evidence.",
-                                "Supply verified shutdown evidence."))
+                                SHUTDOWN_EVIDENCE_HINT))
         validity_state = "STALE"
         revalidation_required = True
         if trigger is None:
@@ -138,4 +235,8 @@ def evaluate(data: dict, root: Path, evaluation_time: str | None = None) -> tupl
         "qualification_basis": "submitted bounded summary; native Foundations authenticity is not established",
         "interval": "inclusive",
     }
+    if shutdown_detail is not None:
+        details["shutdown_test"] = shutdown_detail
+    if autonomous:
+        details["autonomous_agent"] = True
     return findings, evidence, details

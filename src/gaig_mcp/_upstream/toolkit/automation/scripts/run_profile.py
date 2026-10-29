@@ -8,6 +8,7 @@ import hashlib
 import importlib
 import json
 import re
+from datetime import datetime, timezone
 import sys
 from pathlib import Path
 
@@ -58,8 +59,15 @@ def schema_for(profile_id: str) -> dict | None:
 def run_profile(profile_id: str, input_path: Path, outdir: Path, manifest_path: Path | None = None, evaluation_time: str | None = None) -> tuple[int, dict[str, object]]:
     if profile_id not in MODULES:
         raise ValueError(f"Unknown profile id: {profile_id}")
-    if evaluation_time is not None and not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", evaluation_time):
-        raise ValueError("evaluation time must use YYYY-MM-DDTHH:MM:SSZ")
+    if evaluation_time is not None:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", evaluation_time):
+            raise ValueError("evaluation time must be UTC RFC3339 with second precision (YYYY-MM-DDTHH:MM:SSZ)")
+        try:
+            datetime.strptime(evaluation_time, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        except ValueError as exc:
+            raise ValueError(
+                "evaluation time must be a real UTC calendar timestamp, such as 2026-08-29T12:00:00Z"
+            ) from exc
     raw = input_path.read_bytes()
     try: data = json.loads(raw)
     except json.JSONDecodeError as exc: raise ValueError(f"input is not valid JSON: {exc}") from exc
