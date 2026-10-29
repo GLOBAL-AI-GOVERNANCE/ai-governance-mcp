@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -29,8 +30,16 @@ def write_json(path: Path, value: Any) -> None:
 
 
 def validate_evaluation_time(value: str | None) -> None:
-    if value is not None and EVALUATION_TIME_PATTERN.fullmatch(value) is None:
-        raise ValueError("evaluation time must be UTC YYYY-MM-DDTHH:MM:SSZ")
+    if value is None:
+        return
+    if EVALUATION_TIME_PATTERN.fullmatch(value) is None:
+        raise ValueError("evaluation time must be UTC RFC3339 with second precision (YYYY-MM-DDTHH:MM:SSZ)")
+    try:
+        datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError as exc:
+        raise ValueError(
+            "evaluation time must be a real UTC calendar timestamp, such as 2026-08-29T12:00:00Z"
+        ) from exc
 
 
 def policy_identity(policy: Mapping[str, Any]) -> tuple[str, str]:

@@ -34,7 +34,7 @@
     },
     {
       "id": "independent-assurance-v0.1",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "maturity": "optional non-authorizing profile",
       "purpose": "Assemble reference evidence for independent evaluation.",
       "input_schema": "automation/contracts/profiles/independent-assurance-case.schema.json",

@@ -3,7 +3,7 @@
   "name": "io.github.GLOBAL-AI-GOVERNANCE/ai-governance-mcp",
   "title": "AI Governance MCP",
   "description": "Read-only AI governance checks: inventory, Decision Pack, agent passports. authority_effect NONE",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "websiteUrl": "https://ai-governance.solutions/connect.html",
   "repository": {
     "url": "https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp",

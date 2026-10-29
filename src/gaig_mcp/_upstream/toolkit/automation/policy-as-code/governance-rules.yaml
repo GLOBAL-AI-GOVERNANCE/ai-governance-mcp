@@ -78,14 +78,6 @@
           "field": "autonomy_level",
           "operator": "equals",
           "value": "Full"
-        },
-        {
-          "field": "calculated_risk_tier",
-          "operator": "not_in",
-          "values": [
-            "Critical",
-            "Frontier"
-          ]
         }
       ]
     }

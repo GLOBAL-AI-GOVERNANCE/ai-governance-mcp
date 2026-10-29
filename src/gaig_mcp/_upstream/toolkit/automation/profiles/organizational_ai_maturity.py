@@ -2,7 +2,7 @@
 
 A human process selects maturity. This evaluator checks whether submitted
 evidence can carry that determination. It does not decide organizational maturity.
-Unregistered. authority_effect remains NONE.
+Registered as organizational-ai-maturity-v0.1. authority_effect remains NONE.
 """
 
 from __future__ import annotations
@@ -155,7 +155,8 @@ def evaluate_category(cat: dict, data: dict, catalog: dict, eval_dt, findings: l
     human = cat.get("human_determination") if isinstance(cat.get("human_determination"), dict) else None
     human_status = human.get("status") if human else None
     human_level = human.get("level") if human else None
-    conditions = list(human.get("conditions") or []) if human else []
+    raw_conditions = human.get("conditions") if human else None
+    conditions = list(raw_conditions) if isinstance(raw_conditions, list) else []
     established = human_status in CARRY_STATUSES and human_level in LEVELS
     result = {
         "known": True,
@@ -174,11 +175,11 @@ def evaluate_category(cat: dict, data: dict, catalog: dict, eval_dt, findings: l
         "freshness_status": "CURRENT",
         "assessment_state": "CURRENT",
         "confidence": "LOW",
-        "contradictions": cat.get("contradictions") or [],
-        "gaps": cat.get("gaps") or [],
-        "corrective_actions": cat.get("corrective_actions") or [],
-        "reassessment_triggers": cat.get("reassessment_triggers") or [],
-        "material_change_events": cat.get("material_change_events") or [],
+        "contradictions": cat.get("contradictions") if isinstance(cat.get("contradictions"), list) else [],
+        "gaps": cat.get("gaps") if isinstance(cat.get("gaps"), list) else [],
+        "corrective_actions": cat.get("corrective_actions") if isinstance(cat.get("corrective_actions"), list) else [],
+        "reassessment_triggers": cat.get("reassessment_triggers") if isinstance(cat.get("reassessment_triggers"), list) else [],
+        "material_change_events": cat.get("material_change_events") if isinstance(cat.get("material_change_events"), list) else [],
     }
     if claimed not in LEVELS:
         findings.append(finding(PROFILE_ID, "INVALID_LEVEL", "CRITICAL",
@@ -198,7 +199,14 @@ def evaluate_category(cat: dict, data: dict, catalog: dict, eval_dt, findings: l
                                     "Human determination requires an accountable role.",
                                     "Name the accountable function, not a person."))
 
-    evs = cat.get("evidence") or []
+    raw_evidence = cat.get("evidence")
+    if raw_evidence is not None and not isinstance(raw_evidence, list):
+        findings.append(finding(PROFILE_ID, "EVIDENCE_SHAPE", "CRITICAL",
+                                "Evidence must be an array of evidence objects.",
+                                "Submit evidence as a JSON array."))
+        evs = []
+    else:
+        evs = raw_evidence or []
     has_operating = has_representative = has_policy = has_pilot = False
     synthetic_only = bool(evs)
     scope_mismatch = stale = integrity_fail = False

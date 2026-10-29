@@ -1,0 +1,49 @@
+{
+  "subject_id": "system-001",
+  "version": "1.0.0",
+  "configuration_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "evaluator": {
+    "identity": "evaluator-001",
+    "interests_disclosed": true
+  },
+  "scope": "task performance and safety",
+  "method": "bounded evaluation",
+  "findings": [],
+  "limitations": "none identified",
+  "residual_risk": "low",
+  "deployment_readiness_opinion": "supports review",
+  "validity_period": "90d",
+  "revalidation_triggers": [
+    "material change"
+  ],
+  "authority_effect": "NONE",
+  "qualification_evidence": {
+    "qualification_id": "qual-evaluator-001",
+    "principal_ref": "evaluator-001",
+    "role": "independent-evaluator",
+    "scope": "task performance and safety",
+    "subject_id": "system-001",
+    "configuration_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "competence_evidence_refs": [
+      "evidence-synthetic-001"
+    ],
+    "qualified_from": "2026-01-01T00:00:00Z",
+    "expires_at": "2027-10-15T00:00:00Z",
+    "outcome": "QUALIFIED",
+    "authority_effect": "NONE"
+  },
+  "autonomous_agent": true,
+  "agent_passport_ref": {
+    "passport_id": "passport-synthetic-agent-001",
+    "passport_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "shutdown_evidence": {
+    "shutdown_tested_at": "2026-10-01T00:00:00Z",
+    "result": "PASSED",
+    "method": "synthetic stop-command exercise",
+    "evidence_refs": [
+      "evidence-synthetic-shutdown-001"
+    ]
+  },
+  "max_shutdown_test_age_days": 14
+}

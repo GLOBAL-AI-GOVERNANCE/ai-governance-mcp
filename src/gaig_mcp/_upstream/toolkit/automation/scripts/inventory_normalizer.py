@@ -163,11 +163,14 @@ def normalize_inventory(path: Path) -> dict[str, Any]:
     supplied_version = None
     if "schema_version" in canonical_headers:
         version_index = mapped_headers.index("schema_version")
-        versions = {row[version_index].strip() for row in rows if len(row) > version_index}
+        versions = {
+            (row[version_index].strip() or SCHEMA_VERSION)
+            for row in rows if len(row) > version_index
+        }
         if versions != {SCHEMA_VERSION}:
             raise NormalizationError(NormalizationIssue(
                 "UNSUPPORTED_SCHEMA_VERSION", headers[version_index], ",".join(sorted(versions)),
-                [SCHEMA_VERSION], "Use a supported canonical inventory schema version.",
+                [SCHEMA_VERSION], "Use schema version 1.0.0, or leave the Schema Version cell blank to use 1.0.0.",
             ))
         supplied_version = SCHEMA_VERSION
 

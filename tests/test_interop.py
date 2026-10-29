@@ -13,7 +13,7 @@ ROOT = pathlib.Path(__file__).parents[1]
 STACKS = ROOT / "examples" / "agent-stacks"
 CONFIGS = ROOT / "examples" / "client-configs"
 POLICY = ROOT / "examples" / "policies" / "action-levels.automated-approver.json"
-PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.0", "gaig-mcp"]
+PINNED = ["--from", "git+https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp@v0.5.1", "gaig-mcp"]
 sys.path.insert(0, str(STACKS))
 
 from action_level_guard import ActionLevelGuard  # noqa: E402
@@ -39,7 +39,7 @@ def test_skill_md_frontmatter():
     assert text.startswith("---\n")
     front = dict(line.split(": ", 1) for line in text.split("---\n")[1].strip().splitlines())
     assert front["name"] == "gaig-mcp" and len(front["description"]) <= 1024
-    assert "@v0.5.0" in text and "authority_effect" in text
+    assert "@v0.5.1" in text and "authority_effect" in text
 
 
 def test_agents_md_present():

@@ -27,7 +27,27 @@ def render() -> dict[Path, str]:
     schema = json.loads((CONTRACT_ROOT / "canonical-inventory-record.schema.json").read_text(encoding="utf-8"))
     fields = ["schema_version", *canonical_fields()]
     labels = [mapping["fields"][field]["human_label"] for field in fields]
-    csv_text = ",".join(labels) + "\n"
+    # Example row so a filled blank template works: Schema Version defaults are documented,
+    # and the first data row shows the required 1.0.0 value (blank cells also default to 1.0.0).
+    example = [
+        "1.0.0",  # schema_version
+        "EXAMPLE-001",  # system_id
+        "Example Assistant",  # system_name
+        "Me",  # owner
+        "Personal",  # business_unit
+        "Vendor",  # vendor_internal
+        "Drafts and summarizes notes",  # use_case
+        "Internal",  # data_sensitivity
+        "No", "No", "No", "No", "No",  # impacts
+        "Partial",  # autonomy_level
+        "No",  # public_facing
+        "Yes",  # monitoring_active
+        "Yes",  # shutdown_path_exists
+        "No",  # evidence_complete
+    ]
+    if len(example) != len(fields):
+        raise RuntimeError(f"example row width {len(example)} != fields {len(fields)}")
+    csv_text = ",".join(labels) + "\n" + ",".join(example) + "\n"
     lines = [
         "# AI System Inventory Template",
         "",

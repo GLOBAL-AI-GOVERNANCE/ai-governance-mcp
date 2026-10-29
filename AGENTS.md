@@ -19,5 +19,5 @@ Interop tests (`tests/test_interop.py` and the SDK tests in `tests/test_guards.p
 - Every tool result keeps `authority_effect: "NONE"`. Do not add a code path that approves, certifies, or authorizes.
 - Level 5 actions are always denied. Level 4 asks by default; only an operator-listed automated approver may answer it.
 - Mark integrations TESTED only when a test in this repository runs them; otherwise say untested.
-- Install instructions pin a release tag from GitHub (`@v0.5.0`), not a package index.
+- Install instructions pin a release tag from GitHub (`@v0.5.1`), not a package index.
 - Keep the upstream pins in `src/gaig_mcp/_upstream` in sync with `scripts/bundle_upstreams.py --check`.
