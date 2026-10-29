@@ -12,7 +12,7 @@ python -m pytest
 ```
 
 Interop tests (`tests/test_interop.py` and the SDK tests in `tests/test_guards.py`) skip unless the pinned SDKs are installed:
-`pip install a2a-sdk==1.2.3 opentelemetry-sdk==1.45.1 langgraph==1.2.17 openai-agents==0.24.0 claude-agent-sdk==0.2.174`.
+`pip install a2a-sdk==1.2.3 opentelemetry-sdk==1.45.1 langgraph==1.2.17 openai-agents==0.24.0 claude-agent-sdk==0.2.174 crewai==1.15.33`.
 
 ## Ground rules
 
