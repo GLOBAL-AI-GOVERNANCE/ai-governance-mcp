@@ -63,18 +63,56 @@ jobs:
           python -m pytest -rs tests/test_interop.py tests/test_guards.py tests/test_automated_approver.py tests/test_prompt_injection.py | tee interop.log
           ! grep -q "SKIPPED" interop.log
 
+  first-run:
+    name: First-run smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Documented first-run (Linux and macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/mcp-venv"
+          . "$RUNNER_TEMP/mcp-venv/bin/activate"
+          python -m pip install --disable-pip-version-check .
+          gaig-mcp --version
+          python -c "from gaig_mcp.core import check_inventory; out=check_inventory(use_sample=True, evaluation_time='2026-10-16T00:00:00Z'); assert out['authority_effect']=='NONE'; assert out['human_decision_state']=='PENDING_HUMAN_DECISION'; assert out['tool']=='check_inventory'; r=out['result']; assert r['validation_state']=='VALID'; assert r['finding_count']==len(r['findings'])>0; assert r['findings_by_severity'].get('CRITICAL', 0)>=1; print(r['validation_state'], r['finding_count'])"
+      - name: Documented first-run (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          python -m venv "$env:RUNNER_TEMP\mcp-venv"
+          & "$env:RUNNER_TEMP\mcp-venv\Scripts\Activate.ps1"
+          python -m pip install --disable-pip-version-check .
+          gaig-mcp --version
+          if ($LASTEXITCODE -ne 0) { throw "gaig-mcp --version exited $LASTEXITCODE" }
+          python -c "from gaig_mcp.core import check_inventory; out=check_inventory(use_sample=True, evaluation_time='2026-10-16T00:00:00Z'); assert out['authority_effect']=='NONE'; assert out['human_decision_state']=='PENDING_HUMAN_DECISION'; assert out['tool']=='check_inventory'; r=out['result']; assert r['validation_state']=='VALID'; assert r['finding_count']==len(r['findings'])>0; assert r['findings_by_severity'].get('CRITICAL', 0)>=1; print(r['validation_state'], r['finding_count'])"
+
   test:
-    # Single required status check covering every supported Python version and the interop job.
-    needs: [tests, interop]
+    # Single required status check covering every supported Python version, interop, and first-run.
+    needs: [tests, interop, first-run]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: All supported Python versions and interop passed
+      - name: All supported Python versions, interop, and first-run passed
         env:
           RESULT: ${{ needs.tests.result }}
           INTEROP: ${{ needs.interop.result }}
-        run: test "$RESULT" = "success" && test "$INTEROP" = "success"
+          FIRST_RUN: ${{ needs.first-run.result }}
+        run: test "$RESULT" = "success" && test "$INTEROP" = "success" && test "$FIRST_RUN" = "success"
 
   package:
     runs-on: ubuntu-latest

@@ -66,6 +66,21 @@ pytest                                # 144 tests
 python scripts/smoke_test.py --transcript docs/verification-transcript.md
 ```
 
+PowerShell (Windows):
+
+```powershell
+git clone https://github.com/GLOBAL-AI-GOVERNANCE/ai-governance-mcp.git
+cd ai-governance-mcp
+python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+gaig-mcp                              # stdio
+gaig-mcp --http --port 8000           # Streamable HTTP at http://127.0.0.1:8000/mcp ; GET /health
+pytest
+python scripts/smoke_test.py --transcript docs/verification-transcript.md
+```
+
+The `uvx --from ... gaig-mcp` command is the same on Linux, macOS, and Windows once [uv](https://docs.astral.sh/uv/) is installed. From source on Windows, point a local client at `.venv\Scripts\gaig-mcp.exe` instead of `.venv/bin/gaig-mcp`.
+
 ## Sample call
 
 After the from-source install steps above.
